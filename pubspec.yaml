@@ -1,0 +1,38 @@
+name: grown
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  shared_preferences: 2.0.20
+  percent_indicator: 4.2.3
+  google_fonts: 4.0.3
+  fluttertoast: 8.2.1
+  image_cropper: 3.0.2
+  path_provider: 2.0.14
+  image_picker: 0.8.7+4
+  connectivity_plus: 3.0.4
+  image: 4.0.15
+  pdf: 3.10.1
+  intl: any
+  async: any
+  http: ^0.13.5
+  date_time_picker: 2.1.0
+  persistent_bottom_nav_bar: 5.0.2
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: 2.0.1
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/images/
+  uses-material-design: true
+
