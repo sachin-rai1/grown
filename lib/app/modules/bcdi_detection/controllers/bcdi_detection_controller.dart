@@ -7,9 +7,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-// ignore: depend_on_referenced_packages
 import 'package:async/async.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -69,10 +67,12 @@ class BcdiDetectionController extends GetxController {
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
+            lockAspectRatio: false
+        ),
         IOSUiSettings(
           title: 'Cropper',
         ),
+
       ],
     );
     final bytes = await croppedFile?.readAsBytes();
@@ -245,10 +245,9 @@ class BcdiDetectionController extends GetxController {
     final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery);
 
     log('image path : ${pickerImage?.path} -- MimeType : ${pickerImage?.mimeType}');
-
     image.value = File(pickerImage!.path);
     hasNetwork();
-    Get.back();
+
   }
 
   Future<void> pickImageFromCamera() async {

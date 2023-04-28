@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grown/app/modules/home/views/home_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
+import 'package:grown/app/modules/ups_reading/ViewUpsReading/views/view_ups_reading_view.dart';
+import 'package:grown/app/modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../modules/gas_bank_operator/GasManifold/views/gas_manifold_view.dart';
 import '../modules/gas_bank_operator/GasMonitor/views/gas_monitor_view.dart';
@@ -18,9 +21,9 @@ class Choice {
       required this.title,
       this.image,
       this.iconData,
-      required this.index});
+      });
 
-  int index;
+
   final String title;
   final String? image;
   final IconData? iconData;
@@ -288,10 +291,10 @@ class MyRadioList extends StatelessWidget {
 }
 
 class MyTextWidget extends StatelessWidget {
-  const MyTextWidget({Key? key, required this.title, this.isContainer, this.body}) : super(key: key);
+  const MyTextWidget({Key? key, required this.title, this.isLines, this.body}) : super(key: key);
   final String title;
   final String? body;
-  final bool? isContainer;
+  final bool? isLines;
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +312,7 @@ class MyTextWidget extends StatelessWidget {
             ],
           ),
         ),
-        (isContainer == false)?Container(): Container(
+        (isLines == false)?Container(): Container(
             width: MediaQuery.of(context).size.width,
             height: 1,
             color: Colors.grey.withOpacity(0.5)
@@ -319,8 +322,8 @@ class MyTextWidget extends StatelessWidget {
   }
 }
 
-class MyTabBar extends StatelessWidget {
-  const MyTabBar({super.key});
+class MlgdTabBar extends StatelessWidget {
+  const MlgdTabBar({super.key});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -343,6 +346,37 @@ class MyTabBar extends StatelessWidget {
                 children: [
                   ViewMlgdDataDateWiseView(),
                   ViewMlgdDataRunWiseView(),
+                ],
+              ))),
+    );
+  }
+}
+
+class UpsReadingTabBar extends StatelessWidget {
+  const UpsReadingTabBar({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: DefaultTabController(
+          length: 2,
+          child: Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                title: const Text("View Data"),
+                centerTitle: true,
+                toolbarHeight: 60,
+                bottom: const TabBar(
+                  tabs: [
+                    Text("Date Wise" , style: TextStyle(fontSize: 18),),
+                    Text("Branch Wise" , style: TextStyle(fontSize: 18),) ,
+                  ],
+                ),
+              ),
+              body:  TabBarView(
+                children: [
+                  ViewUpsReadingView(),
+                  ViewUpsReadingBranchWiseView()
+
                 ],
               ))),
     );
@@ -594,13 +628,14 @@ class TextBoxWidget extends StatelessWidget {
         this.onChanged,
         this.validator,
         this.autofocus,
-        this.keyboardType})
+        this.keyboardType, this.hintText})
       : super(key: key);
   final TextEditingController controller;
   final String title;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
+  final String? hintText;
 
   final bool? autofocus;
 
@@ -619,7 +654,11 @@ class TextBoxWidget extends StatelessWidget {
           validator: validator,
           onChanged: onChanged,
           keyboardType: keyboardType ?? TextInputType.number,
-          decoration: const InputDecoration(hintText: "Your Answer"),
+          decoration:  InputDecoration(
+              hintText: hintText?? "Your Answer",
+            hintStyle: (hintText != null)?const TextStyle(color: Colors.black):const TextStyle()
+
+          ),
           controller: controller,
         ),
         const SizedBox(
@@ -629,3 +668,6 @@ class TextBoxWidget extends StatelessWidget {
     );
   }
 }
+
+
+

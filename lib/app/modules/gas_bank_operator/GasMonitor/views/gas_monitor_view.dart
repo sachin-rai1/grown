@@ -84,7 +84,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                  log(value.toString());
                },
                dropDownWidth: w / 1.5,
-               dropDownItems: controller.branchData.map((branch) {
+               dropDownItems: controller.branchDataList.map((branch) {
                  return DropdownMenuItem<String>(
                      value: branch["branch_name"],
                      onTap: () {
@@ -120,7 +120,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
            Obx(
                  () => TextFormWidget(
                  dropDownOnChanged: (value) {},
-                 dropDownItems: controller.gasData.map((gases) {
+                 dropDownItems: controller.gasDataList.map((gases) {
                    return DropdownMenuItem<String>(
                      onTap: () {
                        controller.selectedGasId.value =
@@ -157,20 +157,20 @@ class GasMonitorView extends GetView<GasMonitorController> {
    }
    Widget viewOnlineGases(BuildContext context){
      return Obx(
-           () => (controller.onlineGasMonitorData.isEmpty)
+           () => (controller.onlineGasMonitorDataList.isEmpty)
            ? Container()
            : ListView.builder(
            shrinkWrap: true,
            physics: const NeverScrollableScrollPhysics(),
-           itemCount: controller.onlineGasMonitorData.length,
+           itemCount: controller.onlineGasMonitorDataList.length,
            itemBuilder: (context, index) {
              var startingDate = DateFormat("dd-MM-yyyy")
                  .format(DateTime.parse(controller
-                 .onlineGasMonitorData[index].startingOn
+                 .onlineGasMonitorDataList[index].startingOn
                  .toString()));
              var dueDate = DateFormat("dd-MM-yyyy").format(
                  DateTime.parse(controller
-                     .onlineGasMonitorData[index].dueDate
+                     .onlineGasMonitorDataList[index].dueDate
                      .toString()));
              return Card(
                color: Colors.greenAccent,
@@ -186,26 +186,26 @@ class GasMonitorView extends GetView<GasMonitorController> {
                          children:  [
                            InkWell(onTap: (){
                              updateGasMonitorData(context,
-                               controller.onlineGasMonitorData[index].gasMonitorId!,
-                               controller.onlineGasMonitorData[index].branchName!,
-                               controller.onlineGasMonitorData[index].gasName!,
-                               controller.onlineGasMonitorData[index].statusName!,
-                               controller.onlineGasMonitorData[index].vendorName!,
-                               controller.onlineGasMonitorData[index].manifoldName!,
-                               controller.onlineGasMonitorData[index].serialNo!.toString(),
-                               controller.onlineGasMonitorData[index].consumption!.toString(),
-                               controller.onlineGasMonitorData[index].gasQty!.toString(),
-                               controller.onlineGasMonitorData[index].operatorName!.toString(),
-                               controller.onlineGasMonitorData[index].branchId!,
-                               controller.onlineGasMonitorData[index].gasesId!,
-                               controller.onlineGasMonitorData[index].statusId!,
-                               controller.onlineGasMonitorData[index].vendorId!,
-                               controller.onlineGasMonitorData[index].manifoldId!,
+                               controller.onlineGasMonitorDataList[index].gasMonitorId!,
+                               controller.onlineGasMonitorDataList[index].branchName!,
+                               controller.onlineGasMonitorDataList[index].gasName!,
+                               controller.onlineGasMonitorDataList[index].statusName!,
+                               controller.onlineGasMonitorDataList[index].vendorName!,
+                               controller.onlineGasMonitorDataList[index].manifoldName!,
+                               controller.onlineGasMonitorDataList[index].serialNo!.toString(),
+                               controller.onlineGasMonitorDataList[index].consumption!.toString(),
+                               controller.onlineGasMonitorDataList[index].gasQty!.toString(),
+                               controller.onlineGasMonitorDataList[index].operatorName!.toString(),
+                               controller.onlineGasMonitorDataList[index].branchId!,
+                               controller.onlineGasMonitorDataList[index].gasesId!,
+                               controller.onlineGasMonitorDataList[index].statusId!,
+                               controller.onlineGasMonitorDataList[index].vendorId!,
+                               controller.onlineGasMonitorDataList[index].manifoldId!,
                              );
                            }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                            const SizedBox(width: 20,),
                            InkWell(onTap: (){
-                             deleteGasMonitorData(context, controller.onlineGasMonitorData[index].gasMonitorId! ,controller.onlineGasMonitorData[index].branchId! , controller.onlineGasMonitorData[index].gasesId! , controller.onlineGasMonitorData[index].statusId! ,DateTime.parse(controller.onlineGasMonitorData[index].dueDate!) );
+                             deleteGasMonitorData(context, controller.onlineGasMonitorDataList[index].gasMonitorId! ,controller.onlineGasMonitorDataList[index].branchId! , controller.onlineGasMonitorDataList[index].gasesId! , controller.onlineGasMonitorDataList[index].statusId! ,DateTime.parse(controller.onlineGasMonitorDataList[index].dueDate!) );
                            }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                          ],
                        ),
@@ -221,31 +221,31 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      MyTextWidget(
                        title: "Serial No",
                        body: controller
-                           .onlineGasMonitorData[index]
+                           .onlineGasMonitorDataList[index]
                            .serialNo
                            .toString(),
                      ),
                      MyTextWidget(
                        title: "Total Qty",
                        body: controller
-                           .onlineGasMonitorData[index].gasQty
+                           .onlineGasMonitorDataList[index].gasQty
                            .toString(),
                      ),
                      MyTextWidget(
                        title: "Balance Qty",
                        body: controller
-                           .onlineGasMonitorData[index]
+                           .onlineGasMonitorDataList[index]
                            .remainingStock
                            .toString(),
                      ),
                      MyTextWidget(
                        title: "Consumption",
-                       body: "${controller.onlineGasMonitorData[index].consumption.toString()} bars/day",
+                       body: "${controller.onlineGasMonitorDataList[index].consumption.toString()} bars/day",
                      ),
                      MyTextWidget(
                        title: "Total Days Left",
                        body: controller
-                           .onlineGasMonitorData[index]
+                           .onlineGasMonitorDataList[index]
                            .remainingStockDays
                            .toString(),
                      ),
@@ -255,7 +255,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      ),
                      MyTextWidget(
                        title: "Operator Name",
-                       body: controller.onlineGasMonitorData[index].operatorName,
+                       body: controller.onlineGasMonitorDataList[index].operatorName,
                      ),
                    ],
                  ),
@@ -267,20 +267,20 @@ class GasMonitorView extends GetView<GasMonitorController> {
    }
    Widget viewStandbyGases(BuildContext context){
      return Obx(
-           () => (controller.standbyGasMonitorData.isEmpty)
+           () => (controller.standbyGasMonitorDataList.isEmpty)
            ? Container()
            : ListView.builder(
            shrinkWrap: true,
            physics: const NeverScrollableScrollPhysics(),
-           itemCount: controller.standbyGasMonitorData.length,
+           itemCount: controller.standbyGasMonitorDataList.length,
            itemBuilder: (context, index) {
              var startingDate = DateFormat("dd-MM-yyyy")
                  .format(DateTime.parse(controller
-                 .standbyGasMonitorData[index].startingOn
+                 .standbyGasMonitorDataList[index].startingOn
                  .toString()));
              var dueDate = DateFormat("dd-MM-yyyy").format(
                  DateTime.parse(controller
-                     .standbyGasMonitorData[index].dueDate
+                     .standbyGasMonitorDataList[index].dueDate
                      .toString()));
              return Card(
                color: Colors.yellow,
@@ -297,26 +297,26 @@ class GasMonitorView extends GetView<GasMonitorController> {
                            InkWell(onTap: (){
                              updateGasMonitorData(
                                context,
-                               controller.standbyGasMonitorData[index].gasMonitorId! ,
-                               controller.standbyGasMonitorData[index].branchName!,
-                               controller.standbyGasMonitorData[index].gasName!,
-                               controller.standbyGasMonitorData[index].statusName!,
-                               controller.standbyGasMonitorData[index].vendorName!,
-                               controller.standbyGasMonitorData[index].manifoldName!,
-                               controller.standbyGasMonitorData[index].serialNo!.toString(),
-                               controller.standbyGasMonitorData[index].consumption!.toString(),
-                               controller.standbyGasMonitorData[index].gasQty!.toString(),
-                               controller.standbyGasMonitorData[index].operatorName!.toString(),
-                               controller.standbyGasMonitorData[index].branchId!,
-                               controller.standbyGasMonitorData[index].gasesId!,
-                               controller.standbyGasMonitorData[index].statusId!,
-                               controller.standbyGasMonitorData[index].vendorId!,
-                               controller.standbyGasMonitorData[index].manifoldId!,
+                               controller.standbyGasMonitorDataList[index].gasMonitorId! ,
+                               controller.standbyGasMonitorDataList[index].branchName!,
+                               controller.standbyGasMonitorDataList[index].gasName!,
+                               controller.standbyGasMonitorDataList[index].statusName!,
+                               controller.standbyGasMonitorDataList[index].vendorName!,
+                               controller.standbyGasMonitorDataList[index].manifoldName!,
+                               controller.standbyGasMonitorDataList[index].serialNo!.toString(),
+                               controller.standbyGasMonitorDataList[index].consumption!.toString(),
+                               controller.standbyGasMonitorDataList[index].gasQty!.toString(),
+                               controller.standbyGasMonitorDataList[index].operatorName!.toString(),
+                               controller.standbyGasMonitorDataList[index].branchId!,
+                               controller.standbyGasMonitorDataList[index].gasesId!,
+                               controller.standbyGasMonitorDataList[index].statusId!,
+                               controller.standbyGasMonitorDataList[index].vendorId!,
+                               controller.standbyGasMonitorDataList[index].manifoldId!,
                              );
                            }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                            const SizedBox(width: 20,),
                            InkWell(onTap: (){
-                             deleteGasMonitorData(context, controller.standbyGasMonitorData[index].gasMonitorId!  , controller.standbyGasMonitorData[index].branchId! , controller.standbyGasMonitorData[index].gasesId! , controller.standbyGasMonitorData[index].statusId! ,DateTime.parse(controller.standbyGasMonitorData[index].dueDate!));
+                             deleteGasMonitorData(context, controller.standbyGasMonitorDataList[index].gasMonitorId!  , controller.standbyGasMonitorDataList[index].branchId! , controller.standbyGasMonitorDataList[index].gasesId! , controller.standbyGasMonitorDataList[index].statusId! ,DateTime.parse(controller.standbyGasMonitorDataList[index].dueDate!));
                            }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                          ],
                        ),
@@ -332,24 +332,24 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      MyTextWidget(
                        title: "Serial No",
                        body: controller
-                           .standbyGasMonitorData[index]
+                           .standbyGasMonitorDataList[index]
                            .serialNo
                            .toString(),
                      ),
                      MyTextWidget(
                        title: "Total Qty",
                        body: controller
-                           .standbyGasMonitorData[index].gasQty
+                           .standbyGasMonitorDataList[index].gasQty
                            .toString(),
                      ),
                      MyTextWidget(
                        title: "Consumption",
-                       body: "${controller.standbyGasMonitorData[index].consumption} bars/day",
+                       body: "${controller.standbyGasMonitorDataList[index].consumption} bars/day",
                      ),
                      MyTextWidget(
                        title: "Total Days Left",
                        body: controller
-                           .standbyGasMonitorData[index]
+                           .standbyGasMonitorDataList[index]
                            .remainingStockDays
                            .toString(),
                      ),
@@ -359,7 +359,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      ),
                      MyTextWidget(
                          title: "Operator Name",
-                         body: controller.standbyGasMonitorData[index].operatorName
+                         body: controller.standbyGasMonitorDataList[index].operatorName
                      ),
                    ],
                  ),
@@ -369,22 +369,22 @@ class GasMonitorView extends GetView<GasMonitorController> {
      );}
    Widget viewStockGases(BuildContext context){
      return Obx(
-           () => (controller.stockGasMonitorData.isEmpty)
+           () => (controller.stockGasMonitorDataList.isEmpty)
            ? Container()
            : Padding(
          padding: const EdgeInsets.only(bottom: 20),
          child: ListView.builder(
              shrinkWrap: true,
              physics: const NeverScrollableScrollPhysics(),
-             itemCount: controller.stockGasMonitorData.length,
+             itemCount: controller.stockGasMonitorDataList.length,
              itemBuilder: (context, index) {
                var startingDate = DateFormat("dd-MM-yyyy")
                    .format(DateTime.parse(controller
-                   .stockGasMonitorData[index].startingOn
+                   .stockGasMonitorDataList[index].startingOn
                    .toString()));
                var dueDate = DateFormat("dd-MM-yyyy").format(
                    DateTime.parse(controller
-                       .stockGasMonitorData[index].dueDate
+                       .stockGasMonitorDataList[index].dueDate
                        .toString()));
 
                return Card(
@@ -402,27 +402,27 @@ class GasMonitorView extends GetView<GasMonitorController> {
                              InkWell(onTap: (){
                                updateGasMonitorData(
                                  context,
-                                 controller.stockGasMonitorData[index].gasMonitorId!,
-                                 controller.stockGasMonitorData[index].branchName!,
-                                 controller.stockGasMonitorData[index].gasName!,
-                                 controller.stockGasMonitorData[index].statusName!,
-                                 controller.stockGasMonitorData[index].vendorName!,
-                                 controller.stockGasMonitorData[index].manifoldName!,
-                                 controller.stockGasMonitorData[index].serialNo!.toString(),
-                                 controller.stockGasMonitorData[index].consumption!.toString(),
-                                 controller.stockGasMonitorData[index].gasQty!.toString(),
-                                 controller.stockGasMonitorData[index].operatorName!.toString(),
-                                 controller.stockGasMonitorData[index].branchId!,
-                                 controller.stockGasMonitorData[index].gasesId!,
-                                 controller.stockGasMonitorData[index].statusId!,
-                                 controller.stockGasMonitorData[index].vendorId!,
-                                 controller.stockGasMonitorData[index].manifoldId!,
+                                 controller.stockGasMonitorDataList[index].gasMonitorId!,
+                                 controller.stockGasMonitorDataList[index].branchName!,
+                                 controller.stockGasMonitorDataList[index].gasName!,
+                                 controller.stockGasMonitorDataList[index].statusName!,
+                                 controller.stockGasMonitorDataList[index].vendorName!,
+                                 controller.stockGasMonitorDataList[index].manifoldName!,
+                                 controller.stockGasMonitorDataList[index].serialNo!.toString(),
+                                 controller.stockGasMonitorDataList[index].consumption!.toString(),
+                                 controller.stockGasMonitorDataList[index].gasQty!.toString(),
+                                 controller.stockGasMonitorDataList[index].operatorName!.toString(),
+                                 controller.stockGasMonitorDataList[index].branchId!,
+                                 controller.stockGasMonitorDataList[index].gasesId!,
+                                 controller.stockGasMonitorDataList[index].statusId!,
+                                 controller.stockGasMonitorDataList[index].vendorId!,
+                                 controller.stockGasMonitorDataList[index].manifoldId!,
                                );
 
                              }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                              const SizedBox(width: 20,),
                              InkWell(onTap: (){
-                               deleteGasMonitorData(context, controller.stockGasMonitorData[index].gasMonitorId! , controller.stockGasMonitorData[index].branchId! , controller.stockGasMonitorData[index].gasesId! ,controller.stockGasMonitorData[index].statusId! , DateTime.parse(controller.stockGasMonitorData[index].dueDate!));
+                               deleteGasMonitorData(context, controller.stockGasMonitorDataList[index].gasMonitorId! , controller.stockGasMonitorDataList[index].branchId! , controller.stockGasMonitorDataList[index].gasesId! ,controller.stockGasMonitorDataList[index].statusId! , DateTime.parse(controller.stockGasMonitorDataList[index].dueDate!));
                              }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                            ],
                          ),
@@ -438,30 +438,30 @@ class GasMonitorView extends GetView<GasMonitorController> {
                        MyTextWidget(
                          title: "Serial No",
                          body: controller
-                             .stockGasMonitorData[index].serialNo
+                             .stockGasMonitorDataList[index].serialNo
                              .toString(),
                        ),
                        MyTextWidget(
                          title: "Total Qty",
                          body: controller
-                             .stockGasMonitorData[index].gasQty
+                             .stockGasMonitorDataList[index].gasQty
                              .toString(),
                        ),
                        MyTextWidget(
                          title: "Consumption",
-                         body: "${controller.stockGasMonitorData[index].consumption} bars/day",
+                         body: "${controller.stockGasMonitorDataList[index].consumption} bars/day",
                        ),
                        MyTextWidget(
                          title: "Balance Qty",
                          body: controller
-                             .stockGasMonitorData[index]
+                             .stockGasMonitorDataList[index]
                              .remainingStock
                              .toString(),
                        ),
                        MyTextWidget(
                          title: "Total Days Left",
                          body: controller
-                             .stockGasMonitorData[index]
+                             .stockGasMonitorDataList[index]
                              .remainingStockDays
                              .toString(),
                        ),
@@ -471,7 +471,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                        ),
                        MyTextWidget(
                          title: "Operator Name " ,
-                         body: controller.stockGasMonitorData[index].operatorName.toString(),
+                         body: controller.stockGasMonitorDataList[index].operatorName.toString(),
                        ),
                      ],
                    ),
@@ -501,7 +501,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                    log(value.toString());
                  },
                  dropDownWidth: w / 1.6,
-                 dropDownItems: controller.branchData.map((branch) {
+                 dropDownItems: controller.branchDataList.map((branch) {
                    return DropdownMenuItem<String>(
                        value: branch["branch_name"],
                        onTap: () {
@@ -516,7 +516,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
              Obx(
                    () => TextFormWidget(
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.gasData.map((gases) {
+                   dropDownItems: controller.gasDataList.map((gases) {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedGasId.value = gases["gases_id"];
@@ -534,10 +534,10 @@ class GasMonitorView extends GetView<GasMonitorController> {
              Obx(
                    () => TextFormWidget(
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.gasStatus.map((status) {
+                   dropDownItems: controller.gasStatusDataList.map((status) {
                      return DropdownMenuItem<String>(
                        onTap: () {
-                         controller.selectedGasStatus.value = status["status_id"];
+                         controller.selectedGasStatusId.value = status["status_id"];
 
                        },
                        value: status["status_name"],
@@ -551,7 +551,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
              Obx(
                    () => TextFormWidget(
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.vendorData.map((vendor) {
+                   dropDownItems: controller.vendorDataList.map((vendor) {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedVendorId.value =
@@ -569,7 +569,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
              Obx(
                    () => TextFormWidget(
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.manifoldData.map((manifold) {
+                   dropDownItems: controller.manifoldDataList.map((manifold) {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedManifoldId.value =
@@ -615,10 +615,10 @@ class GasMonitorView extends GetView<GasMonitorController> {
                    () => TextFormWidget(
                    dropDownValue: status,
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.gasStatus.map((status) {
+                   dropDownItems: controller.gasStatusDataList.map((status) {
                      return DropdownMenuItem<String>(
                        onTap: () {
-                         controller.selectedGasStatus.value = status["status_id"];
+                         controller.selectedGasStatusId.value = status["status_id"];
 
                        },
                        value: status["status_name"],
@@ -633,7 +633,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                    () => TextFormWidget(
                    dropDownValue: vendorName,
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.vendorData.map((vendor) {
+                   dropDownItems: controller.vendorDataList.map((vendor) {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedVendorId.value =
@@ -652,7 +652,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                    () => TextFormWidget(
                    dropDownValue: manifold,
                    dropDownOnChanged: (value) {},
-                   dropDownItems: controller.manifoldData.map((manifold) {
+                   dropDownItems: controller.manifoldDataList.map((manifold) {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedManifoldId.value =

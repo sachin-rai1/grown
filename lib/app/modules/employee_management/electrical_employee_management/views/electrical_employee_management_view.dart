@@ -16,7 +16,7 @@ class ElectricalEmployeeManagementView
       ),
       body: const Center(
         child: Text(
-          'ElectricalEmployeeManagementView is working',
+          'Coming Soon....',
           style: TextStyle(fontSize: 20),
         ),
       ),

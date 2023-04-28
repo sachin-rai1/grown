@@ -118,7 +118,7 @@ class MlgdDataMonitoringController extends GetxController {
     loading.value = true;
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var uploadUrl = '$empManagementApiUrl/add_mlgd_data';
+    var uploadUrl = '$apiUrl/add_mlgd_data';
     var uri = Uri.parse(uploadUrl);
     var request = http.MultipartRequest("POST", uri);
     request.headers.addAll({'Authorization': 'Bearer $token'});

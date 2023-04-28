@@ -14,7 +14,7 @@ class ViewMlgdDataRunWiseController extends GetxController {
 
   Future<void> getData(runNo) async {
 
-    var url = "$empManagementApiUrl/view_mlgd_data?runNo=$runNo";
+    var url = "$apiUrl/view_mlgd_data?runNo=$runNo";
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await http.get(

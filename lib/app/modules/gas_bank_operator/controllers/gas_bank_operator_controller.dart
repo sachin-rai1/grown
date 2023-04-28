@@ -28,7 +28,7 @@ class GasBankOperatorController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var response = await http.get(Uri.parse("$empManagementApiUrl/get_gases"), headers: {
+    var response = await http.get(Uri.parse("$apiUrl/get_gases"), headers: {
       'Authorization': 'Bearer $token',
     });
     if (response.statusCode == 200) {
@@ -42,7 +42,7 @@ class GasBankOperatorController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    final response = await http.get(Uri.parse('$empManagementApiUrl/branches'), headers: {
+    final response = await http.get(Uri.parse('$apiUrl/branches'), headers: {
       'Authorization': 'Bearer $token',
     });
 
@@ -63,7 +63,7 @@ class GasBankOperatorController extends GetxController {
     var token = prefs.getString("token");
     var response = await http.get(
         Uri.parse(
-            "$empManagementApiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
+            "$apiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
         headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {

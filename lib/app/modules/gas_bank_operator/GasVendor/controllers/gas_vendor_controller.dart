@@ -23,7 +23,7 @@ class GasVendorController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var response = await http.get(Uri.parse("$empManagementApiUrl/get_gas_vendor"),
+    var response = await http.get(Uri.parse("$apiUrl/get_gas_vendor"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
@@ -48,7 +48,7 @@ class GasVendorController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.post(Uri.parse("$empManagementApiUrl/add_gas_vendor"),
+      var response = await http.post(Uri.parse("$apiUrl/add_gas_vendor"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -97,7 +97,7 @@ class GasVendorController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.put(Uri.parse("$empManagementApiUrl/update_gas_vendor/$id"),
+      var response = await http.put(Uri.parse("$apiUrl/update_gas_vendor/$id"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -137,7 +137,7 @@ class GasVendorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await http.delete(
-      Uri.parse("$empManagementApiUrl/delete_gas_vendor/$id"),
+      Uri.parse("$apiUrl/delete_gas_vendor/$id"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"

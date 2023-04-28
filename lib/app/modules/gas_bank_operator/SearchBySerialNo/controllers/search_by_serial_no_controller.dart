@@ -16,7 +16,7 @@ class SearchBySerialNoController extends GetxController {
   Future<void> fetchDataBySerialNo(var serialNo) async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var response =await http.get(Uri.parse("$empManagementApiUrl/search_by_serial_no?serial_no=$serialNo") , headers: {
+    var response =await http.get(Uri.parse("$apiUrl/search_by_serial_no?serial_no=$serialNo") , headers: {
       "Authorization":"Bearer $token",
       "Content-Type":"application/json"
     });

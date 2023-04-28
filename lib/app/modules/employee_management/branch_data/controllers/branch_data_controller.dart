@@ -21,7 +21,7 @@ class BranchDataController extends GetxController {
   }
 
   final instance = Get.put(LabEmployeeManagementController());
-  LabEmployeeManagementController lLabEmployeeManagementController = Get.find();
+  LabEmployeeManagementController labEmployeeManagementController = Get.find();
 
   final updateBranchNameController = TextEditingController();
   final updateNoOfMachinesController = TextEditingController();
@@ -47,7 +47,7 @@ class BranchDataController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var response = await http.get(Uri.parse('$empManagementApiUrl/branches'),
+    var response = await http.get(Uri.parse('$apiUrl/branches'),
         headers: {"Authorization": "Bearer $token"});
 
     if(response.statusCode == 200) {
@@ -75,7 +75,7 @@ class BranchDataController extends GetxController {
 
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var response = await http.post(Uri.parse("$empManagementApiUrl/branches"),
+      var response = await http.post(Uri.parse("$apiUrl/branches"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -96,7 +96,7 @@ class BranchDataController extends GetxController {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        getBranches().whenComplete(() => lLabEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
+        getBranches().whenComplete(() => labEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
         clearAll();
 
       }
@@ -110,7 +110,7 @@ class BranchDataController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var response = await http.put(Uri.parse("$empManagementApiUrl/update/branches/$id"),
+    var response = await http.put(Uri.parse("$apiUrl/update/branches/$id"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token"
@@ -130,14 +130,14 @@ class BranchDataController extends GetxController {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
-      getBranches().whenComplete(() => lLabEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
+      getBranches().whenComplete(() => labEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
       clearAll();
 
     }
   }
 
   Future<void> deleteBranch(int id) async {
-    if (lLabEmployeeManagementController.branchId.value == id) {
+    if (labEmployeeManagementController.branchId.value == id) {
       Get.showSnackbar(const GetSnackBar(
         message: "Please select Another Branch and try again",
         title: "Branch already Selected",
@@ -150,7 +150,7 @@ class BranchDataController extends GetxController {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       var response = await http.delete(
-        Uri.parse("$empManagementApiUrl/delete/branches/$id"),
+        Uri.parse("$apiUrl/delete/branches/$id"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token"
@@ -158,7 +158,7 @@ class BranchDataController extends GetxController {
       );
       if (response.statusCode == 200) {
         Get.back();
-        lLabEmployeeManagementController.fetchBranches();
+        labEmployeeManagementController.fetchBranches();
         Fluttertoast.showToast(
             msg: "Branch deleted Successfully",
             toastLength: Toast.LENGTH_SHORT,
@@ -167,7 +167,7 @@ class BranchDataController extends GetxController {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        getBranches().whenComplete(() => lLabEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
+        getBranches().whenComplete(() => labEmployeeManagementController.fetchBranches().whenComplete(() => isLoading.value = false));
       }
       else{
         Get.back();

@@ -14,6 +14,7 @@ class BcdiClassificationView extends GetView<BcdiClassificationController> {
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(onTap:()=>Get.back(), child: const Icon(Icons.home_rounded , size: 30,color: Colors.black,)),
         title: const Text("BCDI CLASSIFICATION"),
         centerTitle: true,
       ),
@@ -143,6 +144,7 @@ class BcdiClassificationView extends GetView<BcdiClassificationController> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
+                        controller.uploadImageFromGallery();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,

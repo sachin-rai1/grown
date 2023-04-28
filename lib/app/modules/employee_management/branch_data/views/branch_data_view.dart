@@ -43,7 +43,7 @@ class BranchDataView extends GetView<BranchDataController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              "Branch Id : ${controller.branchData[index].branchId}"),
+                              "Branch Id : ${controller.branchData[index].branchId!}"),
                           Text(
                               "Branch Name : ${controller.branchData[index].branchName}"),
                           Text(
@@ -58,12 +58,9 @@ class BranchDataView extends GetView<BranchDataController> {
                             onTap: () {
                               updateBranch(
                                   context,
-                                  controller.branchData[index].branchId,
-                                  controller.branchData[index].branchName,
-                                  controller.branchData[index].noOfMachines
-                                      .toString(),
-                                  controller.branchData[index].floor
-                                      .toString());
+                                  controller.branchData[index].branchId!,
+                                  controller.branchData[index].branchName!,
+                                  controller.branchData[index].noOfMachines.toString(), controller.branchData[index].floor.toString());
                             },
                             child: const Icon(
                               Icons.edit,
@@ -73,7 +70,7 @@ class BranchDataView extends GetView<BranchDataController> {
                           (privilage.value == "Admin")? InkWell(
                             onTap: () {
                               deleteBranch(context,
-                                  controller.branchData[index].branchId);
+                                  controller.branchData[index].branchId!);
                             },
                             child: const Icon(
                               Icons.delete,

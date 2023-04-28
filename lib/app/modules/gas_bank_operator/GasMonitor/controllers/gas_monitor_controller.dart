@@ -18,24 +18,24 @@ class GasMonitorController extends GetxController {
 
   var selectedBranchId = 0.obs;
   var isLoading = false.obs;
-  var branchData = [].obs;
+  var branchDataList = [].obs;
 
   var selectedGasId = 0.obs;
-  var gasData = [].obs;
+  var gasDataList = [].obs;
 
-  var onlineGasMonitorData = <GasMonitor>[].obs;
-  var standbyGasMonitorData = <GasMonitor>[].obs;
-  var stockGasMonitorData = <GasMonitor>[].obs;
+  var onlineGasMonitorDataList = <GasMonitor>[].obs;
+  var standbyGasMonitorDataList = <GasMonitor>[].obs;
+  var stockGasMonitorDataList = <GasMonitor>[].obs;
   var bottomNavigationIndex = 0.obs;
 
-  var manifoldData = [].obs;
+  var manifoldDataList = [].obs;
   var selectedManifoldId = 0.obs;
 
-  var vendorData = [].obs;
+  var vendorDataList = [].obs;
   var selectedVendorId = 0.obs;
 
-  var gasStatus = [].obs;
-  var selectedGasStatus = 0.obs;
+  var gasStatusDataList = [].obs;
+  var selectedGasStatusId = 0.obs;
 
   final addSerialNoController = TextEditingController();
   final addConsumptionNoController = TextEditingController();
@@ -52,12 +52,12 @@ class GasMonitorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var response =
-        await http.get(Uri.parse("$empManagementApiUrl/get_gases"), headers: {
+        await http.get(Uri.parse("$apiUrl/get_gases"), headers: {
       'Authorization': 'Bearer $token',
     });
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      gasData.value = data;
+      gasDataList.value = data;
       isLoading.value = false;
     }
   }
@@ -67,15 +67,15 @@ class GasMonitorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     final response =
-        await http.get(Uri.parse('$empManagementApiUrl/branches'), headers: {
+        await http.get(Uri.parse('$apiUrl/branches'), headers: {
       'Authorization': 'Bearer $token',
     });
 
     if (response.statusCode == 200) {
-      branchData.value = jsonDecode(response.body);
+      branchDataList.value = jsonDecode(response.body);
 
       isLoading.value = false;
-      return branchData;
+      return branchDataList;
     } else {
       isLoading.value = false;
       throw Exception('Failed to load branches');
@@ -88,15 +88,15 @@ class GasMonitorController extends GetxController {
     var token = prefs.getString("token");
     var response = await http.get(
         Uri.parse(
-            "$empManagementApiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
+            "$apiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
         headers: {'Authorization': 'Bearer $token'});
     // print(response.body);
     if (response.statusCode == 200) {
       isLoading.value = false;
       var data = ModelGasMonitor.fromJson(jsonDecode(response.body));
-      onlineGasMonitorData.value = data.onlineGasMonitors ?? [];
-      standbyGasMonitorData.value = data.standbyGasMonitors ?? [];
-      stockGasMonitorData.value = data.stockGasMonitors ?? [];
+      onlineGasMonitorDataList.value = data.onlineGasMonitors ?? [];
+      standbyGasMonitorDataList.value = data.standbyGasMonitors ?? [];
+      stockGasMonitorDataList.value = data.stockGasMonitors ?? [];
     } else {
       isLoading.value = false;
       throw Exception();
@@ -108,14 +108,14 @@ class GasMonitorController extends GetxController {
     var token = prefs.getString("token");
     var response = await http.get(
         Uri.parse(
-            "$empManagementApiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
+            "$apiUrl/get_gas_monitor?branch_id=$branchId&gases_id=$gasId"),
         headers: {'Authorization': 'Bearer $token'});
 
     if (response.statusCode == 200) {
       var data = ModelGasMonitor.fromJson(jsonDecode(response.body));
-      onlineGasMonitorData.value = data.onlineGasMonitors ?? [];
-      standbyGasMonitorData.value = data.standbyGasMonitors ?? [];
-      stockGasMonitorData.value = data.stockGasMonitors ?? [];
+      onlineGasMonitorDataList.value = data.onlineGasMonitors ?? [];
+      standbyGasMonitorDataList.value = data.standbyGasMonitors ?? [];
+      stockGasMonitorDataList.value = data.stockGasMonitors ?? [];
     } else {
       throw Exception();
     }
@@ -126,11 +126,11 @@ class GasMonitorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var response = await http.get(
-        Uri.parse("$empManagementApiUrl/get_gas_status"),
+        Uri.parse("$apiUrl/get_gas_status"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      gasStatus.value = jsonDecode(response.body);
+      gasStatusDataList.value = jsonDecode(response.body);
       isLoading.value = false;
     } else {
       isLoading.value = false;
@@ -142,11 +142,11 @@ class GasMonitorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var response = await http.get(
-        Uri.parse("$empManagementApiUrl/get_gas_manifold"),
+        Uri.parse("$apiUrl/get_gas_manifold"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      manifoldData.value = jsonDecode(response.body);
+      manifoldDataList.value = jsonDecode(response.body);
       isLoading.value = false;
     } else {
       isLoading.value = false;
@@ -158,11 +158,11 @@ class GasMonitorController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var response = await http.get(
-        Uri.parse("$empManagementApiUrl/get_gas_vendor"),
+        Uri.parse("$apiUrl/get_gas_vendor"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
-      vendorData.value = jsonDecode(response.body);
+      vendorDataList.value = jsonDecode(response.body);
       isLoading.value = false;
     } else {
       isLoading.value = false;
@@ -178,7 +178,7 @@ class GasMonitorController extends GetxController {
     updateConsumptionNoController.clear();
     updateGasQtyNoController.clear();
     updateOperatorNameController.clear();
-    selectedGasStatus.value = 0;
+    selectedGasStatusId.value = 0;
     selectedVendorId.value = 0;
     selectedManifoldId.value = 0;
   }
@@ -186,62 +186,23 @@ class GasMonitorController extends GetxController {
   Future<void> addGasMonitorData() async {
     fetchGasMonitorDataForCrud(selectedBranchId.value, selectedGasId.value)
         .whenComplete(() async {
-      if (onlineGasMonitorData.isEmpty && selectedGasStatus.value == 3) {
-        Fluttertoast.showToast(
-            msg: "Please add online gas first ",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else if (onlineGasMonitorData.isEmpty && selectedGasStatus.value == 4) {
-        Fluttertoast.showToast(
-            msg: "Please add online gas first ",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else if (standbyGasMonitorData.isEmpty &&
-          selectedGasStatus.value == 4) {
-        Fluttertoast.showToast(
-            msg: "Please add stand by gas first ",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else if (onlineGasMonitorData.isNotEmpty &&
-          selectedGasStatus.value == 2) {
-        Fluttertoast.showToast(
-            msg:
-                "You already have 1 online bottle , Please edit or delete the bottle first",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      } else if (standbyGasMonitorData.isNotEmpty &&
-          selectedGasStatus.value == 3) {
-        Fluttertoast.showToast(
-            msg:
-                "You already have 1 stand by bottle , Please edit or delete the bottle first",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
+      if (onlineGasMonitorDataList.isEmpty && selectedGasStatusId.value == 3) {
+        showToastError(msg: "Please add online gas first ");
+      } else if (onlineGasMonitorDataList.isEmpty && selectedGasStatusId.value == 4) {
+        showToastError(msg: "Please add online gas first ");
+      } else if (standbyGasMonitorDataList.isEmpty && selectedGasStatusId.value == 4) {
+        showToastError(msg: "Please add stand by gas first ",);
+      } else if (onlineGasMonitorDataList.isNotEmpty &&
+          selectedGasStatusId.value == 2) {
+        showToastError(msg: "You already have 1 online bottle , Please edit or delete the bottle first",);
+      } else if (standbyGasMonitorDataList.isNotEmpty && selectedGasStatusId.value == 3) {
+        showToastError(msg: "You already have 1 stand by bottle , Please edit or delete the bottle first");
       } else {
         isLoading.value = true;
         var prefs = await SharedPreferences.getInstance();
         var token = prefs.getString("token");
         var response = await http.post(
-            Uri.parse("$empManagementApiUrl/add_gas_monitor"),
+            Uri.parse("$apiUrl/add_gas_monitor"),
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer $token"
@@ -250,7 +211,7 @@ class GasMonitorController extends GetxController {
               "branch_id": selectedBranchId.value.toString(),
               "gases_id": selectedGasId.value.toString(),
               "manifold_id": selectedManifoldId.value.toString(),
-              "status_id": selectedGasStatus.value.toString(),
+              "status_id": selectedGasStatusId.value.toString(),
               "vendor_id": selectedVendorId.value.toString(),
               "serial_no": addSerialNoController.text,
               "consumption": addConsumptionNoController.text,
@@ -260,36 +221,15 @@ class GasMonitorController extends GetxController {
         // print(response.body);
         if (response.statusCode == 200) {
           Get.back();
-          Fluttertoast.showToast(
-              msg: "Added Successfully",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          showToast(msg: "Added Successfully",);
           clearData();
           isLoading.value = false;
           fetchGasMonitorData(selectedBranchId.value, selectedGasId.value);
         } else if (response.statusCode == 302) {
-          Fluttertoast.showToast(
-              msg: "Serial No Already Exists",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          showToastError(msg : "Serial No Already Exists");
           isLoading.value = false;
         } else {
-          Fluttertoast.showToast(
-              msg: "Cannot Add ${response.statusCode}",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          showToastError(msg: "Cannot Add ${response.statusCode}",);
           isLoading.value = false;
         }
       }
@@ -308,9 +248,9 @@ class GasMonitorController extends GetxController {
       int vendorId,
       int manifoldId) async {
     fetchGasMonitorDataForCrud(branchId, gasId).whenComplete(() async {
-      if (onlineGasMonitorData.isNotEmpty &&
-          id != onlineGasMonitorData[0].gasMonitorId &&
-          selectedGasStatus.value == 2) {
+      if (onlineGasMonitorDataList.isNotEmpty &&
+          id != onlineGasMonitorDataList[0].gasMonitorId &&
+          selectedGasStatusId.value == 2) {
         Fluttertoast.showToast(
             msg: "Cannot Edit \nOnline gas running already",
             toastLength: Toast.LENGTH_SHORT,
@@ -319,9 +259,9 @@ class GasMonitorController extends GetxController {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-      } else if (standbyGasMonitorData.isNotEmpty &&
-          selectedGasStatus.value == 3 &&
-          id != standbyGasMonitorData[0].gasMonitorId) {
+      } else if (standbyGasMonitorDataList.isNotEmpty &&
+          selectedGasStatusId.value == 3 &&
+          id != standbyGasMonitorDataList[0].gasMonitorId) {
         Fluttertoast.showToast(
             msg: "Cannot Edit \n stand by gas running already",
             toastLength: Toast.LENGTH_SHORT,
@@ -335,7 +275,7 @@ class GasMonitorController extends GetxController {
         var prefs = await SharedPreferences.getInstance();
         var token = prefs.getString("token");
         var response = await http.put(
-            Uri.parse("$empManagementApiUrl/update_gas_monitor/$id"),
+            Uri.parse("$apiUrl/update_gas_monitor/$id"),
             headers: {
               "Content-Type": "application/json",
               "Authorization": "Bearer $token"
@@ -346,9 +286,9 @@ class GasMonitorController extends GetxController {
               "manifold_id": (selectedManifoldId.value == 0)
                   ? manifoldId
                   : selectedManifoldId.value.toString(),
-              "status_id": (selectedGasStatus.value == 0)
+              "status_id": (selectedGasStatusId.value == 0)
                   ? statusId
-                  : selectedGasStatus.value.toString(),
+                  : selectedGasStatusId.value.toString(),
               "vendor_id": (selectedVendorId.value == 0)
                   ? vendorId
                   : selectedVendorId.value.toString(),
@@ -397,7 +337,7 @@ class GasMonitorController extends GetxController {
   Future<void> deleteGasMonitorData(
       int id, int branchId, int gasId, int gasStatus, DateTime dueDate) async {
     fetchGasMonitorDataForCrud(branchId, gasId).whenComplete(() async {
-      if (standbyGasMonitorData.isNotEmpty &&
+      if (standbyGasMonitorDataList.isNotEmpty &&
           gasStatus == 2 &&
           dueDate.compareTo(DateTime.now().add(const Duration(days: 1))) >= 0) {
         Fluttertoast.showToast(
@@ -408,7 +348,7 @@ class GasMonitorController extends GetxController {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-      } else if (stockGasMonitorData.isNotEmpty && gasStatus == 3) {
+      } else if (stockGasMonitorDataList.isNotEmpty && gasStatus == 3) {
         Fluttertoast.showToast(
             msg: "Please delete stock gas first ",
             toastLength: Toast.LENGTH_SHORT,
@@ -422,7 +362,7 @@ class GasMonitorController extends GetxController {
         var prefs = await SharedPreferences.getInstance();
         var token = prefs.getString('token');
         var response = await http.delete(
-          Uri.parse("$empManagementApiUrl/delete_gas_monitor/$id"),
+          Uri.parse("$apiUrl/delete_gas_monitor/$id"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"

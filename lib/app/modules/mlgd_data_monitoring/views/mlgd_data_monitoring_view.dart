@@ -17,6 +17,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(onTap:()=>Get.back(), child: const Icon(Icons.home_rounded , size: 30,color: Colors.black,)),
         elevation: 0,
         backgroundColor: Colors.blue.withOpacity(0.5),
         title: const Text(
@@ -527,7 +528,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
 
   void login() {
     if (controller.passController.text == "M@!Tr!") {
-      Get.to(() => const MyTabBar());
+      Get.to(() => const MlgdTabBar());
       controller.passController.clear();
     } else if (controller.passController.text == "") {
       Get.showSnackbar(const GetSnackBar(

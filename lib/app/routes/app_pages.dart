@@ -46,7 +46,13 @@ import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
 import '../modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
+import '../modules/ups_reading/ViewUpsReading/bindings/view_ups_reading_binding.dart';
+import '../modules/ups_reading/ViewUpsReading/views/view_ups_reading_view.dart';
+import '../modules/ups_reading/ViewUpsReadingBranchWise/bindings/view_ups_reading_branch_wise_binding.dart';
+import '../modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
 import '../modules/ups_reading/bindings/ups_reading_binding.dart';
+import '../modules/ups_reading/upsData/bindings/ups_data_binding.dart';
+import '../modules/ups_reading/upsData/views/ups_data_view.dart';
 import '../modules/ups_reading/views/ups_reading_view.dart';
 
 part 'app_routes.dart';
@@ -140,27 +146,27 @@ class AppPages {
       children: [
         GetPage(
           name: _Paths.GAS_MONITOR,
-          page: () =>  GasMonitorView(),
+          page: () => GasMonitorView(),
           binding: GasMonitorBinding(),
         ),
         GetPage(
           name: _Paths.GASES,
-          page: () =>  GasesView(),
+          page: () => GasesView(),
           binding: GasesBinding(),
         ),
         GetPage(
           name: _Paths.GAS_MANIFOLD,
-          page: () =>  GasManifoldView(),
+          page: () => GasManifoldView(),
           binding: GasManifoldBinding(),
         ),
         GetPage(
           name: _Paths.GAS_VENDOR,
-          page: () =>  GasVendorView(),
+          page: () => GasVendorView(),
           binding: GasVendorBinding(),
         ),
         GetPage(
           name: _Paths.SEARCH_BY_SERIAL_NO,
-          page: () =>  SearchBySerialNoView(),
+          page: () => SearchBySerialNoView(),
           binding: SearchBySerialNoBinding(),
         ),
       ],
@@ -169,6 +175,23 @@ class AppPages {
       name: _Paths.UPS_READING,
       page: () => UpsReadingView(),
       binding: UpsReadingBinding(),
+      children: [
+        GetPage(
+          name: _Paths.UPS_DATA,
+          page: () => UpsDataView(),
+          binding: UpsDataBinding(),
+        ),
+        GetPage(
+          name: _Paths.VIEW_UPS_READING,
+          page: () => ViewUpsReadingView(),
+          binding: ViewUpsReadingBinding(),
+        ),
+        GetPage(
+          name: _Paths.VIEW_UPS_READING_BRANCH_WISE,
+          page: () =>  ViewUpsReadingBranchWiseView(),
+          binding: ViewUpsReadingBranchWiseBinding(),
+        ),
+      ],
     ),
     GetPage(
       name: _Paths.CHILLER_READING,

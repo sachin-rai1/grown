@@ -49,7 +49,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     var token = prefs.getString('token');
 
     var response = await http.get(
-        Uri.parse("$empManagementApiUrl/employee_by_skill/$skillId/$branchId") ,
+        Uri.parse("$apiUrl/employee_by_skill/$skillId/$branchId") ,
         headers: {
           'Authorization':'Bearer $token'
         }
@@ -70,7 +70,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var response = await http.get(Uri.parse('$empManagementApiUrl/branches'),
+    var response = await http.get(Uri.parse('$apiUrl/branches'),
         headers: {"Authorization": "Bearer $token"});
     branchData.value = jsonDecode(response.body);
   }
@@ -79,7 +79,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var response = await http.get(Uri.parse('$empManagementApiUrl/designation'),
+    var response = await http.get(Uri.parse('$apiUrl/designation'),
         headers: {"Authorization": "Bearer $token"});
     designationData.value = jsonDecode(response.body);
     // print(designationData);
@@ -89,7 +89,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
 
-    var response = await http.get(Uri.parse('$empManagementApiUrl/special_skill'),
+    var response = await http.get(Uri.parse('$apiUrl/special_skill'),
         headers: {"Authorization": "Bearer $token"});
     specialSkillData.value = jsonDecode(response.body);
 
@@ -99,7 +99,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var response = await http.put(Uri.parse('$empManagementApiUrl/update_employee/$id'),
+    var response = await http.put(Uri.parse('$apiUrl/update_employee/$id'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token"
@@ -166,7 +166,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var response = await http.post(Uri.parse("$empManagementApiUrl/employee"),
+      var response = await http.post(Uri.parse("$apiUrl/employee"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -213,7 +213,7 @@ class SpecialSkillLabEmployeeManagementController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var response = await http.delete(Uri.parse("$empManagementApiUrl/delete_employee/$id"),
+    var response = await http.delete(Uri.parse("$apiUrl/delete_employee/$id"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"

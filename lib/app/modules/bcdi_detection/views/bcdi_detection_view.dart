@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
+import 'package:grown/app/modules/home/views/home_view.dart';
 import '../controllers/bcdi_detection_controller.dart';
 
 class BcdiDetectionView extends GetView<BcdiDetectionController> {
@@ -16,6 +14,7 @@ class BcdiDetectionView extends GetView<BcdiDetectionController> {
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(onTap:()=>Get.back(), child: const Icon(Icons.home_rounded , size: 30,color: Colors.black,)),
         elevation: 0,
         centerTitle: true,
         title: const Text("BCDI DETECTION"),

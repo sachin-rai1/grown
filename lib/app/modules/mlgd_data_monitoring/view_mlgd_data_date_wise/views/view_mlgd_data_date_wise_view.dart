@@ -112,15 +112,15 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  MyTextWidget(isContainer: false, title: "X : " , body: controller.data[index]["x"].toString(),),
-                                  MyTextWidget(isContainer: false, title: "Y : " , body: controller.data[index]["y"].toString(),),
+                                  MyTextWidget(isLines: false, title: "X : " , body: controller.data[index]["x"].toString(),),
+                                  MyTextWidget(isLines: false, title: "Y : " , body: controller.data[index]["y"].toString(),),
                                 ],
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  MyTextWidget(isContainer: false, title: "Z : " , body: controller.data[index]["z"].toString(),),
-                                  MyTextWidget(isContainer: false, title: "T : " , body: controller.data[index]["t"].toString(),),
+                                  MyTextWidget(isLines: false, title: "Z : " , body: controller.data[index]["z"].toString(),),
+                                  MyTextWidget(isLines: false, title: "T : " , body: controller.data[index]["t"].toString(),),
                                 ],
                               ),
                               Padding(

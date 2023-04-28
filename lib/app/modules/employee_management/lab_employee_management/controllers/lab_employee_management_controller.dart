@@ -30,7 +30,7 @@ class LabEmployeeManagementController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    final response = await http.get(Uri.parse('$empManagementApiUrl/branches'), headers: {
+    final response = await http.get(Uri.parse('$apiUrl/branches'), headers: {
       'Authorization': 'Bearer $token',
     });
 
@@ -53,7 +53,7 @@ class LabEmployeeManagementController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response =
-    await http.get(Uri.parse('$empManagementApiUrl/employees_branch/$id'), headers: {
+    await http.get(Uri.parse('$apiUrl/employees_branch/$id'), headers: {
       'Authorization': 'Bearer $token',
     });
 

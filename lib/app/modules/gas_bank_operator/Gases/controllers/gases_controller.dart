@@ -25,7 +25,7 @@ class GasesController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var response = await http.get(Uri.parse("$empManagementApiUrl/get_gases"),
+    var response = await http.get(Uri.parse("$apiUrl/get_gases"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
@@ -50,7 +50,7 @@ class GasesController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.post(Uri.parse("$empManagementApiUrl/add_gases"),
+      var response = await http.post(Uri.parse("$apiUrl/add_gases"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -99,7 +99,7 @@ class GasesController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.put(Uri.parse("$empManagementApiUrl/update_gas_name/$id"),
+      var response = await http.put(Uri.parse("$apiUrl/update_gas_name/$id"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -148,7 +148,7 @@ class GasesController extends GetxController {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       var response = await http.delete(
-        Uri.parse("$empManagementApiUrl/delete_gas_name/$id"),
+        Uri.parse("$apiUrl/delete_gas_name/$id"),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token"

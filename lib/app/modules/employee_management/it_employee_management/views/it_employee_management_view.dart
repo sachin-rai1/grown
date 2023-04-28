@@ -15,7 +15,7 @@ class ItEmployeeManagementView extends GetView<ItEmployeeManagementController> {
       ),
       body: const Center(
         child: Text(
-          'ItEmployeeManagementView is working',
+          'Coming Soon....',
           style: TextStyle(fontSize: 20),
         ),
       ),

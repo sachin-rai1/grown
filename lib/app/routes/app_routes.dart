@@ -41,6 +41,10 @@ abstract class Routes {
   static const GAS_VENDOR = _Paths.GAS_BANK_OPERATOR + _Paths.GAS_VENDOR;
   static const SEARCH_BY_SERIAL_NO =
       _Paths.GAS_BANK_OPERATOR + _Paths.SEARCH_BY_SERIAL_NO;
+  static const UPS_DATA = _Paths.UPS_READING + _Paths.UPS_DATA;
+  static const VIEW_UPS_READING = _Paths.UPS_READING + _Paths.VIEW_UPS_READING;
+  static const VIEW_UPS_READING_BRANCH_WISE =
+      _Paths.UPS_READING + _Paths.VIEW_UPS_READING_BRANCH_WISE;
 }
 
 abstract class _Paths {
@@ -72,4 +76,7 @@ abstract class _Paths {
   static const GAS_MANIFOLD = '/gas-manifold';
   static const GAS_VENDOR = '/gas-vendor';
   static const SEARCH_BY_SERIAL_NO = '/search-by-serial-no';
+  static const UPS_DATA = '/ups-data';
+  static const VIEW_UPS_READING = '/view-ups-reading';
+  static const VIEW_UPS_READING_BRANCH_WISE = '/view-ups-reading-branch-wise';
 }

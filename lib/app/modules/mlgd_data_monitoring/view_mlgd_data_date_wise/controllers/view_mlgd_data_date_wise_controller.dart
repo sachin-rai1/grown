@@ -18,7 +18,7 @@ class ViewMlgdDataDateWiseController extends GetxController {
       var token = prefs.getString('token');
       isLoading.value = true;
       var response = await http.get(
-        Uri.parse("$empManagementApiUrl/view_mlgd_data?startDate=$startDate"),
+        Uri.parse("$apiUrl/view_mlgd_data?startDate=$startDate"),
         headers: {
           "Content-Type": "application/json",
           "Authorization":

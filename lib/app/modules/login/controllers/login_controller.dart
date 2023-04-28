@@ -22,11 +22,10 @@ class LoginController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       isLoading.value = true;
 
-      var response = await http.post(Uri.parse("$empManagementApiUrl/login"),
+      var response = await http.post(Uri.parse("$apiUrl/login"),
           headers: {
             "Access-Control-Allow-Origin": "*",
             'Content-Type': 'application/json',
-            'Accept': '*/*'
           },
           body: jsonEncode(<String, String>{
             "user_email": userName.text,
@@ -34,12 +33,21 @@ class LoginController extends GetxController {
           }));
       if (response.statusCode == 200) {
         data = jsonDecode(response.body);
-        print(data);
         var token = data["token"];
         privilage.value = data["privilage"]??"";
-        print(privilage);
+        departmentName.value = data["user_department_name"];
+        departmentId.value = data["user_department_id"];
+        branchName.value = data["user_branch_name"];
+        branchId.value = data["user_branch_id"];
+
         prefs.setString("token", token);
-        // prefs.setString('privilage', privilage.value);
+        prefs.setString('privilage', privilage.value);
+        prefs.setString('user_department_name', departmentName.value);
+        prefs.setInt('user_department_id', departmentId.value);
+        prefs.setInt('user_branch_id', branchId.value);
+        prefs.setString('user_branch_name', branchName.value);
+
+
         Get.offAll(()=>  HomeView() );
         isLoading.value = false;
       } else {

@@ -16,7 +16,7 @@ class CameraApplicationView extends GetView<CameraApplicationController> {
       ),
       body: const Center(
         child: Text(
-          'CameraApplicationView is working',
+          'Coming Soon ....',
           style: TextStyle(fontSize: 20),
         ),
       ),

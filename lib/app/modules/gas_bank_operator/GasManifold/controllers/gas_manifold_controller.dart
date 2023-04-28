@@ -24,7 +24,7 @@ class GasManifoldController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var response = await http.get(Uri.parse("$empManagementApiUrl/get_gas_manifold"),
+    var response = await http.get(Uri.parse("$apiUrl/get_gas_manifold"),
         headers: {"Authorization": "Bearer $token"});
 
     if (response.statusCode == 200) {
@@ -49,7 +49,7 @@ class GasManifoldController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.post(Uri.parse("$empManagementApiUrl/add_gas_manifold"),
+      var response = await http.post(Uri.parse("$apiUrl/add_gas_manifold"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -98,7 +98,7 @@ class GasManifoldController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString("token");
-      var response = await http.put(Uri.parse("$empManagementApiUrl/update_gas_manifold/$id"),
+      var response = await http.put(Uri.parse("$apiUrl/update_gas_manifold/$id"),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -138,7 +138,7 @@ class GasManifoldController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var response = await http.delete(
-      Uri.parse("$empManagementApiUrl/delete_gas_manifold/$id"),
+      Uri.parse("$apiUrl/delete_gas_manifold/$id"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
