@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/constants.dart';
@@ -43,18 +42,19 @@ class HomeView extends GetView<HomeController> {
                                 ? controller.electricalList.length
                                 : 0, (index) {
           return Center(
-              child: SelectCard(
-                  choice: (departmentName.value == "Admin")
-                      ? controller.adminList[index]
-                      : (departmentName.value == "Lab")
-                          ? controller.labList[index]
-                          : (departmentName.value == "IT")
-                              ? controller.itList[index]
-                              : (departmentName.value == "GAS")
-                                  ? controller.gasList[index]
-                                  : (departmentName.value == "ELECTRICAL")
-                                      ? controller.electricalList[index]
-                                      : controller.nullList[index]));
+            child: SelectCard(
+                choice: (departmentName.value == "Admin")
+                    ? controller.adminList[index]
+                    : (departmentName.value == "Lab")
+                        ? controller.labList[index]
+                        : (departmentName.value == "IT")
+                            ? controller.itList[index]
+                            : (departmentName.value == "GAS")
+                                ? controller.gasList[index]
+                                : (departmentName.value == "ELECTRICAL")
+                                    ? controller.electricalList[index]
+                                    : controller.nullList[index]),
+          );
         }),
       ),
     );

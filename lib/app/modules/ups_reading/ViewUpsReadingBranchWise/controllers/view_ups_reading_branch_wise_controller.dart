@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
-import '../../ViewUpsReading/Model/model_ups_reading.dart';
+
+import '../../ViewUpsReadingDateWise/Model/model_ups_reading.dart';
 import '../../controllers/ups_reading_controller.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,35 +22,16 @@ class ViewUpsReadingBranchWiseController extends GetxController {
 
   final loadOnUpsYController = TextEditingController();
   final loadOnUpsBController = TextEditingController();
-  var selectedBranchId = 0.obs;
+  var selectedBranchId = 1.obs;
   var selectedUpsId = 0.obs;
 
 
 
   @override
   void onInit() {
-    fetchUpsReadingData();
+
+    fetchUpsReadingDataById(branchId: selectedBranchId.value);
     super.onInit();
-  }
-
-  Future<void> fetchUpsReadingData() async {
-    isLoading.value = true;
-    var prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    final response =
-    await http.get(Uri.parse('$apiUrl/view_ups_reading'), headers: {
-      'Authorization': 'Bearer $token',
-    });
-
-    if (response.statusCode == 200) {
-      var json = jsonDecode(response.body);
-      var upsData = ModelUpsReading.fromJson(json);
-      upsReadingDataList.value = upsData.data!;
-      isLoading.value = false;
-    } else {
-      isLoading.value = false;
-      throw Exception('Failed to load branches');
-    }
   }
 
   Future<void> fetchUpsReadingDataById({required int branchId}) async {
@@ -58,7 +39,7 @@ class ViewUpsReadingBranchWiseController extends GetxController {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     final response =
-    await http.get(Uri.parse('$apiUrl/view_ups_reading?branchId=$branchId'), headers: {
+    await http.get(Uri.parse('$apiUrl/view_ups_reading?branch_id=$branchId'), headers: {
       'Authorization': 'Bearer $token',
     });
 
@@ -66,6 +47,7 @@ class ViewUpsReadingBranchWiseController extends GetxController {
       var json = jsonDecode(response.body);
       var upsData = ModelUpsReading.fromJson(json);
       upsReadingDataList.value = upsData.data!;
+
       isLoading.value = false;
     } else {
       isLoading.value = false;
@@ -117,9 +99,9 @@ class ViewUpsReadingBranchWiseController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      showToast(msg: "Updated Successfully");
       Get.back();
-      fetchUpsReadingData();
+      showToast(msg: "Updated Successfully");
+      fetchUpsReadingDataById(branchId: selectedBranchId.value);
 
       isLoading.value = false;
     } else {
@@ -140,7 +122,7 @@ class ViewUpsReadingBranchWiseController extends GetxController {
     if (response.statusCode == 200) {
       showToast(msg: "Updated Successfully");
       Get.back();
-      fetchUpsReadingData();
+      fetchUpsReadingDataById(branchId: selectedBranchId.value);
       isLoading.value = false;
     } else {
       showToastError(msg: "Can't Delete :  ${response.statusCode}");

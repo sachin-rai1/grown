@@ -9,7 +9,7 @@ import '../emp_model.dart';
 
 class LabEmployeeManagementController extends GetxController {
   var selectedBranch = "".obs;
-  var branchId = 0.obs;
+  var branchId = 1.obs;
   var designationDetails = <DesignationCount>[].obs;
 
   var specialSkill = <DesignationCount>[].obs;
@@ -24,7 +24,7 @@ class LabEmployeeManagementController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchBranches();
+    fetchBranches().whenComplete(() => fetchEmployeesByBranchDetails(branchId.value));
   }
   Future<List> fetchBranches() async {
     isLoading.value = true;

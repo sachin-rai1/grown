@@ -27,7 +27,7 @@ class LabEmployeeManagementView
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: RefreshIndicator(
           onRefresh: () {
-            return Future(() => controller.fetchBranches().whenComplete(() => controller.fetchEmployeesByBranchDetails(controller.branchId.value))); },
+            return Future(() => controller.onClose()); },
           child: SingleChildScrollView(
             child:
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -37,6 +37,7 @@ class LabEmployeeManagementView
                   Obx(() => (controller.branchData.isEmpty)
                       ? Container()
                       : TextFormWidget(
+                    dropDownValue: controller.branchData[0]["branch_name"],
                       dropDownWidth: (privilage.value == "Admin" ||
                           privilage.value == "Editor")
                           ? w / 1.5

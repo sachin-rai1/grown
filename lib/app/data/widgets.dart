@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grown/app/modules/home/views/home_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
-import 'package:grown/app/modules/ups_reading/ViewUpsReading/views/view_ups_reading_view.dart';
 import 'package:grown/app/modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
+import 'package:grown/app/modules/ups_reading/ViewUpsReadingDateWise/views/view_ups_reading_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../modules/gas_bank_operator/GasManifold/views/gas_manifold_view.dart';
 import '../modules/gas_bank_operator/GasMonitor/views/gas_monitor_view.dart';
 import '../modules/gas_bank_operator/GasVendor/views/gas_vendor_view.dart';
 import '../modules/gas_bank_operator/Gases/views/gases_view.dart';
 import '../modules/gas_bank_operator/SearchBySerialNo/views/search_by_serial_no_view.dart';
-import '../modules/login/views/login_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
 
 class Choice {
@@ -39,42 +37,35 @@ class SelectCard extends StatelessWidget {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: h / 5,
-      width: w / 3,
+      height: h / 4,
+      width: w / 2,
       child: GestureDetector(
         onTap: choice.onTap,
-        child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), //<-- SEE HERE
-            ),
-            elevation: 10,
-            color: const Color(0xFFF6F6F6),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  (choice.image == null)
-                      ? Icon(
-                          choice.iconData,
-                          size: w * 0.15,
-                        )
-                      : Image.asset(
-                          choice.image!,
-                          height: 70,
-                          width: 25,
-                        ),
-                  // Icon(choice.icon, size: 26, color: const Color(0xFF716259)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(choice.title,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: const Color(0xFF6EB7A1),
-                        )),
-                  )
-                ])),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              (choice.image == null)
+                  ? Icon(
+                      choice.iconData,
+                      size: w * 0.15,
+                    )
+                  : Image.asset(
+                      choice.image!,
+                      height: h * 0.12,
+                    ),
+              // Icon(choice.icon, size: 26, color: const Color(0xFF716259)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(choice.title,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: const Color(0xFF6EB7A1),
+                    )),
+              )
+            ]),
       ),
     );
   }
@@ -218,7 +209,7 @@ class MyCard extends StatelessWidget {
 
 class MlgdTextFormWidget extends StatelessWidget {
   const MlgdTextFormWidget(
-      {Key? key, required this.controller, required this.title, this.onChanged, this.validator, this.autofocus, this.keyboardType, this.maxWidth})
+      {Key? key, required this.controller, required this.title, this.onChanged, this.validator, this.autofocus, this.keyboardType, this.maxWidth, this.readOnly})
       : super(key: key);
   final TextEditingController controller;
   final String title;
@@ -227,6 +218,7 @@ class MlgdTextFormWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? autofocus;
   final double? maxWidth;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -235,6 +227,7 @@ class MlgdTextFormWidget extends StatelessWidget {
       children: [
         Text(title),
         TextFormField(
+          readOnly: readOnly ?? false,
           autofocus: autofocus ?? false,
           validator: validator,
           onChanged: onChanged,
@@ -374,7 +367,7 @@ class UpsReadingTabBar extends StatelessWidget {
               ),
               body:  TabBarView(
                 children: [
-                  ViewUpsReadingView(),
+                  ViewUpsReadingDateWiseView(),
                   ViewUpsReadingBranchWiseView()
 
                 ],
@@ -384,17 +377,26 @@ class UpsReadingTabBar extends StatelessWidget {
 }
 
 class MyBottomNavigation extends StatelessWidget {
-  MyBottomNavigation({Key? key}) : super(key: key);
+  MyBottomNavigation({Key? key, required this.title1, required this.title2, required this.title3, required this.title4, required this.screens, required this.iconData1, required this.iconData2, required this.iconData3, required this.iconData4}) : super(key: key);
   final RxInt selected = 1.obs;
   final _controller = PersistentTabController(initialIndex: 0,);
+  final String title1;
+  final String title2;
+  final String title3;
+  final String title4;
+  final IconData iconData1;
+  final IconData iconData2;
+  final IconData iconData3;
+  final IconData iconData4;
+  final List<Widget> screens;
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        title: "Gas Monitor",
+        title: title1,
         textStyle: const TextStyle(fontSize: 16 ),
         iconSize: 25,
-        icon: const Icon(Icons.monitor , size: 30,),
+        icon: Icon(iconData1 , size: 30),
         activeColorPrimary: Colors.purpleAccent,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.grey,
@@ -402,9 +404,9 @@ class MyBottomNavigation extends StatelessWidget {
       ),
       PersistentBottomNavBarItem(
         iconSize: 25,
-        title: "Gases",
+        title: title2,
         textStyle: const TextStyle(fontSize: 16 ),
-        icon:const Icon(Icons.gas_meter , size: 30),
+        icon:Icon(iconData2 ,size: 30,),
         activeColorPrimary: Colors.redAccent,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.grey,
@@ -414,8 +416,8 @@ class MyBottomNavigation extends StatelessWidget {
       PersistentBottomNavBarItem(
         textStyle: const TextStyle(fontSize: 16 ),
         iconSize: 25,
-        title: "Gas Manifold",
-        icon: const Icon(Icons.gas_meter_sharp, size: 30,),
+        title: title3,
+        icon: Icon(iconData3 , size: 30),
         activeColorPrimary: Colors.teal,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.grey,
@@ -423,9 +425,9 @@ class MyBottomNavigation extends StatelessWidget {
       ),
       PersistentBottomNavBarItem(
         textStyle: const TextStyle(fontSize: 16 ),
-        title: "Gas Vendor",
+        title: title4,
         iconSize: 25,
-        icon: const Icon(Icons.person , size: 30,),
+        icon: Icon(iconData4 , size: 30),
         activeColorPrimary: Colors.green,
         inactiveColorPrimary: Colors.grey,
         inactiveColorSecondary: Colors.grey,
@@ -435,12 +437,7 @@ class MyBottomNavigation extends StatelessWidget {
   }
 
   List<Widget> _buildScreens() {
-    return [
-      GasMonitorView(),
-      GasesView(),
-      GasManifoldView(),
-      GasVendorView(),
-    ];
+    return screens;
   }
 
   @override

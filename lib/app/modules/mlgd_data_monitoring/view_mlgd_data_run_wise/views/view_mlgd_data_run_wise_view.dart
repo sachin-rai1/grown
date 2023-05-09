@@ -10,152 +10,172 @@ class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {
   final viewMlgdDataRunWiseController = Get.put(ViewMlgdDataRunWiseController());
   @override
   Widget build(BuildContext context) {
-
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Run No : "),
-                      TextFormField(
-                        controller:controller.runController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            hintText: "Enter Run No",
-                            contentPadding: const EdgeInsets.only(left: 10),
-                            constraints: BoxConstraints(maxHeight: 40, maxWidth: w / 2),
-                            border: const OutlineInputBorder()),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          controller.getData(controller.runController.text);
-
-                        },
-                        label: const Text("Search"),
-                        icon: const Icon(Icons.search),
-                      ),
-                    ],
-                  ),
+        body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Run No : " ,style: TextStyle(fontSize: 18 ,fontWeight: FontWeight.w600),),
+                    TextFormField(
+                      controller:controller.runController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Enter Run No",
+                          contentPadding: const EdgeInsets.only(left: 10),
+                          constraints: BoxConstraints(maxHeight: 40, maxWidth: w / 2),
+                          border: const OutlineInputBorder()),
+                    ),
+                    IconButton(onPressed:() {
+                      controller.getData(controller.runController.text);
+                    }, icon: const Icon(Icons.search),
+                      color: Colors.teal,
+                    iconSize: w * 0.1,)
+                  ],
                 ),
-                Obx(
-                      () => (controller.data.isEmpty)
-                      ?  SizedBox(
-                      height: Get.mediaQuery.size.height /1.5,
-                      child: const Center(child: Text("Please Enter Valid Run No" , style: TextStyle(fontSize: 16 , fontWeight: FontWeight.w500),)))
+              ),
+
+              Expanded(
+                child: Obx(
+                      () =>(controller.isLoading.value == true)?const Center(child: CircularProgressIndicator()): (controller.mlgdDataList.isEmpty == true)
+                      ?  Center(
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: MediaQuery.of(context).size.height/1.5,
+                          child: const Text("No Data Found" , style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w500),)))
                       : ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: controller.data.length,
-                      itemBuilder: (BuildContext context, index) {
-                        dynamic cleanPer = controller.data[index]["cleanPcsNo"] / controller.data[index]["totalPcsNo"] * 100;
-                        return (controller.runController.text.isEmpty)
-                            ? Container():
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          child: Card(
-                            color: Colors.pink.shade50,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  MyTextWidget(
-                                    title:
-                                    "Date : " ,
-                                    body: controller.data[index]["created_on"],
-                                  ),
-                                  Container(
-                                      width:
-                                      MediaQuery.of(context).size.width,
-                                      height: 1,
-                                      color: Colors.grey.withOpacity(0.5)),
-                                  MyTextWidget(title: "Run No : " , body: controller.data[index]["runNo"].toString(),),
-                                  MyTextWidget(title: "Clean % : " , body: " ${num.parse(cleanPer.toString()).toStringAsFixed(2)} %",),
-                                  MyTextWidget(title: "Holder Size : " , body: controller.data[index]["holderSize"].toString(),),
-                                  MyTextWidget(title: "Running Hours : " , body: controller.data[index]["runningHours"].toString(),),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                        physics: const BouncingScrollPhysics(),
+                          itemCount: controller.mlgdDataList.length,
+                          itemBuilder: (BuildContext context, index) {
+                            dynamic cleanPer = controller.mlgdDataList[index].cleanPcsNo! / controller.mlgdDataList[index].totalPcsNo! * 100;
+                            var topView = controller.mlgdDataList[index].topView;
+                            var frontView = controller.mlgdDataList[index].frontView;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5),
+                              child: Card(
+                                color: Colors.pink.shade50,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      MyTextWidget(isLines: false, title: "X : " , body: controller.data[index]["x"].toString(),),
-                                      MyTextWidget(isLines: false, title: "Y : " , body: controller.data[index]["y"].toString(),),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      MyTextWidget(isLines: false, title: "Z : " , body: controller.data[index]["z"].toString(),),
-                                      MyTextWidget(isLines: false, title: "T : " , body: controller.data[index]["t"].toString(),),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(bottom: 10),
-                                    child: Container(
-                                        width:
-                                        MediaQuery.of(context).size.width,
-                                        height: 1,
-                                        color: Colors.grey.withOpacity(0.5)),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children:  [
+                                            InkWell(onTap: (){
+                                              updateMlgdData(context: context,
+                                                  mlgdId: controller.mlgdDataList[index].mlgdId!,
+                                                  b: controller.mlgdDataList[index].breakagePcs!,
+                                                  c: controller.mlgdDataList[index].cleanPcsNo!,
+                                                  d: controller.mlgdDataList[index].dotPcs!,
+                                                  i: controller.mlgdDataList[index].inclusionPcs!,
+                                                  x: controller.mlgdDataList[index].x!,
+                                                  y: controller.mlgdDataList[index].y!,
+                                                  z: controller.mlgdDataList[index].z!,
+                                                  t: controller.mlgdDataList[index].t!
+                                              );
+                                            }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
+                                            const SizedBox(width: 20,),
+                                            InkWell(onTap: (){
+                                              deleteMlgdData(context: context, mlgdId: controller.mlgdDataList[index].mlgdId!,);
+                                            }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
+                                          ],
+                                        ),
+                                      ),
+                                      MyTextWidget(
+                                        title: "Date : " , body: controller.mlgdDataList[index].createdOn.toString(),
+                                      ),
+                                      Container(
+                                          width:
+                                          MediaQuery.of(context).size.width,
+                                          height: 1,
+                                          color: Colors.grey.withOpacity(0.5)),
+                                      MyTextWidget(title: "Run No : " , body: controller.mlgdDataList[index].runNo.toString(),),
+                                      MyTextWidget(title: "Clean % : " , body: " ${num.parse(cleanPer.toString()).toStringAsFixed(2)} %",),
+                                      MyTextWidget(title: "Holder Size : " , body: controller.mlgdDataList[index].holderSize.toString(),),
+                                      MyTextWidget(title: "Running Hours : " , body: controller.mlgdDataList[index].runningHours.toString(),),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text("Front View "),
-                                          GestureDetector(
-                                            onTap: (){
-                                              enlargeImage(context , controller.data[index]["frontView"]);
-                                              FocusScope.of(context).unfocus();
-                                            },
-                                            child: Image.network(
-                                              controller.data[index]["frontView"],
-                                              height: 100,
-                                              width: 100,
-                                            ),
+                                          MyTextWidget(isLines: false, title: "X : " , body: controller.mlgdDataList[index].x.toString(),),
+                                          MyTextWidget(isLines: false, title: "Y : " , body: controller.mlgdDataList[index].y.toString(),),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          MyTextWidget(isLines: false, title: "Z : " , body: controller.mlgdDataList[index].z.toString(),),
+                                          MyTextWidget(isLines: false, title: "T : " , body: controller.mlgdDataList[index].t.toString(),),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 10),
+                                        child: Container(
+                                            width:
+                                            MediaQuery.of(context).size.width,
+                                            height: 1,
+                                            color: Colors.grey.withOpacity(0.5)),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              const Text("Front View "),
+                                              GestureDetector(
+                                                onTap: (){
+                                                  enlargeImage(frontView, context);
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                                child: Image.network(
+                                                  frontView!,
+                                                  height: 100,
+                                                  width: 100,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              const Text("Top View"),
+                                              GestureDetector(
+                                                onTap: (){
+                                                  enlargeImage(topView, context);
+                                                  FocusScope.of(context).unfocus();
+
+                                                },
+                                                child: Image.network(
+                                                  topView!,
+                                                  height: 100,
+                                                  width: 100,
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Column(
-                                        children: [
-                                          const Text("Top View"),
-                                          GestureDetector(
-                                            onTap: (){
-                                              enlargeImage(context , controller.data[index]["topView"]);
-                                              FocusScope.of(context).unfocus();
-                                            },
-                                            child: Image.network(
-                                              controller.data[index]["topView"],
-                                              height: 100,
-                                              width: 100,
-                                            ),
-                                          )
-                                        ],
-                                      ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-
-                      }),
+                            );
+                          }),
                 ),
-              ]),
-        ));
+              ),
+            ]));
   }
-  void enlargeImage(BuildContext context, data) {
+  void enlargeImage(data,BuildContext context) {
     AlertDialog alertDialog = AlertDialog(
       content: Image.network(data),
     );
@@ -163,4 +183,173 @@ class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {
       return alertDialog;
     });
   }
+
+  void updateMlgdData({required BuildContext context ,required int mlgdId, required int b , required int c ,required int d ,required int i ,required int x ,required int y ,required int z ,required int t}){
+
+   controller.cleanPcsController.text = c.toString();
+   controller.breakagePcsController.text =b.toString();
+   controller.dotPcsController.text = d.toString();
+   controller.inclusionPcsController.text =i.toString();
+   controller.xController.text = x.toString();
+   controller.yController.text = y.toString();
+   controller.zController.text = z.toString();
+   controller.tController.text = t.toString();
+
+
+    AlertDialog alertDialog = AlertDialog(
+      actions: [
+        ElevatedButton(
+          onPressed: ()=>Get.back(),
+          style: ElevatedButton.styleFrom(
+
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+          child: const Text("Cancel"),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (controller.formKey.currentState!
+                .validate()) {
+              controller.updateMlgdData(mlgdId: mlgdId);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))),
+          child: const Text("Submit"),
+        ),
+
+      ],
+      content: Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children:  [
+              MlgdTextFormWidget(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Clean Pcs';
+                  }
+                  return null;
+                },
+                controller: controller.cleanPcsController,
+                title: "Clean Pcs",
+              ),
+              MlgdTextFormWidget(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Breakage Pcs';
+                  }
+                  return null;
+                },
+                controller: controller.breakagePcsController,
+                title: "Breakage Pcs",
+              ),
+              MlgdTextFormWidget(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Dot Pcs';
+                  }
+                  return null;
+                },
+                controller: controller.dotPcsController,
+                title: "Dot Pcs",
+              ),
+              MlgdTextFormWidget(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Inclusion Pcs';
+                  }
+                  return null;
+                },
+                controller: controller.inclusionPcsController,
+                title: "Inclusion Pcs",
+                // onChanged: (xyz) {
+                //   checkSum();
+                // },
+              ),
+              MlgdTextFormWidget(
+                controller: controller.xController,
+                title: "X",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter X';
+                  }
+                  return null;
+                },
+              ),
+              MlgdTextFormWidget(
+                controller: controller.yController,
+                title: "Y",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Y';
+                  }
+                  return null;
+                },
+              ),
+              MlgdTextFormWidget(
+                controller: controller.zController,
+                title: "Z",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Z';
+                  }
+                  return null;
+                },
+              ),
+              MlgdTextFormWidget(
+                controller: controller.tController,
+                title: "T",
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter T';
+                  }
+                  return null;
+                },
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(context: context, builder: (context){
+      return alertDialog;
+    });
+  }
+   void deleteMlgdData({required BuildContext context , required int mlgdId}){
+     AlertDialog alertDialog =  AlertDialog(
+       actions: [
+         ElevatedButton(
+           onPressed: ()=>Get.back(),
+           style: ElevatedButton.styleFrom(
+
+               backgroundColor: Colors.redAccent,
+               shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(10))),
+           child: const Text("Cancel"),
+         ),
+         ElevatedButton(
+           onPressed: () {
+               controller.deleteMlgdData(mlgdId: mlgdId);
+
+           },
+           style: ElevatedButton.styleFrom(
+               backgroundColor: Colors.green.shade600,
+               shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(10))),
+           child: const Text("Submit"),
+         ),
+       ],
+       content: const Text("Are You Sure Want to Delete ?"),
+     );
+     showDialog(context: context, builder: (context){
+       return alertDialog;
+     });
+   }
+
 }

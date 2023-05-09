@@ -40,16 +40,20 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/bindings/mlgd_bottom_navigation_binding.dart';
+import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/views/mlgd_bottom_navigation_view.dart';
+import '../modules/mlgd_data_monitoring/RunNoData/bindings/run_no_data_binding.dart';
+import '../modules/mlgd_data_monitoring/RunNoData/views/run_no_data_view.dart';
 import '../modules/mlgd_data_monitoring/bindings/mlgd_data_monitoring_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/bindings/view_mlgd_data_date_wise_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
 import '../modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
-import '../modules/ups_reading/ViewUpsReading/bindings/view_ups_reading_binding.dart';
-import '../modules/ups_reading/ViewUpsReading/views/view_ups_reading_view.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/bindings/view_ups_reading_branch_wise_binding.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
+import '../modules/ups_reading/ViewUpsReadingDateWise/bindings/view_ups_reading_binding.dart';
+import '../modules/ups_reading/ViewUpsReadingDateWise/views/view_ups_reading_view.dart';
 import '../modules/ups_reading/bindings/ups_reading_binding.dart';
 import '../modules/ups_reading/upsData/bindings/ups_data_binding.dart';
 import '../modules/ups_reading/upsData/views/ups_data_view.dart';
@@ -137,6 +141,16 @@ class AppPages {
           page: () => ViewMlgdDataRunWiseView(),
           binding: ViewMlgdDataRunWiseBinding(),
         ),
+        GetPage(
+          name: _Paths.RUN_NO_DATA,
+          page: () =>  RunNoDataView(),
+          binding: RunNoDataBinding(),
+        ),
+        GetPage(
+          name: _Paths.MLGD_BOTTOM_NAVIGATION,
+          page: () => const MlgdBottomNavigationView(),
+          binding: MlgdBottomNavigationBinding(),
+        ),
       ],
     ),
     GetPage(
@@ -183,12 +197,12 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.VIEW_UPS_READING,
-          page: () => ViewUpsReadingView(),
+          page: () => ViewUpsReadingDateWiseView(),
           binding: ViewUpsReadingBinding(),
         ),
         GetPage(
           name: _Paths.VIEW_UPS_READING_BRANCH_WISE,
-          page: () =>  ViewUpsReadingBranchWiseView(),
+          page: () => ViewUpsReadingBranchWiseView(),
           binding: ViewUpsReadingBranchWiseBinding(),
         ),
       ],

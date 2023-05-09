@@ -103,7 +103,6 @@ class BcdiDetectionController extends GetxController {
 
       if (response.statusCode == 200) {
           var json = jsonDecode(response.body);
-
           var xyz = ModelBcdiDetection.fromJson(json);
           imageString.value = xyz.image!;
           classData.value = xyz.modelBcdiDetectionClass!;

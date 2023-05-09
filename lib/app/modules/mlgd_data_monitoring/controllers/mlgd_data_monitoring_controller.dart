@@ -1,12 +1,13 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grown/app/modules/mlgd_data_monitoring/Model/model_run_no.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
@@ -46,6 +47,11 @@ class MlgdDataMonitoringController extends GetxController {
   Rx<File?> resizedFrontImageFile = Rx<File?>(null);
   Rx<File?> resizedTopImageFile = Rx<File?>(null);
   CroppedFile? croppedFile;
+
+  var runNoDataList = <RunNoData>[].obs;
+  var isLoading = false.obs;
+  var readOnly = true.obs;
+
   void checkSum() {
     total = int.tryParse(cleanPcsController.text) ?? 0;
     total += int.tryParse(breakagePcsController.text) ?? 0;
@@ -91,7 +97,6 @@ class MlgdDataMonitoringController extends GetxController {
   }
 
   void clearData() {
-    runNoController.clear();
     runningHoursController.clear();
     totalPcsNoController.clear();
     totalPcsAreaController.clear();
@@ -114,54 +119,65 @@ class MlgdDataMonitoringController extends GetxController {
 
   }
 
+  void fillTextBox(){
+    totalPcsNoController.text = runNoDataList[0].totalPcsNo.toString();
+    totalPcsAreaController.text = runNoDataList[0].totalPcsArea.toString();
+    bigPcsNoController.text = runNoDataList[0].bigPcsNo.toString();
+    regularPcsNumberController.text = runNoDataList[0].regularPcsNo.toString();
+    size.value = runNoDataList[0].holderSize.toString();
+  }
+
   Future<void> postData(File frontImage, File topImage) async {
-    loading.value = true;
-    final prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    var uploadUrl = '$apiUrl/add_mlgd_data';
-    var uri = Uri.parse(uploadUrl);
-    var request = http.MultipartRequest("POST", uri);
-    request.headers.addAll({'Authorization': 'Bearer $token'});
-    request.files.add(await http.MultipartFile.fromPath('frontView', frontImage.path, filename: (frontImage.path)));
-    request.files.add(await http.MultipartFile.fromPath('topView', topImage.path, filename: (topImage.path)));
-    request.fields["runNo"] = runNoController.text.toString();
-    request.fields["runningHours"] = runningHoursController.text.toString();
-    request.fields["holderSize"] = size.value;
-    request.fields["totalPcsNo"] = totalPcsNoController.text.toString();
-    request.fields["totalPcsArea"] = totalPcsAreaController.text.toString();
-    request.fields["bigPcsNo"] = bigPcsNoController.text.toString();
-    request.fields["regularPcsNo"] = regularPcsNumberController.text.toString();
-    request.fields["cleanPcsNo"] = cleanPcsController.text.toString();
-    request.fields["breakagePcs"] = breakagePcsController.text.toString();
-    request.fields["dotPcs"] = dotPcsController.text.toString();
-    request.fields["inclusionPcs"] = inclusionPcsController.text.toString();
-    request.fields["x"] = xController.text.toString();
-    request.fields["y"] = yController.text.toString();
-    request.fields["z"] = zController.text.toString();
-    request.fields["t"] = tController.text.toString();
-    request.fields["operatorName"] = operatorNameController.text.toString();
-    // Send the request
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      Get.showSnackbar(const GetSnackBar(
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green,
-        title: "Success",
-        message: "Data Inserted Successfully",
-        duration: Duration(seconds: 2),
-      ));
-      clearData();
-      loading.value = false;
-    } else {
-      print(response.stream);
-      loading.value = false;
-      Get.showSnackbar(GetSnackBar(
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        title: "Error : ${response.statusCode}",
-        message: "error",
-        duration: const Duration(seconds: 2),
-      ));
+    try {
+      loading.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var uploadUrl = '$apiUrl/add_mlgd_data';
+      var uri = Uri.parse(uploadUrl);
+      var request = http.MultipartRequest("POST", uri);
+      request.headers.addAll({'Authorization': 'Bearer $token'});
+      request.files.add(await http.MultipartFile.fromPath(
+          'frontView', frontImage.path, filename: (frontImage.path)));
+      request.files.add(await http.MultipartFile.fromPath(
+          'topView', topImage.path, filename: (topImage.path)));
+
+      request.fields["mlgd_run_no"] = runNoController.text.toString();
+      request.fields["runningHours"] = runningHoursController.text;
+      request.fields["cleanPcsNo"] = cleanPcsController.text.toString();
+      request.fields["breakagePcs"] = breakagePcsController.text.toString();
+      request.fields["dotPcs"] = dotPcsController.text.toString();
+      request.fields["inclusionPcs"] = inclusionPcsController.text.toString();
+      request.fields["x"] = xController.text.toString();
+      request.fields["y"] = yController.text.toString();
+      request.fields["z"] = zController.text.toString();
+      request.fields["t"] = tController.text.toString();
+      request.fields["operatorName"] = operatorNameController.text.toString();
+      // Send the request
+      var response = await http.Response.fromStream(await request.send());
+      if (response.statusCode == 200) {
+        Get.showSnackbar(const GetSnackBar(
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          title: "Success",
+          message: "Data Inserted Successfully",
+          duration: Duration(seconds: 2),
+        ));
+        runNoController.clear();
+        clearData();
+        loading.value = false;
+      } else {
+        loading.value = false;
+        Get.showSnackbar(GetSnackBar(
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          title: "Error : ${response.statusCode}",
+          message: "error",
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    }
+    catch(e){
+      log(e.toString());
     }
   }
 
@@ -249,8 +265,8 @@ class MlgdDataMonitoringController extends GetxController {
     // bytes1 = await _image?.readAsBytes();
     // print(bytes1);
       _image = File(image!.path);
-      _cropFrontImage(_image!);
-
+     var abc= await _cropFrontImage(_image!);
+    resizedFrontImageFile.value = abc;
 
   }
 
@@ -261,6 +277,36 @@ class MlgdDataMonitoringController extends GetxController {
     _image = File(image!.path);
     var abc = await _cropFrontImage(_image!);
     resizedFrontImageFile.value = abc;
+  }
+
+  Future<void> searchRunNoData({required int runNo}) async {
+    try{
+      clearData();
+      isLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var response = await http.get(Uri.parse("$apiUrl/view_run_no?run_id=$runNo") , headers: {
+        'Authorization':'Bearer $token'
+      });
+      if(response.statusCode == 200){
+        var json = jsonDecode(response.body);
+        var data = ModelRunNoData.fromJson(json);
+        runNoDataList.value = data.data ?? [];
+        fillTextBox();
+        readOnly.value = false;
+        isLoading.value = false;
+      }
+      else{
+        // showToastError(msg: "No Data Found");
+      }
+    }
+    catch(e){
+      // showToastError(msg: "No Data Found");
+      isLoading.value = false;
+    }
+    finally{
+      isLoading.value = false;
+    }
   }
 
 }

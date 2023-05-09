@@ -45,6 +45,13 @@ abstract class Routes {
   static const VIEW_UPS_READING = _Paths.UPS_READING + _Paths.VIEW_UPS_READING;
   static const VIEW_UPS_READING_BRANCH_WISE =
       _Paths.UPS_READING + _Paths.VIEW_UPS_READING_BRANCH_WISE;
+  static const RUN_NO_DATA = _Paths.MLGD_DATA_MONITORING + _Paths.RUN_NO_DATA;
+  static const BOTTOM_NAVIGATION =
+      _Paths.MLGD_DATA_MONITORING + _Paths.BOTTOM_NAVIGATION;
+  static const MLGS_BOTTOM_NAVIGATION =
+      _Paths.MLGD_DATA_MONITORING + _Paths.MLGS_BOTTOM_NAVIGATION;
+  static const MLGD_BOTTOM_NAVIGATION =
+      _Paths.MLGD_DATA_MONITORING + _Paths.MLGD_BOTTOM_NAVIGATION;
 }
 
 abstract class _Paths {
@@ -79,4 +86,8 @@ abstract class _Paths {
   static const UPS_DATA = '/ups-data';
   static const VIEW_UPS_READING = '/view-ups-reading';
   static const VIEW_UPS_READING_BRANCH_WISE = '/view-ups-reading-branch-wise';
+  static const RUN_NO_DATA = '/run-no-data';
+  static const BOTTOM_NAVIGATION = '/bottom-navigation';
+  static const MLGS_BOTTOM_NAVIGATION = '/mlgs-bottom-navigation';
+  static const MLGD_BOTTOM_NAVIGATION = '/mlgd-bottom-navigation';
 }

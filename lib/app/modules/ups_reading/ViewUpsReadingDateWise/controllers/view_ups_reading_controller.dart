@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/modules/ups_reading/ViewUpsReading/Model/model_ups_reading.dart';
 import 'package:grown/app/modules/ups_reading/controllers/ups_reading_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../data/constants.dart';
+import '../Model/model_ups_reading.dart';
 
-class ViewUpsReadingController extends GetxController {
+class ViewUpsReadingDateWiseController extends GetxController {
   var isLoading = false.obs;
   var upsReadingDataList = <UpsReadingData>[].obs;
   var instance = Get.put(UpsReadingController());
@@ -18,24 +19,34 @@ class ViewUpsReadingController extends GetxController {
   final ledStatus = "".obs;
   final positiveVoltageController = TextEditingController();
   final negativeVoltageController = TextEditingController();
-
-    final loadOnUpsYController = TextEditingController();
-    final loadOnUpsBController = TextEditingController();
+  final loadOnUpsYController = TextEditingController();
+  final loadOnUpsBController = TextEditingController();
   var selectedBranchId = 0.obs;
   var selectedUpsId = 0.obs;
 
+  Rx<String> selectedDate = DateTime.now().toString().obs;
+  dynamic formatted;
+
+
   @override
   void onInit() {
-    fetchUpsReadingData();
+    var date = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    formatted = formatter.format(date);
+    fetchUpsReadingDataDateWise(formatted);
     super.onInit();
   }
 
-  Future<void> fetchUpsReadingData() async {
+  void clearData(){
+
+  }
+
+  Future<void> fetchUpsReadingDataDateWise(createdOn) async {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     final response =
-        await http.get(Uri.parse('$apiUrl/view_ups_reading'), headers: {
+    await http.get(Uri.parse('$apiUrl/view_ups_reading?created_on=$createdOn'), headers: {
       'Authorization': 'Bearer $token',
     });
 
@@ -83,7 +94,7 @@ class ViewUpsReadingController extends GetxController {
     if (response.statusCode == 200) {
       showToast(msg: "Updated Successfully");
       Get.back();
-      fetchUpsReadingData();
+      fetchUpsReadingDataDateWise(formatted);
 
       isLoading.value = false;
     } else {
@@ -103,7 +114,7 @@ class ViewUpsReadingController extends GetxController {
     if (response.statusCode == 200) {
       showToast(msg: "Updated Successfully");
       Get.back();
-      fetchUpsReadingData();
+      fetchUpsReadingDataDateWise(formatted);
       isLoading.value = false;
     } else {
       showToastError(msg: "Can't Delete :  ${response.statusCode}");

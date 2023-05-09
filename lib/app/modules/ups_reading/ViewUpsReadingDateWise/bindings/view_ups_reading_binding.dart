@@ -5,8 +5,8 @@ import '../controllers/view_ups_reading_controller.dart';
 class ViewUpsReadingBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ViewUpsReadingController>(
-      () => ViewUpsReadingController(),
+    Get.lazyPut<ViewUpsReadingDateWiseController>(
+      () => ViewUpsReadingDateWiseController(),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/modules/ups_reading/ViewUpsReading/views/view_ups_reading_view.dart';
 import 'package:grown/app/modules/ups_reading/upsData/views/ups_data_view.dart';
 import '../../../data/constants.dart';
 import '../../../data/widgets.dart';

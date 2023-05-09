@@ -1,10 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../../data/widgets.dart';
 import '../controllers/mlgd_data_monitoring_controller.dart';
 
@@ -17,7 +14,13 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(onTap:()=>Get.back(), child: const Icon(Icons.home_rounded , size: 30,color: Colors.black,)),
+        leading: InkWell(
+            onTap: () => Get.back(),
+            child: const Icon(
+              Icons.home_rounded,
+              size: 30,
+              color: Colors.black,
+            )),
         elevation: 0,
         backgroundColor: Colors.blue.withOpacity(0.5),
         title: const Text(
@@ -43,6 +46,9 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             MlgdTextFormWidget(
+                              onChanged: (data){
+                                controller.searchRunNoData(runNo:int.parse(controller.runNoController.text));
+                              },
                               maxWidth: width / 1.8,
                               controller: controller.runNoController,
                               title: "Run No.",
@@ -54,7 +60,9 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                               },
                             ),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                controller.searchRunNoData(runNo:int.parse(controller.runNoController.text));
+                              },
                               color: Colors.white,
                               shape: const CircleBorder(
                                 eccentricity: 0.1,
@@ -154,6 +162,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                           height: 20,
                         ),
                         MlgdTextFormWidget(
+                          readOnly: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter Total Pcs No';
@@ -164,6 +173,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                           title: "Total Pcs No.",
                         ),
                         MlgdTextFormWidget(
+                            readOnly: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter Total Pcs Area (in Sq. mm)';
@@ -173,6 +183,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                             controller: controller.totalPcsAreaController,
                             title: "Total Pcs Area (in Sq. mm)"),
                         MlgdTextFormWidget(
+                            readOnly: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter Big Pcs No.';
@@ -182,6 +193,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                             controller: controller.bigPcsNoController,
                             title: "Big Pcs No."),
                         MlgdTextFormWidget(
+                            readOnly: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter Regular Pcs Number';
@@ -430,33 +442,27 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                if (controller.formKey.currentState!
-                                    .validate()) {
-                                  controller.checkSum();
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.purple.shade600,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              child: const Text("Submit"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                getPass(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.purple.shade600,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              child: const Text("View data"),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (controller.formKey.currentState!
+                                      .validate()) {
+                                    controller.checkSum();
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(width * 0.6, 15),
+                                    backgroundColor: Colors.purple.shade600,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10))),
+                                child: const Text("Submit"),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -465,85 +471,5 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
         ),
       ),
     );
-  }
-
-  void getPass(BuildContext context) {
-    bool isObscure = true;
-    AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      contentPadding: const EdgeInsets.all(10),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: controller.passController,
-            obscureText: isObscure,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-                suffixIcon: InkWell(
-                    onTap: () {
-                      isObscure = !isObscure;
-                    },
-                    child: (isObscure == false)
-                        ? const Icon(
-                            Icons.remove_red_eye,
-                            color: Colors.black,
-                          )
-                        : const Icon(
-                            CupertinoIcons.eye_slash,
-                            color: Colors.black,
-                          )),
-                constraints: const BoxConstraints(maxHeight: 40),
-                contentPadding: const EdgeInsets.only(left: 10),
-                hintText: "Enter Password",
-                hintStyle: const TextStyle(color: Colors.black),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: const BorderSide(color: Colors.black)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                )),
-          ),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15))),
-            onPressed: () {
-              login();
-            },
-            label: const Text("login"),
-            icon: const Icon(Icons.login),
-          ),
-        ],
-      ),
-    );
-    showDialog(
-        context: context,
-        builder: (context) {
-          return alert;
-        });
-  }
-
-  void login() {
-    if (controller.passController.text == "M@!Tr!") {
-      Get.to(() => const MlgdTabBar());
-      controller.passController.clear();
-    } else if (controller.passController.text == "") {
-      Get.showSnackbar(const GetSnackBar(
-        snackPosition: SnackPosition.TOP,
-        title: "Enter password",
-        message: "password should not empty",
-        duration: Duration(milliseconds: 1500),
-      ));
-    } else {
-      Get.showSnackbar(const GetSnackBar(
-        snackPosition: SnackPosition.TOP,
-        title: "Invalid Credential",
-        message: "Incorrect Password",
-        duration: Duration(milliseconds: 1500),
-      ));
-    }
   }
 }

@@ -18,8 +18,8 @@ class GasMonitorView extends GetView<GasMonitorController> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      drawer: const MyDrawer(),
       appBar: AppBar(
+        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.home_filled),iconSize: 35,),
         elevation: 0,
         title: const Text('GasMonitorView'),
         actions: [
@@ -39,7 +39,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
         child: RefreshIndicator(
           onRefresh: () {
             return Future(
-                    () => controller.fetchBranches().whenComplete(() =>controller.fetchGases().whenComplete(() =>controller.fetchVendor().whenComplete(() => controller.fetchManifold().whenComplete(() => controller.getGasStatus()))))
+                    () => controller.onInit()
             );
           },
           child: SingleChildScrollView(
@@ -47,10 +47,11 @@ class GasMonitorView extends GetView<GasMonitorController> {
             child: Obx(()=>
                 Column(
                   children: [
-                    dropDowns(context),
-
+                     dropDowns(context),
                     if (controller.isLoading.value == true)
-                      const Center(child: CircularProgressIndicator())
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2.5,
+                          child: const Center(child: CircularProgressIndicator()))
                     else
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -72,88 +73,94 @@ class GasMonitorView extends GetView<GasMonitorController> {
   }
    dropDowns(BuildContext context) {
      var w = MediaQuery.of(context).size.width;
-     return Column(children: [
-       Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+     return Obx(()=>
+     (controller.isDropDownLoading.value)?SizedBox(width:MediaQuery.of(context).size.width / 2, child: const Center(child: CircularProgressIndicator())):
+        Column(
          children: [
-           Obx(
-                 () => TextFormWidget(
-               dropDown: true,
-               titleText: "Select Branch",
-               dropDownOnChanged: (value) {
-                 log(value.toString());
-               },
-               dropDownWidth: w / 1.5,
-               dropDownItems: controller.branchDataList.map((branch) {
-                 return DropdownMenuItem<String>(
-                     value: branch["branch_name"],
-                     onTap: () {
-                       controller.selectedBranchId.value =
-                       branch["branch_id"];
-                       controller.fetchGasMonitorData(
-                           controller.selectedBranchId.value,
-                           controller.selectedGasId.value);
-                     },
-                     child: Text(branch["branch_name"]));
-               }).toList(),
-             ),
-           ),
-           Padding(
-             padding: const EdgeInsets.only(top: 15),
-             child: MaterialButton(
-               onPressed: () {
-                 Get.to(() => BranchDataView());
-               },
-               shape: const CircleBorder(),
-               child: const Icon(
-                 Icons.add_circle,
-                 size: 50,
-                 color: Colors.purple,
-               ),
-             ),
-           ),
-         ],
-       ),
-       Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-         children: [
-           Obx(
-                 () => TextFormWidget(
-                 dropDownOnChanged: (value) {},
-                 dropDownItems: controller.gasDataList.map((gases) {
-                   return DropdownMenuItem<String>(
-                     onTap: () {
-                       controller.selectedGasId.value =
-                       gases["gases_id"];
-                       controller.fetchGasMonitorData(
-                           controller.selectedBranchId.value,
-                           controller.selectedGasId.value);
-                     },
-                     value: gases["gases_name"],
-                     child: Text(gases["gases_name"]),
-                   );
-                 }).toList(),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Obx(
+                   () => TextFormWidget(
+                     dropDownValue:controller.branchDataList[0]['branch_name'],
                  dropDown: true,
-                 titleText: "Select Gas",
-                 dropDownWidth: w / 1.5),
-           ),
-           Padding(
-             padding: const EdgeInsets.only(top: 15),
-             child: MaterialButton(
-               onPressed: () {
-                 Get.to(() => GasesView());
-               },
-               shape: const CircleBorder(),
-               child: const Icon(
-                 Icons.add_circle,
-                 size: 50,
-                 color: Colors.purple,
+                 titleText: "Select Branch",
+                 dropDownOnChanged: (value) {
+                   log(value.toString());
+                 },
+                 dropDownWidth: w / 1.5,
+                 dropDownItems: controller.branchDataList.map((branch) {
+                   return DropdownMenuItem<String>(
+                       value: branch["branch_name"],
+                       onTap: () {
+                         controller.selectedBranchId.value =
+                         branch["branch_id"];
+                         controller.fetchGasMonitorData(
+                             controller.selectedBranchId.value,
+                             controller.selectedGasId.value);
+                       },
+                       child: Text(branch["branch_name"]));
+                 }).toList(),
                ),
              ),
-           ),
-         ],
-       ),
-     ],);
+             Padding(
+               padding: const EdgeInsets.only(top: 15),
+               child: MaterialButton(
+                 onPressed: () {
+                   Get.to(() => BranchDataView());
+                 },
+                 shape: const CircleBorder(),
+                 child: const Icon(
+                   Icons.add_circle,
+                   size: 50,
+                   color: Colors.purple,
+                 ),
+               ),
+             ),
+           ],
+         ),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Obx(
+                   () =>TextFormWidget(
+                     dropDownValue: controller.gasDataList[0]["gases_name"],
+                   dropDownOnChanged: (value) {},
+                   dropDownItems: controller.gasDataList.map((gases) {
+                     return DropdownMenuItem<String>(
+                       onTap: () {
+                         controller.selectedGasId.value =
+                         gases["gases_id"];
+                         controller.fetchGasMonitorData(
+                             controller.selectedBranchId.value,
+                             controller.selectedGasId.value);
+                       },
+                       value: gases["gases_name"],
+                       child: Text(gases["gases_name"]),
+                     );
+                   }).toList(),
+                   dropDown: true,
+                   titleText: "Select Gas",
+                   dropDownWidth: w / 1.5),
+             ),
+             Padding(
+               padding: const EdgeInsets.only(top: 15),
+               child: MaterialButton(
+                 onPressed: () {
+                   Get.to(() => GasesView());
+                 },
+                 shape: const CircleBorder(),
+                 child: const Icon(
+                   Icons.add_circle,
+                   size: 50,
+                   color: Colors.purple,
+                 ),
+               ),
+             ),
+           ],
+         ),
+       ],),
+     );
    }
    Widget viewOnlineGases(BuildContext context){
      return Obx(
@@ -289,6 +296,9 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      top: 10, bottom: 10),
                  child: Column(
                    children: [
+                     IconButton(onPressed: (){
+                       controller.updateGasMonitorStatus(id: controller.standbyGasMonitorDataList[index].gasMonitorId!, statusId: 2);
+                     }, icon: const Icon(Icons.arrow_circle_up_sharp) , iconSize: 50,),
                      Padding(
                        padding: const EdgeInsets.all(8.0),
                        child: Row(
@@ -331,10 +341,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      ),
                      MyTextWidget(
                        title: "Serial No",
-                       body: controller
-                           .standbyGasMonitorDataList[index]
-                           .serialNo
-                           .toString(),
+                       body: controller.standbyGasMonitorDataList[index].serialNo.toString(),
                      ),
                      MyTextWidget(
                        title: "Total Qty",
@@ -394,6 +401,9 @@ class GasMonitorView extends GetView<GasMonitorController> {
                        top: 10, bottom: 10),
                    child: Column(
                      children: [
+                       IconButton(onPressed: (){
+                         controller.updateGasMonitorStatus(id: controller.stockGasMonitorDataList[index].gasMonitorId!, statusId: 3);
+                       }, icon: const Icon(Icons.arrow_circle_up_sharp) , iconSize: 50,),
                        Padding(
                          padding: const EdgeInsets.all(8.0),
                          child: Row(

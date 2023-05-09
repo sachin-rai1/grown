@@ -23,13 +23,20 @@ dependencies:
   http: ^0.13.5
   date_time_picker: 2.1.0
   persistent_bottom_nav_bar: 5.0.2
+  flutter_launcher_icons: 0.13.1
   flutter: 
     sdk: flutter
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: 2.0.1
   flutter_test: 
     sdk: flutter
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/grown_logo.png"
+  min_sdk_android: 21
 
 flutter: 
   assets: 
