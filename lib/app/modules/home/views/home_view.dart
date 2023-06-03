@@ -42,18 +42,22 @@ class HomeView extends GetView<HomeController> {
                                 ? controller.electricalList.length
                                 : 0, (index) {
           return Center(
-            child: SelectCard(
-                choice: (departmentName.value == "Admin")
-                    ? controller.adminList[index]
-                    : (departmentName.value == "Lab")
-                        ? controller.labList[index]
-                        : (departmentName.value == "IT")
-                            ? controller.itList[index]
-                            : (departmentName.value == "GAS")
-                                ? controller.gasList[index]
-                                : (departmentName.value == "ELECTRICAL")
-                                    ? controller.electricalList[index]
-                                    : controller.nullList[index]),
+            child: Card(
+              elevation: 2,
+              color: Colors.white,
+              child: SelectCard(
+                  choice: (departmentName.value == "Admin")
+                      ? controller.adminList[index]
+                      : (departmentName.value == "Lab")
+                          ? controller.labList[index]
+                          : (departmentName.value == "IT")
+                              ? controller.itList[index]
+                              : (departmentName.value == "GAS")
+                                  ? controller.gasList[index]
+                                  : (departmentName.value == "ELECTRICAL")
+                                      ? controller.electricalList[index]
+                                      : controller.nullList[index]),
+            ),
           );
         }),
       ),

@@ -15,8 +15,8 @@ class EmployeeManagementController extends GetxController {
 
   List<Choice> choices = <Choice>[
     Choice(title: 'LAB EMPLOYEE MANAGEMENT',  iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  LabEmployeeManagementView())),
-    Choice(title: 'GAS EMPLOYEE MANAGEMENT',  iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  GasEmployeeManagementView())),
-    Choice(title: 'IT EMPLOYEE MANAGEMENT',  iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  ItEmployeeManagementView())),
-    Choice(title: 'ELECTRICAL EMPLOYEE MANAGEMENT', iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  ElectricalEmployeeManagementView())),
+    Choice(title: 'GAS EMPLOYEE MANAGEMENT',  iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  const GasEmployeeManagementView())),
+    Choice(title: 'IT EMPLOYEE MANAGEMENT',  iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  const ItEmployeeManagementView())),
+    Choice(title: 'ELECTRICAL EMPLOYEE MANAGEMENT', iconData:Icons.class_sharp, onTap: ()=>Get.to(()=>  const ElectricalEmployeeManagementView())),
   ];
 }

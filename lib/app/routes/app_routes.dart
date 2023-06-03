@@ -52,6 +52,28 @@ abstract class Routes {
       _Paths.MLGD_DATA_MONITORING + _Paths.MLGS_BOTTOM_NAVIGATION;
   static const MLGD_BOTTOM_NAVIGATION =
       _Paths.MLGD_DATA_MONITORING + _Paths.MLGD_BOTTOM_NAVIGATION;
+  static const CHILLER_PHASE = _Paths.CHILLER_READING + _Paths.CHILLER_PHASE;
+  static const CHILLER_COMPRESSOR =
+      _Paths.CHILLER_READING + _Paths.CHILLER_COMPRESSOR;
+  static const CHILLERS = _Paths.CHILLER_READING + _Paths.CHILLERS;
+  static const DATEWISE_CHILLER_READING =
+      _Paths.CHILLER_READING + _Paths.DATEWISE_CHILLER_READING;
+  static const BRANCHWISE_CHILLER_READING =
+      _Paths.CHILLER_READING + _Paths.BRANCHWISE_CHILLER_READING;
+  static const FEEDBACK = _Paths.FEEDBACK;
+  static const USER_MANAGEMENT = _Paths.USER_MANAGEMENT;
+  static const GROWING = _Paths.MLGD_DATA_MONITORING + _Paths.GROWING;
+  static const POST_RUN = _Paths.MLGD_DATA_MONITORING + _Paths.POST_RUN;
+  static const PRE_RUN = _Paths.MLGD_DATA_MONITORING + _Paths.PRE_RUN;
+  static const CAMERA_SCREEN =
+      _Paths.MLGD_DATA_MONITORING + _Paths.CAMERA_SCREEN;
+  static const GALLERY_SCREEN =
+      _Paths.MLGD_DATA_MONITORING + _Paths.GALLERY_SCREEN;
+  static const PREVIEW_SCREEN =
+      _Paths.MLGD_DATA_MONITORING + _Paths.PREVIEW_SCREEN;
+  static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
+  static const PRE_RUN_VIEW_DATA =
+      _Paths.MLGD_DATA_MONITORING + _Paths.PRE_RUN + _Paths.PRE_RUN_VIEW_DATA;
 }
 
 abstract class _Paths {
@@ -90,4 +112,19 @@ abstract class _Paths {
   static const BOTTOM_NAVIGATION = '/bottom-navigation';
   static const MLGS_BOTTOM_NAVIGATION = '/mlgs-bottom-navigation';
   static const MLGD_BOTTOM_NAVIGATION = '/mlgd-bottom-navigation';
+  static const CHILLER_PHASE = '/chiller-phase';
+  static const CHILLER_COMPRESSOR = '/chiller-compressor';
+  static const CHILLERS = '/chillers';
+  static const DATEWISE_CHILLER_READING = '/datewise-chiller-reading';
+  static const BRANCHWISE_CHILLER_READING = '/branchwise-chiller-reading';
+  static const FEEDBACK = '/feedback';
+  static const USER_MANAGEMENT = '/user-management';
+  static const GROWING = '/growing';
+  static const POST_RUN = '/post-run';
+  static const PRE_RUN = '/pre-run';
+  static const CAMERA_SCREEN = '/camera-screen';
+  static const GALLERY_SCREEN = '/gallery-screen';
+  static const PREVIEW_SCREEN = '/preview-screen';
+  static const SPLASH_SCREEN = '/splash-screen';
+  static const PRE_RUN_VIEW_DATA = '/pre-run-view-data';
 }

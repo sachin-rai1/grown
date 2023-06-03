@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,8 +11,6 @@ import '../../home/views/home_view.dart';
 import 'package:http/http.dart' as http;
 
 class LoginController extends GetxController {
-
-
   var isLoading = false.obs;
   final userName = TextEditingController();
   final password = TextEditingController();
@@ -24,7 +24,6 @@ class LoginController extends GetxController {
 
       var response = await http.post(Uri.parse("$apiUrl/login"),
           headers: {
-            "Access-Control-Allow-Origin": "*",
             'Content-Type': 'application/json',
           },
           body: jsonEncode(<String, String>{
@@ -34,12 +33,12 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         data = jsonDecode(response.body);
         var token = data["token"];
-        privilage.value = data["privilage"]??"";
+        log(token);
+        privilage.value = data["privilage"] ?? "";
         departmentName.value = data["user_department_name"];
         departmentId.value = data["user_department_id"];
         branchName.value = data["user_branch_name"];
         branchId.value = data["user_branch_id"];
-
         prefs.setString("token", token);
         prefs.setString('privilage', privilage.value);
         prefs.setString('user_department_name', departmentName.value);
@@ -47,8 +46,7 @@ class LoginController extends GetxController {
         prefs.setInt('user_branch_id', branchId.value);
         prefs.setString('user_branch_name', branchName.value);
 
-
-        Get.offAll(()=>  HomeView() );
+        Get.offAll(() => HomeView());
         isLoading.value = false;
       } else {
         Get.showSnackbar(const GetSnackBar(

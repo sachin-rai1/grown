@@ -19,7 +19,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.home_filled),iconSize: 35,),
+        leading: IconButton(onPressed: ()=>Get.back(), icon: const Icon(Icons.home_filled),iconSize: 35,),
         elevation: 0,
         title: const Text('GasMonitorView'),
         actions: [
@@ -180,7 +180,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      .onlineGasMonitorDataList[index].dueDate
                      .toString()));
              return Card(
-               color: Colors.greenAccent,
+               color:(controller.onlineGasMonitorDataList[index].remainingStockDays == null)?Colors.greenAccent:(controller.onlineGasMonitorDataList[index].remainingStockDays! <= 0)?Colors.grey: Colors.greenAccent,
                child: Padding(
                  padding: const EdgeInsets.only(
                      top: 10, bottom: 10),
@@ -212,7 +212,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                            }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                            const SizedBox(width: 20,),
                            InkWell(onTap: (){
-                             deleteGasMonitorData(context, controller.onlineGasMonitorDataList[index].gasMonitorId! ,controller.onlineGasMonitorDataList[index].branchId! , controller.onlineGasMonitorDataList[index].gasesId! , controller.onlineGasMonitorDataList[index].statusId! ,DateTime.parse(controller.onlineGasMonitorDataList[index].dueDate!) );
+                             deleteGasMonitorData(context, controller.onlineGasMonitorDataList[index].gasMonitorId! ,controller.onlineGasMonitorDataList[index].branchId! , controller.onlineGasMonitorDataList[index].gasesId! , controller.onlineGasMonitorDataList[index].statusId! ,controller.onlineGasMonitorDataList[index].remainingStockDays! );
                            }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                          ],
                        ),
@@ -251,9 +251,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      ),
                      MyTextWidget(
                        title: "Total Days Left",
-                       body: controller
-                           .onlineGasMonitorDataList[index]
-                           .remainingStockDays
+                       body: controller.onlineGasMonitorDataList[index].remainingStockDays
                            .toString(),
                      ),
                      MyTextWidget(
@@ -290,7 +288,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      .standbyGasMonitorDataList[index].dueDate
                      .toString()));
              return Card(
-               color: Colors.yellow,
+               color:(controller.standbyGasMonitorDataList[index].remainingStockDays == null)?Colors.red:(controller.standbyGasMonitorDataList[index].remainingStockDays! <= 0)?Colors.grey: Colors.yellow,
                child: Padding(
                  padding: const EdgeInsets.only(
                      top: 10, bottom: 10),
@@ -326,7 +324,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                            }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                            const SizedBox(width: 20,),
                            InkWell(onTap: (){
-                             deleteGasMonitorData(context, controller.standbyGasMonitorDataList[index].gasMonitorId!  , controller.standbyGasMonitorDataList[index].branchId! , controller.standbyGasMonitorDataList[index].gasesId! , controller.standbyGasMonitorDataList[index].statusId! ,DateTime.parse(controller.standbyGasMonitorDataList[index].dueDate!));
+                             deleteGasMonitorData(context, controller.standbyGasMonitorDataList[index].gasMonitorId!  , controller.standbyGasMonitorDataList[index].branchId! , controller.standbyGasMonitorDataList[index].gasesId! , controller.standbyGasMonitorDataList[index].statusId! ,controller.standbyGasMonitorDataList[index].remainingStockDays!);
                            }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                          ],
                        ),
@@ -395,7 +393,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                        .toString()));
 
                return Card(
-                 color: Colors.cyan,
+                 color:(controller.stockGasMonitorDataList[index].remainingStockDays == null)?Colors.red:(controller.stockGasMonitorDataList[index].remainingStockDays! <= 0)?Colors.grey: Colors.cyan,
                  child: Padding(
                    padding: const EdgeInsets.only(
                        top: 10, bottom: 10),
@@ -432,7 +430,7 @@ class GasMonitorView extends GetView<GasMonitorController> {
                              }, child: const Icon(Icons.edit_note_outlined , size: 35,color: Colors.deepPurpleAccent,)),
                              const SizedBox(width: 20,),
                              InkWell(onTap: (){
-                               deleteGasMonitorData(context, controller.stockGasMonitorDataList[index].gasMonitorId! , controller.stockGasMonitorDataList[index].branchId! , controller.stockGasMonitorDataList[index].gasesId! ,controller.stockGasMonitorDataList[index].statusId! , DateTime.parse(controller.stockGasMonitorDataList[index].dueDate!));
+                               deleteGasMonitorData(context, controller.stockGasMonitorDataList[index].gasMonitorId! , controller.stockGasMonitorDataList[index].branchId! , controller.stockGasMonitorDataList[index].gasesId! ,controller.stockGasMonitorDataList[index].statusId! ,controller.stockGasMonitorDataList[index].remainingStockDays! );
                              }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
                            ],
                          ),
@@ -530,8 +528,6 @@ class GasMonitorView extends GetView<GasMonitorController> {
                      return DropdownMenuItem<String>(
                        onTap: () {
                          controller.selectedGasId.value = gases["gases_id"];
-                         print(controller.selectedGasId.value);
-
                        },
                        value: gases["gases_name"],
                        child: Text(gases["gases_name"]),
@@ -690,11 +686,11 @@ class GasMonitorView extends GetView<GasMonitorController> {
        return alertDialog;
      });
    }
-   void deleteGasMonitorData(BuildContext context , int id , int selectedBranchId , int selectedGasId , int gasStatus , DateTime dueDate){
+   void deleteGasMonitorData(BuildContext context , int id , int selectedBranchId , int selectedGasId , int gasStatus , int dueDays){
      AlertDialog alertDialog =  AlertDialog(
        actions: [
          ElevatedButton(onPressed: ()=>Get.back(), child: const Text("Cancel")),
-         ElevatedButton(onPressed: ()=>controller.deleteGasMonitorData(id , selectedBranchId , selectedGasId , gasStatus, dueDate), child: const Text("Submit")),
+         ElevatedButton(onPressed: ()=>controller.deleteGasMonitorData(id , selectedBranchId , selectedGasId , gasStatus, dueDays), child: const Text("Submit")),
        ],
        content: const Text("Are You Sure Want to Delete ?"),
      );

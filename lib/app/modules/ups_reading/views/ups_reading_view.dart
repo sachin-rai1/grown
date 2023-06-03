@@ -13,6 +13,7 @@ class UpsReadingView extends GetView<UpsReadingController> {
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('UPS Monitoring/ Reading Form'),
@@ -27,7 +28,7 @@ class UpsReadingView extends GetView<UpsReadingController> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Obx(()=>
-            (controller.isLoading.value == true)?const Center(child: CircularProgressIndicator(),):
+            (controller.isLoading.value == true)?Container(alignment: Alignment.center,height: h,  child: const CircularProgressIndicator()):
                Form(
                  key: controller.formKey,
                  child: Column(
@@ -46,6 +47,7 @@ class UpsReadingView extends GetView<UpsReadingController> {
                                   child: CircularProgressIndicator(),
                                 ))
                             : TextFormWidget(
+                          dropDownValue: controller.branchDataList[0]["branch_name"],
                                 dropDownWidth: (privilage.value == "Admin" ||
                                         privilage.value == "Editor")
                                     ? w / 1.5
@@ -61,8 +63,7 @@ class UpsReadingView extends GetView<UpsReadingController> {
                                     onTap: () {
                                       controller.selectedBranchId.value =
                                           branch['branch_id'];
-                                      controller.selectedBranchId.value =
-                                          controller.selectedBranchId.value;
+                                      controller.selectedBranchId.value = controller.selectedBranchId.value;
                                     },
                                     value: branch['branch_name'],
                                     child: Text(branch['branch_name']),
@@ -113,8 +114,6 @@ class UpsReadingView extends GetView<UpsReadingController> {
                                   return DropdownMenuItem<String>(
                                     onTap: () {
                                       controller.selectedUpsId.value = ups.upsId!;
-                                      controller.selectedUpsId.value =
-                                          controller.selectedBranchId.value;
                                     },
                                     value: ups.upsName,
                                     child: Text(ups.upsName!),
@@ -235,7 +234,10 @@ class UpsReadingView extends GetView<UpsReadingController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton(onPressed: (){
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(fixedSize: Size(w / 2.5,
+                                10), backgroundColor: Colors.orange),
+                            onPressed: (){
 
                           if (controller.formKey.currentState!.validate()) {
                             if(controller.selectedBranchId.value == 0){
@@ -253,7 +255,11 @@ class UpsReadingView extends GetView<UpsReadingController> {
                           }
 
                           }, child: const Text("Submit")),
-                        ElevatedButton(onPressed: ()=>Get.to(() => const UpsReadingTabBar()), child: const Text("View")),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                fixedSize: Size(w / 2.5, 10)),
+                            onPressed: ()=>Get.to(() => const UpsReadingTabBar()), child: const Text("View")),
                       ],
                     )
                   ],

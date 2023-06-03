@@ -370,15 +370,11 @@ class GasMonitorController extends GetxController {
   }
 
   Future<void> deleteGasMonitorData(
-      int id, int branchId, int gasId, int gasStatus, DateTime dueDate) async {
+      int id, int branchId, int gasId, int gasStatus, int dueDays) async {
     fetchGasMonitorDataForCrud(branchId, gasId).whenComplete(() async {
-      var today = DateTime.now();
-      var currentDate = DateTime(today.year, today.month, today.day);
-      if (standbyGasMonitorDataList.isNotEmpty &&
-          gasStatus == 2 &&
-          dueDate.compareTo(currentDate) >= 1) {
+      if (gasStatus == 2 && dueDays > 0) {
         Fluttertoast.showToast(
-            msg: "Please delete stand by gas first Or Due date is Pending ",
+            msg: "Due date is Pending ",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -394,8 +390,7 @@ class GasMonitorController extends GetxController {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-      }
-      else {
+      } else {
         isLoading.value = true;
         var prefs = await SharedPreferences.getInstance();
         var token = prefs.getString('token');
@@ -408,12 +403,16 @@ class GasMonitorController extends GetxController {
         );
         if (response.statusCode == 200) {
           Get.back();
-          showToast(msg: "Deleted Successfully",);
+          showToast(
+            msg: "Deleted Successfully",
+          );
 
           fetchGasMonitorData(selectedBranchId.value, selectedGasId.value);
         } else {
           Get.back();
-          showToastError(msg: "Cannot delete , Please try again",);
+          showToastError(
+            msg: "Cannot delete , Please try again",
+          );
           isLoading.value = false;
         }
       }

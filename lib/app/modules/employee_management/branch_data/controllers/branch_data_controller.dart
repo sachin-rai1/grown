@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-
 import '../../../../data/constants.dart';
 import '../../lab_employee_management/controllers/lab_employee_management_controller.dart';
 import '../model_branch.dart';

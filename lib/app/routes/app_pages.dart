@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/SplashScreen/bindings/splash_screen_binding.dart';
+import '../modules/SplashScreen/views/splash_screen_view.dart';
 import '../modules/bcdi_classification/bindings/bcdi_classification_binding.dart';
 import '../modules/bcdi_classification/views/bcdi_classification_view.dart';
 import '../modules/bcdi_detection/bindings/bcdi_detection_binding.dart';
@@ -7,6 +9,16 @@ import '../modules/bcdi_detection/views/bcdi_detection_view.dart';
 import '../modules/camera_application/bindings/camera_application_binding.dart';
 import '../modules/camera_application/views/camera_application_view.dart';
 import '../modules/chiller_reading/bindings/chiller_reading_binding.dart';
+import '../modules/chiller_reading/branchwise_chiller_reading/bindings/branchwise_chiller_reading_binding.dart';
+import '../modules/chiller_reading/branchwise_chiller_reading/views/branchwise_chiller_reading_view.dart';
+import '../modules/chiller_reading/chiller_compressor/bindings/chiller_compressor_binding.dart';
+import '../modules/chiller_reading/chiller_compressor/views/chiller_compressor_view.dart';
+import '../modules/chiller_reading/chiller_phase/bindings/chiller_phase_binding.dart';
+import '../modules/chiller_reading/chiller_phase/views/chiller_phase_view.dart';
+import '../modules/chiller_reading/chillers/bindings/chillers_binding.dart';
+import '../modules/chiller_reading/chillers/views/chillers_view.dart';
+import '../modules/chiller_reading/datewise_chiller_reading/bindings/datewise_chiller_reading_binding.dart';
+import '../modules/chiller_reading/datewise_chiller_reading/views/datewise_chiller_reading_view.dart';
 import '../modules/chiller_reading/views/chiller_reading_view.dart';
 import '../modules/employee_management/bindings/employee_management_binding.dart';
 import '../modules/employee_management/branch_data/bindings/branch_data_binding.dart';
@@ -24,6 +36,8 @@ import '../modules/employee_management/lab_employee_management/special_skill_lab
 import '../modules/employee_management/lab_employee_management/special_skill_lab_employee_management/views/special_skill_lab_employee_management_view.dart';
 import '../modules/employee_management/lab_employee_management/views/lab_employee_management_view.dart';
 import '../modules/employee_management/views/employee_management_view.dart';
+import '../modules/feedback/bindings/feedback_binding.dart';
+import '../modules/feedback/views/feedback_view.dart';
 import '../modules/gas_bank_operator/GasManifold/bindings/gas_manifold_binding.dart';
 import '../modules/gas_bank_operator/GasManifold/views/gas_manifold_view.dart';
 import '../modules/gas_bank_operator/GasMonitor/bindings/gas_monitor_binding.dart';
@@ -45,6 +59,20 @@ import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/views/mlgd_bottom_n
 import '../modules/mlgd_data_monitoring/RunNoData/bindings/run_no_data_binding.dart';
 import '../modules/mlgd_data_monitoring/RunNoData/views/run_no_data_view.dart';
 import '../modules/mlgd_data_monitoring/bindings/mlgd_data_monitoring_binding.dart';
+import '../modules/mlgd_data_monitoring/growing/bindings/growing_binding.dart';
+import '../modules/mlgd_data_monitoring/growing/views/growing_view.dart';
+import '../modules/mlgd_data_monitoring/post_run/bindings/post_run_binding.dart';
+import '../modules/mlgd_data_monitoring/post_run/views/post_run_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/bindings/pre_run_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/camera_screen/bindings/camera_screen_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/camera_screen/views/camera_screen_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/gallery_screen/bindings/gallery_screen_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/gallery_screen/views/gallery_screen_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/pre_run_view_data/bindings/pre_run_view_data_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/pre_run_view_data/views/pre_run_view_data_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/preview_screen/bindings/preview_screen_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/preview_screen/views/preview_screen_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/views/pre_run_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/bindings/view_mlgd_data_date_wise_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
@@ -58,13 +86,15 @@ import '../modules/ups_reading/bindings/ups_reading_binding.dart';
 import '../modules/ups_reading/upsData/bindings/ups_data_binding.dart';
 import '../modules/ups_reading/upsData/views/ups_data_view.dart';
 import '../modules/ups_reading/views/ups_reading_view.dart';
+import '../modules/user_management/bindings/user_management_binding.dart';
+import '../modules/user_management/views/user_management_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -143,13 +173,50 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.RUN_NO_DATA,
-          page: () =>  RunNoDataView(),
+          page: () => RunNoDataView(),
           binding: RunNoDataBinding(),
         ),
         GetPage(
           name: _Paths.MLGD_BOTTOM_NAVIGATION,
           page: () => const MlgdBottomNavigationView(),
           binding: MlgdBottomNavigationBinding(),
+        ),
+        GetPage(
+          name: _Paths.GROWING,
+          page: () => GrowingView(),
+          binding: GrowingBinding(),
+        ),
+        GetPage(
+          name: _Paths.POST_RUN,
+          page: () => PostRunView(),
+          binding: PostRunBinding(),
+        ),
+        GetPage(
+          name: _Paths.PRE_RUN,
+          page: () => PreRunView(),
+          binding: PreRunBinding(),
+          children: [
+            GetPage(
+              name: _Paths.PRE_RUN_VIEW_DATA,
+              page: () =>  PreRunViewDataView(),
+              binding: PreRunViewDataBinding(),
+            ),
+          ],
+        ),
+        GetPage(
+          name: _Paths.CAMERA_SCREEN,
+          page: () => CameraScreenView(),
+          binding: CameraScreenBinding(),
+        ),
+        GetPage(
+          name: _Paths.GALLERY_SCREEN,
+          page: () => const GalleryScreenView(),
+          binding: GalleryScreenBinding(),
+        ),
+        GetPage(
+          name: _Paths.PREVIEW_SCREEN,
+          page: () => PreviewScreenView(),
+          binding: PreviewScreenBinding(),
         ),
       ],
     ),
@@ -211,6 +278,33 @@ class AppPages {
       name: _Paths.CHILLER_READING,
       page: () => ChillerReadingView(),
       binding: ChillerReadingBinding(),
+      children: [
+        GetPage(
+          name: _Paths.CHILLER_PHASE,
+          page: () => ChillerPhaseView(),
+          binding: ChillerPhaseBinding(),
+        ),
+        GetPage(
+          name: _Paths.CHILLER_COMPRESSOR,
+          page: () => ChillerCompressorView(),
+          binding: ChillerCompressorBinding(),
+        ),
+        GetPage(
+          name: _Paths.CHILLERS,
+          page: () => ChillersView(),
+          binding: ChillersBinding(),
+        ),
+        GetPage(
+          name: _Paths.DATEWISE_CHILLER_READING,
+          page: () => DateWiseChillerReadingView(),
+          binding: DatewiseChillerReadingBinding(),
+        ),
+        GetPage(
+          name: _Paths.BRANCHWISE_CHILLER_READING,
+          page: () => BranchWiseChillerReadingView(),
+          binding: BranchwiseChillerReadingBinding(),
+        ),
+      ],
     ),
     GetPage(
       name: _Paths.CAMERA_APPLICATION,
@@ -221,6 +315,21 @@ class AppPages {
       name: _Paths.LOGIN,
       page: () => LoginView(),
       binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.FEEDBACK,
+      page: () =>  FeedbackView(),
+      binding: FeedbackBinding(),
+    ),
+    GetPage(
+      name: _Paths.USER_MANAGEMENT,
+      page: () => const UserManagementView(),
+      binding: UserManagementBinding(),
+    ),
+    GetPage(
+      name: _Paths.SPLASH_SCREEN,
+      page: () => SplashScreenView(),
+      binding: SplashScreenBinding(),
     ),
   ];
 }

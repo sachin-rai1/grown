@@ -32,7 +32,7 @@ class MlgdBottomNavigationView extends GetView<MlgdBottomNavigationController> {
               ViewMlgdDataDateWiseView(),
               ViewMlgdDataRunWiseView()
             ],
-            iconData1: Icons.view_comfy_alt_outlined,
+            image1: "assets/images/mlgd.png",
             iconData2: Icons.view_comfy_alt_outlined,
             iconData3: Icons.view_comfy_alt_outlined,
             iconData4: Icons.view_comfy_alt_outlined,

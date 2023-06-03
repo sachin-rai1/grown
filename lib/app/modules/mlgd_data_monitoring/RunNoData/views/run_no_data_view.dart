@@ -12,7 +12,7 @@ class RunNoDataView extends GetView<RunNoDataController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RunNoDataView'),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         actions: [
           IconButton(onPressed: (){
@@ -235,7 +235,7 @@ class RunNoDataView extends GetView<RunNoDataController> {
                       },
                       style: ElevatedButton.styleFrom(
                           fixedSize: Size(width * 0.6, 15),
-                          backgroundColor: Colors.purple.shade600,
+                          backgroundColor: Colors.orange.shade600,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       child: const Text("Submit"),

@@ -18,7 +18,7 @@ class UpsReadingController extends GetxController {
   var isLoading = false.obs;
 
   var branchDataList = [].obs;
-  var selectedBranchId = 0.obs;
+  var selectedBranchId = 1.obs;
   var selectedBranch = "".obs;
 
   final formKey = GlobalKey<FormState>();
@@ -73,40 +73,42 @@ class UpsReadingController extends GetxController {
   }
 
   Future<void> addUpsReading() async {
-    isLoading.value = true;
-    var prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    final response = await http.post(Uri.parse('$apiUrl/add_ups_reading'), headers: {
-      'Authorization': 'Bearer $token',
-      'Content-type': 'application/json'
-    },
-      body: jsonEncode(<String, dynamic>{
-        "branch_id":selectedBranchId.value,
-        "ups_id":selectedUpsId.value,
-        "loads_on_ups_r": loadOnUpsRController.text,
-        "loads_on_ups_y":loadOnUpsYController.text,
-        "loads_on_ups_b":loadOnUpsBController.text,
-        "led_status":ledStatus.value,
-        "dc_positive_voltage":positiveVoltageController.text,
-        "dc_negative_voltage":negativeVoltageController.text
-      })
-    );
-
-    if (response.statusCode == 200) {
-
-      showToast(msg: "Ups Reading Added Successfully");
-      isLoading.value = false;
-      clearData();
+    if (selectedUpsId.value == 0) {
+      showToastError(msg: "Please Select Ups");
     } else {
-      isLoading.value = false;
-      showToast(msg: response.body + response.statusCode.toString());
-      throw Exception(response.body + response.statusCode.toString());
+      isLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      final response = await http.post(Uri.parse('$apiUrl/add_ups_reading'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-type': 'application/json'
+          },
+          body: jsonEncode(<String, dynamic>{
+            "branch_id": selectedBranchId.value,
+            "ups_id": selectedUpsId.value,
+            "loads_on_ups_r": loadOnUpsRController.text,
+            "loads_on_ups_y": loadOnUpsYController.text,
+            "loads_on_ups_b": loadOnUpsBController.text,
+            "led_status": ledStatus.value,
+            "dc_positive_voltage": positiveVoltageController.text,
+            "dc_negative_voltage": negativeVoltageController.text
+          }));
+
+      if (response.statusCode == 200) {
+        showToast(msg: "Ups Reading Added Successfully");
+        isLoading.value = false;
+        clearData();
+      } else {
+        isLoading.value = false;
+        showToast(msg: response.body + response.statusCode.toString());
+        throw Exception(response.body + response.statusCode.toString());
+      }
     }
   }
 
   void clearData() {
     selectedUpsId.value = 0;
-    selectedBranchId.value = 0;
     loadOnUpsRController.clear();
     loadOnUpsYController.clear();
     loadOnUpsBController.clear();

@@ -186,13 +186,8 @@ class ViewUpsReadingBranchWiseView
                                         .dcPositiveVoltage
                                         .toString(),
                                   ),
-                                  MyTextWidget(
-                                    title: "DC NEGATIVE VOLTAGE :  ",
-                                    isLines: false,
-                                    body: controller.upsReadingDataList[index]
-                                        .dcNegativeVoltage
-                                        .toString(),
-                                  ),
+                                  MyTextWidget(title: "DC NEGATIVE VOLTAGE :  ", isLines: false, body: controller.upsReadingDataList[index].dcNegativeVoltage.toString(),),
+                                  MyTextWidget(title: "Uploaded On :  ", isLines: false, body: controller.upsReadingDataList[index].createdOn.toString(),),
                                 ],
                               ),
                             ),

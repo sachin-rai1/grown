@@ -28,6 +28,7 @@ class UpsReadingData {
   UpsReadingData({
     this.branchId,
     this.branchName,
+    this.createdOn,
     this.dcNegativeVoltage,
     this.dcPositiveVoltage,
     this.ledStatus,
@@ -41,6 +42,7 @@ class UpsReadingData {
 
   int? branchId;
   String? branchName;
+  DateTime? createdOn;
   int? dcNegativeVoltage;
   int? dcPositiveVoltage;
   int? ledStatus;
@@ -54,6 +56,7 @@ class UpsReadingData {
   factory UpsReadingData.fromJson(Map<String, dynamic> json) => UpsReadingData(
     branchId: json["branch_id"],
     branchName: json["branch_name"],
+    createdOn: json["created_on"] == null ? null : DateTime.parse(json["created_on"]),
     dcNegativeVoltage: json["dc_negative_voltage"],
     dcPositiveVoltage: json["dc_positive_voltage"],
     ledStatus: json["led_status"],
@@ -68,6 +71,7 @@ class UpsReadingData {
   Map<String, dynamic> toJson() => {
     "branch_id": branchId,
     "branch_name": branchName,
+    "created_on": createdOn?.toIso8601String(),
     "dc_negative_voltage": dcNegativeVoltage,
     "dc_positive_voltage": dcPositiveVoltage,
     "led_status": ledStatus,

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/modules/home/views/home_view.dart';
 import '../controllers/bcdi_detection_controller.dart';
 
 class BcdiDetectionView extends GetView<BcdiDetectionController> {
