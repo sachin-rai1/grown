@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/constants.dart';
 import 'package:grown/app/modules/login/views/login_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/widgets.dart';
 import '../controllers/home_controller.dart';
 
@@ -67,7 +68,12 @@ class HomeView extends GetView<HomeController> {
   void logoutDialogBox(BuildContext context) {
     AlertDialog alertDialog =  AlertDialog(
       actions: [
-        ElevatedButton(onPressed: ()=>Get.offAll(() => LoginView()), style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),) , backgroundColor: Colors.green), child: const Text("Yes") ,),
+        ElevatedButton(onPressed: () async {
+          final preferences = await SharedPreferences.getInstance();
+          await preferences.clear();
+          await Get.offAll(()=>LoginView());
+
+        }, style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),) , backgroundColor: Colors.green), child: const Text("Yes") ,),
         ElevatedButton(onPressed: ()=>Get.back(), style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),) , backgroundColor: Colors.red), child: const Text("No") ,)
       ],
       content: const Text("Are You Sure Want to Logout ?"),);

@@ -20,6 +20,8 @@ import '../modules/chiller_reading/chillers/views/chillers_view.dart';
 import '../modules/chiller_reading/datewise_chiller_reading/bindings/datewise_chiller_reading_binding.dart';
 import '../modules/chiller_reading/datewise_chiller_reading/views/datewise_chiller_reading_view.dart';
 import '../modules/chiller_reading/views/chiller_reading_view.dart';
+import '../modules/email_config/bindings/email_config_binding.dart';
+import '../modules/email_config/views/email_config_view.dart';
 import '../modules/employee_management/bindings/employee_management_binding.dart';
 import '../modules/employee_management/branch_data/bindings/branch_data_binding.dart';
 import '../modules/employee_management/branch_data/views/branch_data_view.dart';
@@ -54,6 +56,18 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/maintenance/assign_engineer/bindings/assign_engineer_binding.dart';
+import '../modules/maintenance/assign_engineer/views/assign_engineer_view.dart';
+import '../modules/maintenance/bindings/maintenance_binding.dart';
+import '../modules/maintenance/edit_assigned_engineer/bindings/edit_assigned_engineer_binding.dart';
+import '../modules/maintenance/edit_assigned_engineer/views/edit_assigned_engineer_view.dart';
+import '../modules/maintenance/engineer/bindings/engineer_binding.dart';
+import '../modules/maintenance/engineer/views/engineer_view.dart';
+import '../modules/maintenance/register_complain/bindings/register_complain_binding.dart';
+import '../modules/maintenance/register_complain/views/register_complain_view.dart';
+import '../modules/maintenance/view_complain/bindings/view_complain_binding.dart';
+import '../modules/maintenance/view_complain/views/view_complain_view.dart';
+import '../modules/maintenance/views/maintenance_view.dart';
 import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/bindings/mlgd_bottom_navigation_binding.dart';
 import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/views/mlgd_bottom_navigation_view.dart';
 import '../modules/mlgd_data_monitoring/RunNoData/bindings/run_no_data_binding.dart';
@@ -198,7 +212,7 @@ class AppPages {
           children: [
             GetPage(
               name: _Paths.PRE_RUN_VIEW_DATA,
-              page: () =>  PreRunViewDataView(),
+              page: () => PreRunViewDataView(),
               binding: PreRunViewDataBinding(),
             ),
           ],
@@ -318,7 +332,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FEEDBACK,
-      page: () =>  FeedbackView(),
+      page: () => FeedbackView(),
       binding: FeedbackBinding(),
     ),
     GetPage(
@@ -331,5 +345,43 @@ class AppPages {
       page: () => SplashScreenView(),
       binding: SplashScreenBinding(),
     ),
+    GetPage(
+      name: _Paths.MAINTENANCE,
+      page: () => MaintenanceView(),
+      binding: MaintenanceBinding(),
+      children: [
+        GetPage(
+          name: _Paths.REGISTER_COMPLAIN,
+          page: () => RegisterComplainView(),
+          binding: RegisterComplainBinding(),
+        ),
+        GetPage(
+          name: _Paths.VIEW_COMPLAIN,
+          page: () => ViewComplainView(),
+          binding: ViewComplainBinding(),
+        ),
+        GetPage(
+          name: _Paths.ASSIGN_ENGINEER,
+          page: () => AssignEngineerView(),
+          binding: AssignEngineerBinding(),
+        ),
+        GetPage(
+          name: _Paths.ENGINEER,
+          page: () => EngineerView(),
+          binding: EngineerBinding(),
+        ),
+        GetPage(
+          name: _Paths.EDIT_ASSIGNED_ENGINEER,
+          page: () =>  EditAssignedEngineerView(),
+          binding: EditAssignedEngineerBinding(),
+        ),
+      ],
+    ),
+    GetPage(
+      name: _Paths.EMAIL_CONFIG,
+      page: () => EmailConfigView(),
+      binding: EmailConfigBinding(),
+    ),
+
   ];
 }

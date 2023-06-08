@@ -119,7 +119,7 @@ class TextFormWidget extends StatelessWidget {
       this.borderSideTextBox,
       this.borderSideDropDown,
       this.dropDownValue,
-      this.textHintStyle, this.minLines})
+      this.textHintStyle, this.minLines, this.obscureText})
       : super(key: key);
   final List<DropdownMenuItem<Object>>? dropDownItems;
   final Function(Object?)? dropDownOnChanged;
@@ -142,6 +142,7 @@ class TextFormWidget extends StatelessWidget {
   final BorderSide? borderSideDropDown;
   final Object? dropDownValue;
   final TextStyle? textHintStyle;
+  final bool? obscureText;
 
 
   @override
@@ -183,6 +184,7 @@ class TextFormWidget extends StatelessWidget {
                 width: textBoxWidth,
                 color: Colors.grey.shade100,
                 child: TextFormField(
+                  obscureText: obscureText??false,
                   onChanged: onTextChanged,
                   controller: textController,
                   maxLines: maxLines,
@@ -337,6 +339,7 @@ class MyTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+
       color: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

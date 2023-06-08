@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:camera/camera.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,20 +32,31 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         data = jsonDecode(response.body);
         var token = data["token"];
-        log(token);
         privilage.value = data["privilage"] ?? "";
         departmentName.value = data["user_department_name"];
         departmentId.value = data["user_department_id"];
         branchName.value = data["user_branch_name"];
         branchId.value = data["user_branch_id"];
+        userId.value = data["user_id"];
+        var userEmail = data["user_email"];
+
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        prefs.setString('fToken', fcmToken!);
+
         prefs.setString("token", token);
         prefs.setString('privilage', privilage.value);
         prefs.setString('user_department_name', departmentName.value);
         prefs.setInt('user_department_id', departmentId.value);
         prefs.setInt('user_branch_id', branchId.value);
         prefs.setString('user_branch_name', branchName.value);
+        prefs.setInt('user_id', userId.value);
+        prefs.setString('user_email', userEmail);
+
+        log(userEmail);
+
 
         Get.offAll(() => HomeView());
+        await getEmailConfig();
         isLoading.value = false;
       } else {
         Get.showSnackbar(const GetSnackBar(
@@ -62,4 +72,41 @@ class LoginController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> getEmailConfig() async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
+
+      var response = await http.get(
+          Uri.parse("$apiUrl/email_setting_read?branch_id=$branchId"),
+          headers: {
+            "Content-type": "application/json",
+            "Authorization": "Bearer $token"
+          }
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        var senderMail = data["data"][0]["sender_email"];
+        var server = data["data"][0]["server"];
+        var port = data["data"][0]["port"];
+        var emailPass = data["data"][0]["pass"];
+        var receiverEmail = data["data"][0]["receiver_email"];
+
+        prefs.setString("sender_email", senderMail);
+        prefs.setString('server', server);
+        prefs.setString('port', port);
+        prefs.setString('email_pass', emailPass);
+        prefs.setString('receiver_email', receiverEmail);
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+
+  }
+
 }

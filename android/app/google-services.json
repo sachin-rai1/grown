@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "926588559523",
+    "project_id": "grown-d54b5",
+    "storage_bucket": "grown-d54b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926588559523:android:6e21d489fc1dba0544df16",
+        "android_client_info": {
+          "package_name": "com.grown.grown"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926588559523-6kl00ldeubfbu7qjki7gp8inci2u2tk1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfmskaVLJDi-ymhCJivCBJ4q868bmf8kk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926588559523-6kl00ldeubfbu7qjki7gp8inci2u2tk1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

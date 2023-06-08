@@ -74,6 +74,14 @@ abstract class Routes {
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
   static const PRE_RUN_VIEW_DATA =
       _Paths.MLGD_DATA_MONITORING + _Paths.PRE_RUN + _Paths.PRE_RUN_VIEW_DATA;
+  static const MAINTENANCE = _Paths.MAINTENANCE;
+  static const REGISTER_COMPLAIN =
+      _Paths.MAINTENANCE + _Paths.REGISTER_COMPLAIN;
+  static const VIEW_COMPLAIN = _Paths.MAINTENANCE + _Paths.VIEW_COMPLAIN;
+  static const ASSIGN_ENGINEER = _Paths.MAINTENANCE + _Paths.ASSIGN_ENGINEER;
+  static const ENGINEER = _Paths.MAINTENANCE + _Paths.ENGINEER;
+  static const EMAIL_CONFIG = _Paths.EMAIL_CONFIG;
+  static const EDIT_ASSIGNED_ENGINEER = _Paths.EDIT_ASSIGNED_ENGINEER;
 }
 
 abstract class _Paths {
@@ -127,4 +135,11 @@ abstract class _Paths {
   static const PREVIEW_SCREEN = '/preview-screen';
   static const SPLASH_SCREEN = '/splash-screen';
   static const PRE_RUN_VIEW_DATA = '/pre-run-view-data';
+  static const MAINTENANCE = '/maintenance';
+  static const REGISTER_COMPLAIN = '/register-complain';
+  static const VIEW_COMPLAIN = '/view-complain';
+  static const ASSIGN_ENGINEER = '/assign-engineer';
+  static const ENGINEER = '/engineer';
+  static const EMAIL_CONFIG = '/email-config';
+  static const EDIT_ASSIGNED_ENGINEER = '/edit-assigned-engineer';
 }

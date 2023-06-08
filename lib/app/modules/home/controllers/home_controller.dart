@@ -3,30 +3,18 @@ import 'package:get/get.dart';
 import 'package:grown/app/modules/bcdi_classification/views/bcdi_classification_view.dart';
 import 'package:grown/app/modules/bcdi_detection/views/bcdi_detection_view.dart';
 import 'package:grown/app/modules/chiller_reading/views/chiller_reading_view.dart';
+import 'package:grown/app/modules/email_config/views/email_config_view.dart';
 import 'package:grown/app/modules/employee_management/views/employee_management_view.dart';
 import 'package:grown/app/modules/feedback/views/feedback_view.dart';
 import 'package:grown/app/modules/gas_bank_operator/views/gas_bank_operator_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
 import 'package:grown/app/modules/user_management/views/user_management_view.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../main.dart';
 import '../../../data/widgets.dart';
+import '../../maintenance/views/maintenance_view.dart';
 import '../../ups_reading/views/ups_reading_view.dart';
 
-final Uri trushnaUrl = Uri.parse('https://mail.trushnaexim.com');
-
-Future<void> launchTrushnaExim() async {
-  if (!await launchUrl(trushnaUrl)) {
-    throw Exception('Could not launch $trushnaUrl');
-  }
-}
-
-final Uri hrmsUrl = Uri.parse('https://hrms.trushnaexim.com');
-
-Future<void> launchHrmsUrl() async {
-  if (!await launchUrl(hrmsUrl, mode: LaunchMode.externalApplication)) {
-    throw Exception('Could not launch $trushnaUrl');
-  }
-}
 
 class HomeController extends GetxController {
   final scrollController = ScrollController();
@@ -63,6 +51,10 @@ class HomeController extends GetxController {
         image: "assets/images/chiller.png",
         onTap: () => Get.to(() => ChillerReadingView())),
     Choice(
+        title: 'Maintenance',
+        iconData: Icons.settings,
+        onTap: () => Get.to(() => MaintenanceView())),
+    Choice(
         title: 'Trushna Exim Mail',
         iconData: Icons.mail,
         iconColor: Colors.red,
@@ -82,6 +74,11 @@ class HomeController extends GetxController {
         iconData: Icons.feedback_sharp,
         iconColor: Colors.blue,
         onTap: () => Get.to(() =>  FeedbackView())),
+    Choice(
+        title: 'Email Setting',
+        iconData: Icons.email_sharp,
+        iconColor: Colors.red,
+        onTap: () => Get.to(() =>  EmailConfigView())),
   ];
 
   List<Choice> labList = <Choice>[
@@ -101,6 +98,10 @@ class HomeController extends GetxController {
         title: 'LAB GROWING PROCESS',
         image: "assets/images/mlgd.png",
         onTap: () => Get.to(() => MlgdDataMonitoringView())),
+    Choice(
+        title: 'Maintenance',
+        iconData: Icons.settings,
+        onTap: () => Get.to(() => MaintenanceView())),
   ];
 
   List<Choice> electricalList = <Choice>[
