@@ -33,8 +33,9 @@ class EngineerController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
       var response =
-          await http.get(Uri.parse("$apiUrl/engineer_read"), headers: {
+          await http.get(Uri.parse("$apiUrl/engineer_read/$branchId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
@@ -43,7 +44,7 @@ class EngineerController extends GetxController {
         var data = ModelEngineersProblems.fromJson(json);
         engineerProblemDataList.value = data.data ?? [];
       } else {
-        log('failed');
+        log('failed ${response.body}');
       }
     } catch (e) {
       log(e.toString());
@@ -110,13 +111,12 @@ class EngineerController extends GetxController {
     }
   }
 
-  Future<void> deleteEngineerComplain({required int uniqueId}) async {
+  Future<void> deleteEngineerComplain({required int uniqueId, required int complainId}) async {
     try {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var response = await http
-          .delete(Uri.parse("$apiUrl/engineer_delete/$uniqueId"), headers: {
+      var response = await http.delete(Uri.parse("$apiUrl/engineer_delete/$uniqueId/$complainId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });

@@ -27,20 +27,21 @@ class EditAssignedEngineerController extends GetxController {
 
     var prefs = await SharedPreferences.getInstance();
     var receiverEmail = prefs.getString('receiver_email');
-    var userEmail = prefs.getString("user_email");
     log(engineerMails.join(","));
     log(receiverEmail.toString());
+    var senderEmail = prefs.getString("sender_email");
     log(msg);
 
-    sendMail.sendEmail(
-      email: prefs.getString("sender_email")!,
-      password: prefs.getString("email_pass")!,
-      server: prefs.getString("server")!,
-      port: prefs.getString("port")!,
-      msg: msg,
-      receipents: [receiverEmail.toString() , engineerMails.join(",")],
-
-    );
+    if(senderEmail != null) {
+      sendMail.sendEmail(
+        email:senderEmail,
+        password: prefs.getString("email_pass")!,
+        server: prefs.getString("server")!,
+        port: prefs.getString("port")!,
+        msg: msg,
+        receipents: [receiverEmail.toString(), engineerMails.join(",")],
+      );
+    }
   }
 
 
@@ -65,8 +66,9 @@ class EditAssignedEngineerController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
       var response =
-      await http.get(Uri.parse("$apiUrl/engineer_read"), headers: {
+      await http.get(Uri.parse("$apiUrl/engineer_read/$branchId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
@@ -74,8 +76,12 @@ class EditAssignedEngineerController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelEngineersProblems.fromJson(json);
         engineerProblemDataList.value = data.data ?? [];
-      } else {
-        log('failed');
+      }
+      else if(response.statusCode == 404) {
+        engineerProblemDataList.value =  [];
+      }
+      else {
+        log('failed ${response.body}');
       }
     } catch (e) {
       log(e.toString());
@@ -100,8 +106,8 @@ class EditAssignedEngineerController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelEngineersProblems.fromJson(json);
         engineerProblemDataList.value = data.data ?? [];
-      } else {
-        log('failed');
+      } else if(response.statusCode == 404) {
+        engineerProblemDataList.value =  [];
       }
     } catch (e) {
       log(e.toString());
@@ -115,8 +121,9 @@ class EditAssignedEngineerController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
       var response =
-      await http.get(Uri.parse("$apiUrl/get_user_engineer"), headers: {
+      await http.get(Uri.parse("$apiUrl/get_user_engineer/$branchId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
@@ -124,10 +131,13 @@ class EditAssignedEngineerController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelEngineers.fromJson(json);
         engineerDataList.value = data.data ?? [];
-        isCheckedList.addAll(
-            List<bool>.generate(engineerDataList.length, (index) => false));
-      } else {
-        log('failed');
+        isCheckedList.addAll(List<bool>.generate(engineerDataList.length, (index) => false));
+      }
+      else if(response.statusCode == 404) {
+        engineerProblemDataList.value =  [];
+      }
+      else {
+        log('failed ${response.body}');
       }
     } catch (e) {
       log(e.toString());
@@ -160,13 +170,16 @@ class EditAssignedEngineerController extends GetxController {
           for(int i=0; i<engineerIdList.length;i++){
             await engineerInsert(complainId: complainId, engineerId: engineerIdList[i]);
           }
+
           await sendEmail(msg: ""
               "New Complain Assigned \n"
               "Ticket No    : $ticketNo \n"
               "Machine No   : $machineNo \n"
               "Machine Name : $machineName",
           );
+          Get.back();
           privilage.value == "Maintenance Engineer" ? getEngineerComplainsByEngineer() : getEngineerComplains();
+
 
         } else {
           log(response.body.toString());
@@ -211,13 +224,13 @@ class EditAssignedEngineerController extends GetxController {
     }
   }
 
-  Future<void> deleteEngineerComplain({required int uniqueId}) async {
+  Future<void> deleteEngineerComplain({required int uniqueId , required int complainId}) async {
     try {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       var response = await http
-          .delete(Uri.parse("$apiUrl/engineer_delete/$uniqueId"), headers: {
+          .delete(Uri.parse("$apiUrl/engineer_delete/$uniqueId/$complainId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });

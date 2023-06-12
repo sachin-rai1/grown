@@ -76,6 +76,7 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
                                           onPressed: () {
                                             deleteEngineerComplain(context: context,
                                               uniqueId: controller.engineerProblemDataList[index].uniqueId!,
+                                              complainId: controller.engineerProblemDataList[index].complainId!,
                                             );
                                           },
                                           icon: const Icon(
@@ -327,15 +328,17 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
 
    void editStatus({required BuildContext context , required List<String> engineerAssigned ,required int uniqueId , required String ticketNo ,required int complainId , required String machineNo , required String machineName}){
      showBottomSheet(context: context, builder: (context){
+
+       controller.newList = engineerAssigned;
        controller.engineers.clear();
        controller.engineers.addAll(engineerAssigned);
-       print(engineerAssigned);
+
 
        var checkList = <bool>[].obs;
 
        controller.isCheckedList.addAll(List<bool>.generate(controller.engineerDataList.length, (index) {
          final item = controller.engineerDataList[index].engineers;
-         final existsInNewList = engineerAssigned.contains(item);
+         final existsInNewList = controller.newList.contains(item);
          checkList.add(existsInNewList);
          return existsInNewList;
        }));
@@ -369,19 +372,20 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
                            ),
                            enableFeedback: true,
                            title: Text(
-                             engineerAssigned[index],
+                             controller.engineerDataList[index].engineers!,
                            ),
                            value: checkList[index],
                            activeColor: Colors.green,
                            onChanged: (value) {
                              checkList[index] = value!;
                              if (checkList[index] == true) {
-                               controller.engineers.add(engineerAssigned[index]);
+                               controller.engineers.add(controller.engineerDataList[index].engineers!);
+
                                controller.engineerMails.add(controller.engineerDataList[index].userEmail!);
                              }
                              if (checkList[index] ==
                                  false) {
-                               controller.engineers.remove(engineerAssigned[index]);
+                               controller.engineers.remove(controller.engineerDataList[index].engineers!);
                                controller.engineerMails.remove(controller.engineerDataList[index].userEmail!);
                              }
                              print(controller.engineerMails);
@@ -406,13 +410,13 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
      });
    }
 
-   void deleteEngineerComplain({required BuildContext context, required int uniqueId}) {
+   void deleteEngineerComplain({required BuildContext context, required int uniqueId , required int complainId}) {
      AlertDialog alertDialog = AlertDialog(
        content: const Text("Are you sure want to delete ?"),
        actions: [
          ElevatedButton(
              onPressed: () {
-               controller.deleteEngineerComplain(uniqueId:uniqueId);
+               controller.deleteEngineerComplain(uniqueId:uniqueId, complainId: complainId);
              },
              child: const Text("Confirm")),
          ElevatedButton(

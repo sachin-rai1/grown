@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grown/app/modules/login/views/login_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/constants.dart';
@@ -51,11 +52,9 @@ class LoginController extends GetxController {
         prefs.setString('user_branch_name', branchName.value);
         prefs.setInt('user_id', userId.value);
         prefs.setString('user_email', userEmail);
-
         log(userEmail);
+        await setFirebaseToken();
 
-
-        Get.offAll(() => HomeView());
         await getEmailConfig();
         isLoading.value = false;
       } else {
@@ -101,6 +100,42 @@ class LoginController extends GetxController {
         prefs.setString('port', port);
         prefs.setString('email_pass', emailPass);
         prefs.setString('receiver_email', receiverEmail);
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+
+  }
+
+  Future<void> setFirebaseToken() async {
+    try {
+
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
+      var userId = prefs.getInt('user_id');
+      var fbToken = prefs.getString('fToken');
+
+      var response = await http.post(
+          Uri.parse("$apiUrl/generate_fcm_token"),
+          headers: {
+            "Content-type": "application/json",
+            "Authorization": "Bearer $token"
+          },
+        body: jsonEncode(<String,dynamic>{
+          "user_id":userId,
+          "fcm_token":fbToken
+        })
+      );
+
+      if (response.statusCode == 200) {
+          log("token set successfully");
+          Get.offAll(() => HomeView());
+      }
+      else{
+        showToastError(msg: response.body);
+        Get.offAll(()=>LoginView());
       }
     }
     catch(e){

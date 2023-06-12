@@ -68,7 +68,7 @@ class ViewComplainController extends GetxController {
     }
   }
 
-  void getProblems() async {
+  void getPredefinedProblems() async {
     try {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
@@ -83,9 +83,6 @@ class ViewComplainController extends GetxController {
 
         var data = ModelProblems.fromJson(json);
         problemsDataList.value = data.data ?? [];
-
-
-        // isCheckedList.addAll(List<bool>.generate(problemsDataList.length, (index) => false));
       } else {
         log('failed');
       }
@@ -105,7 +102,7 @@ class ViewComplainController extends GetxController {
   @override
   void onInit(){
     super.onInit();
-    getComplains().whenComplete(() => getProblems());
+    getComplains().whenComplete(() => getPredefinedProblems());
   }
 
   Future<void> getComplains() async {
@@ -113,8 +110,9 @@ class ViewComplainController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
       var response = await http.get(
-          Uri.parse("$apiUrl/complain_tb_read"),
+          Uri.parse("$apiUrl/complain_tb_read/$branchId"),
           headers: {
             'Authorization' : 'Bearer $token',
             'Content-type': 'application/json',
@@ -125,7 +123,7 @@ class ViewComplainController extends GetxController {
         complainsDataList.value = data.complain ?? [];
       }
       else {
-        log('failed');
+        log('failed ${response.body}');
       }
     } catch (e) {
       log(e.toString());

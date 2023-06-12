@@ -3,23 +3,30 @@ import 'dart:developer';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/home/views/home_view.dart';
 import 'package:grown/app/modules/login/views/login_view.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'app/data/NotificationService.dart';
 import 'app/data/constants.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
     GetMaterialApp(
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal),
@@ -27,45 +34,45 @@ Future<void> main() async {
       home: AnimatedSplashScreen(
           duration: 3000,
           splash: 'assets/images/grown_logo.png',
-          nextScreen:await checkLogging()?HomeView():LoginView(),
+          nextScreen: await checkLogging() ? HomeView() : LoginView(),
           splashTransition: SplashTransition.scaleTransition,
           pageTransitionType: PageTransitionType.leftToRight,
           animationDuration: const Duration(milliseconds: 1500),
-          backgroundColor: Colors.white
-      ),
+          backgroundColor: Colors.white),
       // initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
   );
 }
 
-
 Future<bool> checkLogging() async {
 
-
+  PermissionStatus status = await Permission.notification.request();
+  if (status.isGranted) {
+    log("status granted");
+  }
+  else {
+    Permission.notification.request();
+  }
 
   final prefs = await SharedPreferences.getInstance();
   var token = prefs.getString("token");
 
+  await Api.getFirebaseMessagingToken();
 
-
-  if(prefs.getString("token")  == null){
+  if (prefs.getString("token") == null) {
     return false;
-  }
-  else if (token != null) {
-
+  } else if (token != null) {
     try {
       final jwt = JWT.verify(token, SecretKey('cat_walking_on_the_street'));
       log('Payload: ${jwt.payload}');
     } on JWTExpiredException {
       log('jwt expired');
       return false;
-    }
-    on JWTInvalidException catch(e){
+    } on JWTInvalidException catch (e) {
       log(e.message);
       return false;
-    }
-    on JWTException catch (ex) {
+    } on JWTException catch (ex) {
       log(ex.message);
       return false;
     }
@@ -74,11 +81,10 @@ Future<bool> checkLogging() async {
 
     log(isTokenExpired.toString());
 
-    if(isTokenExpired ==  true){
+    if (isTokenExpired == true) {
       showToastError(msg: "Your Login Expired \nPlease login Again");
       return false;
-    }
-    else {
+    } else {
       privilage.value = prefs.getString("privilage")!;
       departmentName.value = prefs.getString("user_department_name")!;
       departmentId.value = prefs.getInt("user_department_id")!;
@@ -90,6 +96,8 @@ Future<bool> checkLogging() async {
     return false;
   }
 }
+
+
 
 final Uri trushnaUrl = Uri.parse('https://mail.trushnaexim.com');
 

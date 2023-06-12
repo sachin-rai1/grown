@@ -6,13 +6,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:grown/app/data/NotificationService.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../modules/login/Model/ModelUser.dart';
 
+
 String apiUrl = "http://ec2-34-197-250-249.compute-1.amazonaws.com/api";
+// String apiUrl = "http://192.168.6.201:5000/api";
 RxString privilage = "".obs;
 RxString departmentName = "".obs;
 RxInt departmentId = 0.obs;
@@ -83,14 +86,14 @@ showToastError({msg}) {
   );
 }
 
-class Api{
-
-
+class Api {
+  PushNotification? _notificationInfo;
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   static Future<void> getFirebaseMessagingToken() async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('fToken');
-    await messaging.requestPermission(
+    NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -98,23 +101,53 @@ class Api{
       criticalAlert: true,
       provisional: false,
       sound: true,
-
     );
-
     await messaging.getToken().then((t) {
       if (t != null) {
         token = t;
         log("Push Token : $t");
       }
-      // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //   print('Got a message whilst in the foreground!');
-      //   print('Message data: ${message.data}');
-      //
-      //   if (message.notification != null) {
-      //     print(
-      //         'Message also contained a notification: ${message.notification}');
-      //   }
-      // });
     });
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+       NotificationService().showNotification(message.notification!.title!, message.notification!.body!);
+      });
+    }
   }
+
+  static Future<void> sendPushNotification({required String msg,required List<String> token, required String title}) async {
+    try {
+      final msgBody = {
+        "registration_ids": token,
+        "notification": {
+          "title": title,
+          "body": msg,
+          "android_channel_id": "chats",
+        }
+      };
+      var url = Uri.parse('https://fcm.googleapis.com/fcm/send');
+      var response = await post(url, body: jsonEncode(msgBody), headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.authorizationHeader: "key = AAAA17z7YKM:APA91bE4vVotRJTbOeCc7nc25xFL9-uGQ5I1pSO_p2KZljC6ImQ3JxnLVMb3xWcxq9nq9o-Emt9wMaZnRLqNbUVYDmtZLMm1yTxzmrZE_Ajj_R2Yw5mxzpGSpDu7DS2D0hQujc-sNY_U"
+      });
+      log('Response status: ${response.statusCode}');
+      log('Response body: ${response.body}');
+
+    } catch (e) {
+      log("Error : $e");
+    }
+  }
+
+
 }
+class PushNotification {
+  PushNotification({
+    this.title,
+    this.body,
+  });
+
+  String? title;
+  String? body;
+}
+
+

@@ -14,11 +14,11 @@ class MaintenanceView extends GetView<MaintenanceController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight: (departmentName.value != "Admin") ? 0 : kToolbarHeight,
-          backgroundColor: (departmentName.value != "Admin")
+          toolbarHeight: (privilage.value != "Admin") ? 0 : kToolbarHeight,
+          backgroundColor: (privilage.value != "Admin")
               ? Colors.transparent
               : Colors.blue,
-          title: (departmentName.value != "Admin")
+          title: (privilage.value != "Admin")
               ? const Text("")
               : const Text("Maintenance"),
           centerTitle: true,

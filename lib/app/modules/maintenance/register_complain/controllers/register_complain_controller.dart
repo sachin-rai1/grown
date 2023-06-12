@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:grown/app/modules/maintenance/register_complain/Model/ModelFcmToken.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,6 +28,13 @@ class RegisterComplainController extends GetxController {
   var ticketNo = "".obs;
   var sendMail = MailSending();
 
+  @override
+  void onInit() {
+    super.onInit();
+    getProblems();
+    getComplainNo().whenComplete(() => ticketNo.value = "${branchName.value}-${digits.value}${currentNumber.value}").whenComplete(() => getFirebaseTokenData());
+  }
+
   Future<void> sendEmail({required String msg}) async {
     var prefs = await SharedPreferences.getInstance();
     var receiverEmail = prefs.getString('receiver_email');
@@ -45,12 +53,34 @@ class RegisterComplainController extends GetxController {
         msg: msg);
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    getProblems();
-    getComplainNo().whenComplete(() => ticketNo.value =
-        "${branchName.value}-${digits.value}${currentNumber.value}");
+  var fcmTokenDataList = <FcmTokenData>[].obs;
+  var fcmToken = <String>[].obs;
+  Future<void> getFirebaseTokenData() async {
+    try {
+      isLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var response =
+      await http.get(Uri.parse("$apiUrl/get_fcm_token_role_wise?user_department_id=2&privilage=Admin"), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json',
+      },
+      );
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        var data = ModelFcmToken.fromJson(json);
+        fcmTokenDataList.value = data.data ?? [];
+        for (int i=0; i<fcmTokenDataList.length;i++) {
+          fcmToken.add(fcmTokenDataList[i].fcmToken!);
+        }
+      } else {
+        log('failed');
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   getImages() {
@@ -203,6 +233,11 @@ class RegisterComplainController extends GetxController {
             log('Data inserted successfully');
             showToast(msg: "Complain Register Successfully");
 
+            await Api.sendPushNotification(
+                msg: "Ticket No : ${ticketNo.value}",
+                token: fcmToken,
+                title: "New Ticket Assigned");
+            await clearData();
             await sendEmail(
               msg: ""
                   "New Ticket has been Generated \n"
@@ -213,7 +248,7 @@ class RegisterComplainController extends GetxController {
                   "Problem Description : ${descriptionController.text}",
             );
 
-            await clearData();
+
           } else {
             showToastError(msg: response.body);
           }

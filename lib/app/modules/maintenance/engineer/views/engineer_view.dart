@@ -76,6 +76,7 @@ class EngineerView extends GetView<EngineerController> {
                                           onPressed: () {
                                             deleteEngineerComplain(context: context,
                                                 uniqueId: controller.engineerProblemDataList[index].uniqueId!,
+                                              complainId: controller.engineerProblemDataList[index].complainId!,
                                             );
                                           },
                                           icon: const Icon(
@@ -424,13 +425,13 @@ class EngineerView extends GetView<EngineerController> {
     });
   }
 
-  void deleteEngineerComplain({required BuildContext context, required int uniqueId}) {
+  void deleteEngineerComplain({required BuildContext context, required int uniqueId , required int complainId}) {
     AlertDialog alertDialog = AlertDialog(
       content: const Text("Are you sure want to delete ?"),
       actions: [
         ElevatedButton(
             onPressed: () {
-              controller.deleteEngineerComplain(uniqueId:uniqueId);
+              controller.deleteEngineerComplain(uniqueId:uniqueId, complainId: complainId);
             },
             child: const Text("Confirm")),
         ElevatedButton(

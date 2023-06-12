@@ -381,11 +381,11 @@ class ViewComplainView extends GetView<ViewComplainController> {
     controller.machineNameController.text = machineName;
     controller.machineNoController.text = machineNo;
     controller.descriptionController.text = problemDescription;
+
     controller.newList = problems;
     var checkList = <bool>[].obs;
     controller.problem.clear();
     controller.problem.addAll(problems);
-
 
     controller.isCheckedList.addAll(List<bool>.generate(controller.problemsDataList.length, (index) {
       final item = controller.problemsDataList[index].description;
@@ -393,8 +393,6 @@ class ViewComplainView extends GetView<ViewComplainController> {
       checkList.add(existsInNewList);
       return existsInNewList;
     }));
-
-
     showBottomSheet(
         context: context,
         builder: (context) {
@@ -470,7 +468,6 @@ class ViewComplainView extends GetView<ViewComplainController> {
                                     if (checkList[index] == false) {
                                       controller.problem.remove(controller.problemsDataList[index].description!);
                                     }
-                                    print(controller.problem.join(","));
                                   },
                                 );
                               });

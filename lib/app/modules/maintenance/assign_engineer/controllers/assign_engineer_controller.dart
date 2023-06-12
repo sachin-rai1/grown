@@ -6,6 +6,7 @@ import 'package:grown/app/modules/maintenance/assign_engineer/Model/ModelEnginee
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
+import '../../register_complain/Model/ModelFcmToken.dart';
 import '../../view_complain/Model/ModelComplainsView.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,6 +21,12 @@ class AssignEngineerController extends GetxController {
 
   var sendMail = MailSending();
 
+  @override
+  void onInit() {
+    super.onInit();
+    getComplains().whenComplete(() => getEngineers());
+  }
+
   Future<void> sendEmail({required String msg}) async {
 
     var prefs = await SharedPreferences.getInstance();
@@ -28,23 +35,50 @@ class AssignEngineerController extends GetxController {
     log(engineerMails.join(","));
     log(receiverEmail.toString());
     log(msg);
-
-    sendMail.sendEmail(
-        email: prefs.getString("sender_email")!,
+    var senderEmail = prefs.getString("sender_email")!;
+    if(senderEmail == ''){
+      showToastError(msg: "Sender Mail empty");
+      log("sender mail not found");
+    }
+    else{
+      sendMail.sendEmail(
+        email: senderEmail,
         password: prefs.getString("email_pass")!,
         server: prefs.getString("server")!,
         port: prefs.getString("port")!,
         msg: msg,
         receipents: [receiverEmail.toString() , engineerMails.join(",")],
 
-    );
+      );
+    }
+
   }
 
 
-  @override
-  void onInit() {
-    super.onInit();
-    getComplains().whenComplete(() => getEngineers());
+  var fcmToken = <String>[].obs;
+  Future<void> getFirebaseTokenData({required int userId}) async {
+    try {
+      isLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var response =
+      await http.get(Uri.parse("$apiUrl/get_fcm_token_role_wise?user_id=$userId"), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json',
+      },
+
+      );
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        fcmToken.add(json["data"][0]['fcm_token']);
+      } else {
+        log('failed ${response.body}');
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> getComplains() async {
@@ -52,8 +86,9 @@ class AssignEngineerController extends GetxController {
       isLoading.value = true;
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
       var response =
-          await http.get(Uri.parse("$apiUrl/unassigned_complain"), headers: {
+          await http.get(Uri.parse("$apiUrl/unassigned_complain/$branchId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
@@ -61,8 +96,8 @@ class AssignEngineerController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelViewComplain.fromJson(json);
         complainsDataList.value = data.complain ?? [];
-      } else {
-        log('failed');
+      } else if(response.statusCode == 404){
+        complainsDataList.value = [];
       }
     } catch (e) {
       log(e.toString());
@@ -77,7 +112,7 @@ class AssignEngineerController extends GetxController {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       var response =
-          await http.get(Uri.parse("$apiUrl/get_user_engineer"), headers: {
+          await http.get(Uri.parse("$apiUrl/get_user_engineer/$branchId"), headers: {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
@@ -85,10 +120,9 @@ class AssignEngineerController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelEngineers.fromJson(json);
         engineerDataList.value = data.data ?? [];
-        isCheckedList.addAll(
-            List<bool>.generate(engineerDataList.length, (index) => false));
+        isCheckedList.addAll(List<bool>.generate(engineerDataList.length, (index) => false));
       } else {
-        log('failed');
+        log('failed ${response.body}');
       }
     } catch (e) {
       log(e.toString());
@@ -116,20 +150,28 @@ class AssignEngineerController extends GetxController {
       try {
         var response = await http.Response.fromStream(await request.send());
         if (response.statusCode == 200) {
-          var ticket = ticketNo;
           log('Engineer assigned successfully');
-          for(int i=0; i<engineerIdList.length;i++){
-            await engineerInsert(complainId: complainId, engineerId: engineerIdList[i]);
+          for (int i = 0; i < engineerIdList.length; i++) {
+            await engineerInsert(
+                complainId: complainId, engineerId: engineerIdList[i]);
+            await getFirebaseTokenData(userId: engineerIdList[i]);
           }
+          await getComplains();
+          if (fcmToken.isNotEmpty) {
+            await Api.sendPushNotification(
+                msg: "Ticket No : $ticketNo",
+                token: fcmToken,
+                title: "New Ticket Assigned");
+          }
+
           await sendEmail(msg: ""
               "New Complain Assigned \n"
               "Ticket No    : $ticketNo \n"
               "Machine No   : $machineNo \n"
               "Machine Name : $machineName",
-              );
-          await getComplains();
-
-        } else {
+          );
+        }
+        else {
           log(response.body.toString());
           log('Error: ${response.statusCode}');
         }
