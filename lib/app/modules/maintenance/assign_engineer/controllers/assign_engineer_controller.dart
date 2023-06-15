@@ -138,6 +138,8 @@ class AssignEngineerController extends GetxController {
     } else {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var branchId = prefs.getInt('user_branch_id');
+
 
       String url = "$apiUrl/assign_engineer/$complainId";
 

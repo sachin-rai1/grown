@@ -676,8 +676,8 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: InkWell(
               onTap: () => Get.to(() => GasesView()),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.gas_meter,
                     size: 25,
@@ -698,8 +698,8 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: InkWell(
               onTap: () => Get.to(() => GasManifoldView()),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.gas_meter_sharp,
                     color: Colors.teal,
@@ -720,8 +720,8 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: InkWell(
               onTap: () => Get.to(() => GasVendorView()),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.person,
                     color: Colors.green,
@@ -742,8 +742,8 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: InkWell(
               onTap: () => Get.to(() => SearchBySerialNoView()),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.search,
                     color: Colors.green,
@@ -764,8 +764,8 @@ class MyDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: InkWell(
               onTap: () => Get.offAll(() => HomeView()),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.home,
                     color: Colors.black87,
@@ -798,7 +798,7 @@ class TextBoxWidget extends StatelessWidget {
       this.autofocus,
       this.keyboardType,
       this.hintText,
-      this.height})
+      this.height, this.readOnly})
       : super(key: key);
   final TextEditingController controller;
   final String title;
@@ -808,6 +808,7 @@ class TextBoxWidget extends StatelessWidget {
   final String? hintText;
   final bool? autofocus;
   final double? height;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -823,6 +824,7 @@ class TextBoxWidget extends StatelessWidget {
           autofocus: autofocus ?? false,
           validator: validator,
           onChanged: onChanged,
+          readOnly: readOnly??false,
           keyboardType: keyboardType ?? TextInputType.number,
           decoration: InputDecoration(
               hintText: hintText ?? "Your Answer",

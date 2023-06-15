@@ -7,10 +7,22 @@ import 'package:grown/app/modules/chiller_reading/Model/ModelCompressor.dart';
 import 'package:grown/app/modules/chiller_reading/Model/ModelPhase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../data/constants.dart';
 
+
+
 class ChillerReadingController extends GetxController {
+  var circulationPumpStatus1 = 'Off'.obs;
+  var circulationPumpStatus2 = 'Off'.obs;
+
+  void updatePumpStatus1(String value) {
+    circulationPumpStatus1.value = value;
+  }
+
+  void updatePumpStatus2(String value) {
+    circulationPumpStatus2.value = value;
+  }
+
   final inletTemperatureController = TextEditingController();
   final outletTemperatureController = TextEditingController();
   final averageLoadController = TextEditingController();
@@ -32,12 +44,17 @@ class ChillerReadingController extends GetxController {
   var selectedChiller = "".obs;
   var isChillerLoading = false.obs;
 
+
+
+
   var compressorDataList = <CompressorData>[].obs;
   var isCompressorLoading = false.obs;
 
   var latestReadingId = 0.obs;
   RxList<RxMap<String, dynamic>> dataList = RxList<RxMap<String, dynamic>>();
   var isUpload = false.obs;
+
+  final processPumpPressureController = TextEditingController(text: "Outlet");
 
   @override
   void onInit() {
@@ -55,13 +72,16 @@ class ChillerReadingController extends GetxController {
 
   Future<void> fetchData() async {
     try {
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var branchId = prefs.getInt("user_branch_id");
       await fetchBranches();
-      await fetchPhases(branchId: branchDataList[0]["branch_id"]);
+      await fetchPhases(branchId: branchId!);
       await fetchChiller(phaseId: phaseDataList[0].phaseId!);
       await fetchCompressor(chillerId: chillerDataList[0].chillerId!);
       await getCompressorStatus();
 
-      selectedBranchId.value = branchDataList[0]["branch_id"];
+      selectedBranchId.value =branchId;
       selectedChillerId.value = chillerDataList[0].chillerId!;
       selectedPhaseId.value = phaseDataList[0].phaseId!;
 
@@ -176,13 +196,14 @@ class ChillerReadingController extends GetxController {
   Future<void> addChillerReadingData() async {
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var branchId = prefs.getInt("user_branch_id");
     final response = await http.post(Uri.parse('$apiUrl/add_chiller_reading'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-type': 'application/json'
         },
         body: jsonEncode(<dynamic, String>{
-          "branch_id": selectedBranchId.value.toString(),
+          "branch_id": branchId.toString(),
           "phase_id": selectedPhaseId.value.toString(),
           "inlet_temperature": inletTemperatureController.text,
           "outlet_temperature": outletTemperatureController.text,
