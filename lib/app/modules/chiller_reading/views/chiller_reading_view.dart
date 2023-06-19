@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:grown/app/modules/chiller_reading/chiller_compressor/views/chiller_compressor_view.dart';
 import 'package:grown/app/modules/chiller_reading/chiller_phase/views/chiller_phase_view.dart';
 import 'package:grown/app/modules/chiller_reading/chillers/views/chillers_view.dart';
+import 'package:grown/app/modules/chiller_reading/process_pump/views/process_pump_view.dart';
 import '../../../data/constants.dart';
 import '../../../data/widgets.dart';
-import '../../employee_management/branch_data/views/branch_data_view.dart';
 import '../controllers/chiller_reading_controller.dart';
 
 class ChillerReadingView extends GetView<ChillerReadingController> {
@@ -81,6 +81,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                         dropDownOnChanged: (newValue) {
                                           controller.selectedPhase(
                                               newValue.toString());
+                                          controller.clearData();
                                         },
                                         dropDownItems: controller.phaseDataList
                                             .map((phase) {
@@ -98,21 +99,11 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                                     phaseId: phase.phaseId!);
                                               }
 
-                                              if (controller
-                                                  .chillerDataList.isEmpty) {
-                                                controller.compressorDataList
-                                                    .value = [];
+                                              if (controller.chillerDataList.isEmpty) {controller.compressorDataList.value = [];
                                               } else {
-                                                await controller
-                                                    .fetchCompressor(
-                                                        chillerId: controller
-                                                            .chillerDataList[0]
-                                                            .chillerId!);
-                                                controller.selectedChillerId
-                                                        .value =
-                                                    controller
-                                                        .chillerDataList[0]
-                                                        .chillerId!;
+                                                await controller.fetchCompressor(chillerId: controller.chillerDataList[0].chillerId!);
+                                                controller.selectedChillerId.value =
+                                                    controller.chillerDataList[0].chillerId!;
                                               }
                                             },
                                             value: phase.phaseName,
@@ -149,7 +140,6 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                         ),
                         TextBoxWidget(
                           title: "Process Pump Pressure (Bar)",
-                          readOnly: true,
                           controller: controller.processPumpPressureController,
                         ),
 
@@ -166,7 +156,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Radio(
-                                  value: 'On',
+                                  value: '1',
                                   groupValue: controller.circulationPumpStatus1.value,
                                   onChanged: (value) {controller.updatePumpStatus1(value.toString());
                                   },
@@ -176,7 +166,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600),),
                                 Radio(
-                                  value: 'Off',
+                                  value: '0',
                                   groupValue:
                                       controller.circulationPumpStatus1.value,
                                   onChanged: (value) {
@@ -202,7 +192,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Radio(
-                                  value: 'On',
+                                  value: '1',
                                   groupValue: controller.circulationPumpStatus2.value,
                                   onChanged: (value) {
                                     controller.updatePumpStatus2(value.toString());
@@ -210,10 +200,11 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                 ),
                                 const Text('On', style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w600),),
                                 Radio(
-                                  value: 'Off',
+                                  value: '0',
                                   groupValue: controller.circulationPumpStatus2.value,
                                   onChanged: (value) {
                                     controller.updatePumpStatus2(value.toString());
+
                                   },
                                 ),
                                 const Text('Off' , style: TextStyle(
@@ -225,6 +216,94 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                             ]
                           ),
                         ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 15),
+                              child: Text(
+                                "Process Pump",
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Obx(
+                                  () => (privilage.value == "Admin" ||
+                                  privilage.value == "Editor")
+                                  ? InkWell(
+                                  onTap: () {
+                                    Get.to(() => ProcessPumpView());
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Icon(
+                                      Icons.add_circle,
+                                      size: 50,
+                                      color: Colors.blue,
+                                    ),
+                                  ))
+                                  : Container(),
+                            ),
+                          ],
+                        ),
+                        Obx(() {
+                          return (controller.isProcessPumpLoading.value == true)
+                              ? const Center(child: CircularProgressIndicator())
+                              : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controller.processPumpDataList.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${controller.processPumpDataList[index].processPumpName!} :",
+                                      style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Obx(
+                                              () => MyRadioList(
+                                            width: 100,
+                                            title: 'ON',
+                                            value: '1',
+                                            groupValue: controller.processPumpStatus[index],
+                                            onChanged: (value) {
+                                              controller.processPumpStatus[index] = value.toString();
+                                              controller.getProcessPumpStatus();
+                                              // controller.insertDataToAPI(readingId: 1);
+                                            },
+                                          ),
+                                        ),
+                                        Obx(
+                                              () => MyRadioList(
+                                            width: 100,
+                                            title: 'OFF',
+                                            value: '0',
+                                            groupValue: controller.processPumpStatus[index],
+                                            onChanged: (value) {
+                                              controller.processPumpStatus[index] = value.toString();
+                                              controller.getProcessPumpStatus();
+
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              });
+                        }),
+
+
 
 
                         Row(
@@ -267,8 +346,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                               await controller.fetchCompressor(
                                                   chillerId: controller
                                                       .selectedChillerId.value);
-                                              await controller
-                                                  .getCompressorStatus();
+                                              await controller.getCompressorStatus();
                                             },
                                             value: chiller.chillerName,
                                             child: Text(chiller.chillerName!),
@@ -337,58 +415,56 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                           return (controller.isCompressorLoading.value == true)
                               ? const Center(child: CircularProgressIndicator())
                               : ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount:
-                                      controller.compressorDataList.length,
-                                  itemBuilder: (context, index) {
-                                    return Row(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount:
+                              controller.compressorDataList.length,
+                              itemBuilder: (context, index) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${controller.compressorDataList[index].compressorName!} :",
+                                      style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          "${controller.compressorDataList[index].compressorName!} :",
-                                          style: const TextStyle(
-                                              color: Colors.black87,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                        Obx(
+                                              () => MyRadioList(
+                                            width: 100,
+                                            title: 'ON',
+                                            value: '1',
+                                            groupValue: controller.compressorStatus[index],
+                                            onChanged: (value) {
+                                              controller.compressorStatus[index] = value.toString();
+                                              controller.getCompressorStatus();
+                                              // controller.insertDataToAPI(readingId: 1);
+                                            },
+                                          ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Obx(
+                                        Obx(
                                               () => MyRadioList(
-                                                width: 100,
-                                                title: 'ON',
-                                                value: '1',
-                                                groupValue: controller.compressorStatus[index],
-                                                onChanged: (value) {
-                                                  controller.compressorStatus[index] = value.toString();
-                                                  controller.getCompressorStatus();
-                                                  // controller.insertDataToAPI(readingId: 1);
-                                                },
-                                              ),
-                                            ),
-                                            Obx(
-                                              () => MyRadioList(
-                                                width: 100,
-                                                title: 'OFF',
-                                                value: '0',
-                                                groupValue: controller
-                                                    .compressorStatus[index],
-                                                onChanged: (value) {
-                                                  controller.compressorStatus[
-                                                      index] = value.toString();
-                                                  controller
-                                                      .getCompressorStatus();
-                                                },
-                                              ),
-                                            ),
-                                          ],
+                                            width: 100,
+                                            title: 'OFF',
+                                            value: '0',
+                                            groupValue: controller.compressorStatus[index],
+                                            onChanged: (value) {
+                                              controller.compressorStatus[index] = value.toString();
+                                              controller.getCompressorStatus();
+                                            },
+                                          ),
                                         ),
                                       ],
-                                    );
-                                  });
+                                    ),
+                                  ],
+                                );
+                              });
                         }),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -397,12 +473,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                     fixedSize: Size(w / 2.5, 10),
                                     backgroundColor: Colors.orange),
                                 onPressed: () {
-                                  controller
-                                      .addChillerReadingData()
-                                      .whenComplete(() =>
-                                          controller.insertDataToAPI(
-                                              readingId: controller
-                                                  .latestReadingId.value));
+                                  controller.addChillerReadingData();
                                 },
                                 child: const Text("Submit")),
                             ElevatedButton(

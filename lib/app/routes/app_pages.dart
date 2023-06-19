@@ -19,6 +19,8 @@ import '../modules/chiller_reading/chillers/bindings/chillers_binding.dart';
 import '../modules/chiller_reading/chillers/views/chillers_view.dart';
 import '../modules/chiller_reading/datewise_chiller_reading/bindings/datewise_chiller_reading_binding.dart';
 import '../modules/chiller_reading/datewise_chiller_reading/views/datewise_chiller_reading_view.dart';
+import '../modules/chiller_reading/process_pump/bindings/process_pump_binding.dart';
+import '../modules/chiller_reading/process_pump/views/process_pump_view.dart';
 import '../modules/chiller_reading/views/chiller_reading_view.dart';
 import '../modules/email_config/bindings/email_config_binding.dart';
 import '../modules/email_config/views/email_config_view.dart';
@@ -318,6 +320,11 @@ class AppPages {
           page: () => BranchWiseChillerReadingView(),
           binding: BranchwiseChillerReadingBinding(),
         ),
+        GetPage(
+          name: _Paths.PROCESS_PUMP,
+          page: () =>  ProcessPumpView(),
+          binding: ProcessPumpBinding(),
+        ),
       ],
     ),
     GetPage(
@@ -372,7 +379,7 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.EDIT_ASSIGNED_ENGINEER,
-          page: () =>  EditAssignedEngineerView(),
+          page: () => EditAssignedEngineerView(),
           binding: EditAssignedEngineerBinding(),
         ),
       ],
@@ -382,6 +389,5 @@ class AppPages {
       page: () => EmailConfigView(),
       binding: EmailConfigBinding(),
     ),
-
   ];
 }

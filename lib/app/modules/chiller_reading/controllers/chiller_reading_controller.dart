@@ -8,12 +8,11 @@ import 'package:grown/app/modules/chiller_reading/Model/ModelPhase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../data/constants.dart';
-
-
+import '../Model/ModelProcessPump.dart';
 
 class ChillerReadingController extends GetxController {
-  var circulationPumpStatus1 = 'Off'.obs;
-  var circulationPumpStatus2 = 'Off'.obs;
+  var circulationPumpStatus1 = '0'.obs;
+  var circulationPumpStatus2 = '0'.obs;
 
   void updatePumpStatus1(String value) {
     circulationPumpStatus1.value = value;
@@ -29,7 +28,6 @@ class ChillerReadingController extends GetxController {
   final compressorStatusController = TextEditingController();
   final negativeVoltageController = TextEditingController();
 
-  var compressorStatus = [].obs;
   var isLoading = false.obs;
   var branchDataList = [].obs;
   var selectedBranchId = 0.obs;
@@ -44,17 +42,22 @@ class ChillerReadingController extends GetxController {
   var selectedChiller = "".obs;
   var isChillerLoading = false.obs;
 
+  var processPumpDataList = <ProcessPumpData>[].obs;
+  var isProcessPumpLoading = false.obs;
+  var processPumpStatus = [].obs;
+  RxList<RxMap<String, dynamic>> processPumpStatusDataList = RxList<RxMap<String, dynamic>>();
 
 
 
+  var compressorStatus = [].obs;
   var compressorDataList = <CompressorData>[].obs;
   var isCompressorLoading = false.obs;
-
+  RxList<RxMap<String, dynamic>> compressorStatusDataList = RxList<RxMap<String, dynamic>>();
   var latestReadingId = 0.obs;
-  RxList<RxMap<String, dynamic>> dataList = RxList<RxMap<String, dynamic>>();
+
   var isUpload = false.obs;
 
-  final processPumpPressureController = TextEditingController(text: "Outlet");
+  final processPumpPressureController = TextEditingController();
 
   @override
   void onInit() {
@@ -77,9 +80,12 @@ class ChillerReadingController extends GetxController {
       var branchId = prefs.getInt("user_branch_id");
       await fetchBranches();
       await fetchPhases(branchId: branchId!);
+      await fetchProcessPump(phaseId: phaseDataList[0].phaseId!);
       await fetchChiller(phaseId: phaseDataList[0].phaseId!);
       await fetchCompressor(chillerId: chillerDataList[0].chillerId!);
+
       await getCompressorStatus();
+      await getProcessPumpStatus();
 
       selectedBranchId.value =branchId;
       selectedChillerId.value = chillerDataList[0].chillerId!;
@@ -91,10 +97,52 @@ class ChillerReadingController extends GetxController {
     }
   }
 
-   getCompressorStatus() async {
-     dataList.value = [];
+  Future<void> fetchProcessPump({required int phaseId}) async{
+    try {
+      isProcessPumpLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      final response = await http.get(Uri.parse('$apiUrl/view_process_pump?phase_id_fk=$phaseId'), headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        dynamic json = jsonDecode(response.body);
+        print(json);
+        var data = ModelProcessPump.fromJson(json);
+        processPumpDataList.value = data.data ?? [];
+        int noOfOptions = processPumpDataList.length;
+        processPumpStatus.value = List.generate(noOfOptions, (index) => "0");
+
+      } else {
+        processPumpDataList.value = [];
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+    finally{
+      isProcessPumpLoading.value = false;
+    }
+
+  }
+
+  Future<void> getProcessPumpStatus() async {
+    processPumpStatusDataList.value = [];
+    for (int index = 0; index < processPumpDataList.length; index++) {
+      processPumpStatusDataList.addAll([
+        RxMap<String, dynamic>({
+          "process_pump_id_fk": processPumpDataList[index].cppId.toString(),
+          "status": processPumpStatus[index].toString()
+        }),
+      ]);
+    }
+  }
+
+  Future<void> getCompressorStatus() async {
+     compressorStatusDataList.value = [];
     for (int index = 0; index < compressorDataList.length; index++) {
-      dataList.addAll([
+      compressorStatusDataList.addAll([
         RxMap<String, dynamic>({
           "compressor_id": compressorDataList[index].compressorId.toString(),
           "status": compressorStatus[index].toString()
@@ -182,6 +230,7 @@ class ChillerReadingController extends GetxController {
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
       var data = ModelCompressor.fromJson(json);
+      print(json);
       compressorDataList.value = data.compressor ?? [];
       int noOfOptions = compressorDataList.length;
       compressorStatus.value = List.generate(noOfOptions, (index) => "0");
@@ -207,16 +256,20 @@ class ChillerReadingController extends GetxController {
           "phase_id": selectedPhaseId.value.toString(),
           "inlet_temperature": inletTemperatureController.text,
           "outlet_temperature": outletTemperatureController.text,
+          "process_pump_pressure":processPumpPressureController.text,
           "chiller_id": selectedChillerId.value.toString(),
           "average_load": averageLoadController.text,
+          "circulation_pump_1_status":circulationPumpStatus1.value,
+          "circulation_pump_2_status":circulationPumpStatus2.value
         }));
 
     var jsonData = jsonDecode(response.body);
     log(jsonData.toString());
     if (response.statusCode == 200) {
       latestReadingId.value = jsonData['reading_id'];
-      clearData();
+      insertDataToAPI(readingId: latestReadingId.value);
     } else {
+      log(response.statusCode.toString());
       showToastError(msg: jsonData["message"].toString());
     }
   }
@@ -225,7 +278,10 @@ class ChillerReadingController extends GetxController {
     try {
       isUpload.value = true;
       for (int i = 0; i < compressorDataList.length; i++) {
-        await addCompressorData(chillerReadingId: readingId, data: dataList[i]);
+        await addCompressorData(chillerReadingId: readingId, data: compressorStatusDataList[i]);
+      }
+      for(int i=0; i<processPumpDataList.length; i++){
+          await addProcessPumpData(chillerReadingId: readingId, data: processPumpStatusDataList[i]);
       }
     }
     catch(e){
@@ -237,6 +293,27 @@ class ChillerReadingController extends GetxController {
     }
 
   }
+
+  Future<void> addProcessPumpData({required int chillerReadingId, required var data}) async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.post(
+        Uri.parse('$apiUrl/add_process_pump_reading/$chillerReadingId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-type': 'application/json'
+        },
+        body: jsonEncode(data));
+    var jsonData = jsonDecode(response.body);
+    log(jsonData["message"].toString());
+
+    if (response.statusCode == 200) {
+      log("uploaded");
+    } else {
+      showToastError(msg: jsonData["message"].toString());
+    }
+  }
+
 
   Future<void> addCompressorData({required int chillerReadingId, required var data}) async {
     var prefs = await SharedPreferences.getInstance();

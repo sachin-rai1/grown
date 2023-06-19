@@ -30,12 +30,15 @@ class ChillerReadingData {
   String? branchName;
   int? chillerId;
   String? chillerName;
-  String? createdOn;
+  int? circulationPump1Status;
+  int? circulationPump2Status;
+  DateTime? createdOn;
   int? inletTemperature;
   int? outletTemperature;
   int? phaseId;
   String? phaseName;
   int? readingId;
+  int? processPumpPressure;
 
   ChillerReadingData({
     this.averageLoad,
@@ -43,12 +46,15 @@ class ChillerReadingData {
     this.branchName,
     this.chillerId,
     this.chillerName,
+    this.circulationPump1Status,
+    this.circulationPump2Status,
     this.createdOn,
     this.inletTemperature,
     this.outletTemperature,
     this.phaseId,
     this.phaseName,
     this.readingId,
+    this.processPumpPressure
   });
 
   factory ChillerReadingData.fromJson(Map<String, dynamic> json) => ChillerReadingData(
@@ -57,12 +63,15 @@ class ChillerReadingData {
     branchName: json["branch_name"],
     chillerId: json["chiller_id"],
     chillerName: json["chiller_name"],
-    createdOn: json["created_on"],
+    circulationPump1Status: json["circulation_pump_1_status"],
+    circulationPump2Status: json["circulation_pump_2_status"],
+    createdOn: json["created_on"] == null ? null : DateTime.parse(json["created_on"]),
     inletTemperature: json["inlet_temperature"],
     outletTemperature: json["outlet_temperature"],
     phaseId: json["phase_id"],
     phaseName: json["phase_name"],
     readingId: json["reading_id"],
+    processPumpPressure: json["process_pump_pressure"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -71,11 +80,14 @@ class ChillerReadingData {
     "branch_name": branchName,
     "chiller_id": chillerId,
     "chiller_name": chillerName,
-    "created_on": createdOn,
+    "circulation_pump_1_status": circulationPump1Status,
+    "circulation_pump_2_status": circulationPump2Status,
+    "created_on": createdOn?.toIso8601String(),
     "inlet_temperature": inletTemperature,
     "outlet_temperature": outletTemperature,
     "phase_id": phaseId,
     "phase_name": phaseName,
     "reading_id": readingId,
+    "process_pump_pressure":processPumpPressure
   };
 }

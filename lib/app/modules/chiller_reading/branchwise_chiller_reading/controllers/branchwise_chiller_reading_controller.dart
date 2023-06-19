@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,25 +10,53 @@ import '../../Model/ModelChillerCompressorReading.dart';
 import '../../Model/ModelChillerReading.dart';
 import 'package:http/http.dart' as http;
 
+import '../../Model/ModelProcessPumpReading.dart';
 import '../../controllers/chiller_reading_controller.dart';
 class BranchwiseChillerReadingController extends GetxController {
   Rx<String> selectedDate = DateTime.now().toString().obs;
   dynamic formatted;
   var isLoading = false.obs;
+  final inletTemperatureController = TextEditingController();
+  final outletTemperatureController = TextEditingController();
+  final averageLoadController = TextEditingController();
+  final processPumpPressureController = TextEditingController();
+
   var chillerReadingDataList = <ChillerReadingData>[].obs;
   var chillerCompressorDataList = <ChillerCompressorData>[].obs;
   final chillerReadingController = Get.put(ChillerReadingController());
   var selectedBranchId = 0.obs;
   var isCompressorLoading = false.obs;
 
+  var processPumpDataList = <ProcessPumpReading>[].obs;
+  var isProcessPumpLoading = false.obs;
+
   @override
   void onInit(){
     super.onInit();
-    fetchChillerReading(branchId: chillerReadingController.branchDataList[0]["branch_id"]);
+    fetchChillerReading(branchId: chillerReadingController.branchDataList[0]["branch_id"]).whenComplete(() => selectedBranchId.value = chillerReadingController.branchDataList[0]["branch_id"]);
   }
 
 
+  Future<void> fetchProcessPumpReading({required var chillerReadingId}) async {
+    isProcessPumpLoading.value = true;
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.get(Uri.parse('$apiUrl/view_process_pump_reading?cr_id_fk=$chillerReadingId'), headers: {
+      'Authorization': 'Bearer $token',
+    });
 
+    if (response.statusCode == 200) {
+      dynamic json = jsonDecode(response.body);
+      var data = ModelProcessPumpReading.fromJson(json);
+      processPumpDataList.value = data.data ?? [];
+
+      isProcessPumpLoading.value = false;
+    } else {
+      isProcessPumpLoading.value = false;
+      processPumpDataList.value = [];
+      log(response.body.toString());
+    }
+  }
 
   Future<void> fetchChillerReading({required var branchId}) async {
     isLoading.value = true;
@@ -66,6 +95,62 @@ class BranchwiseChillerReadingController extends GetxController {
       isCompressorLoading.value = false;
       chillerCompressorDataList.value = [];
       log(response.body.toString());
+    }
+  }
+  Future<void> deleteChillerReading({required int readingId}) async {
+    print("Selected Date");
+    print(selectedDate.value);
+    isLoading.value = true;
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.delete(
+      Uri.parse('$apiUrl/delete_chiller_reading/$readingId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-type': 'application/json'
+      },
+    );
+
+    log(response.statusCode.toString());
+    if (response.statusCode == 200) {
+      Get.back();
+      fetchChillerReading(branchId: selectedBranchId.value);
+      showToast(msg: "Chiller Reading Deleted Successfully");
+      isLoading.value = false;
+    } else {
+      isLoading.value = false;
+      showToastError(msg: "Can't Delete ,${response.body}");
+    }
+  }
+
+  Future<void> updateChillerReadingData({required int readingId}) async {
+
+    isLoading.value = true;
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response =
+    await http.put(Uri.parse('$apiUrl/update_chiller_reading/$readingId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-type': 'application/json'
+        },
+        body: jsonEncode(<String, String>{
+          "inlet_temperature": inletTemperatureController.text,
+          "outlet_temperature": outletTemperatureController.text,
+          "average_load": averageLoadController.text,
+          "process_pump_pressure":processPumpPressureController.text
+        }));
+
+    if (response.statusCode == 200) {
+      Get.back();
+      fetchChillerReading(branchId: selectedBranchId.value);
+      showToast(msg: "Chiller Reading Updated Successfully");
+      isLoading.value = false;
+    } else {
+
+      isLoading.value = false;
+      showToastError(msg: "Can't Update ,${response.body}");
+      log(response.body);
     }
   }
 }
