@@ -50,7 +50,8 @@ class ViewUpsReadingBranchWiseView
                   :(controller.upsReadingDataList.isEmpty)?
               const Center(child: Text("No Data Found" , style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w600),),):
               ListView.builder(
-                      physics: const BouncingScrollPhysics(),
+                      // reverse: true,
+                      // physics: const BouncingScrollPhysics(),
                       itemCount: controller.upsReadingDataList.length,
                       itemBuilder: (context, index) {
                         var ledStatus = "";

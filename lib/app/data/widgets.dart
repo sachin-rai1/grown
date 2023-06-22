@@ -18,6 +18,7 @@ import '../modules/gas_bank_operator/GasVendor/views/gas_vendor_view.dart';
 import '../modules/gas_bank_operator/Gases/views/gases_view.dart';
 import '../modules/gas_bank_operator/SearchBySerialNo/views/search_by_serial_no_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
+import '../modules/mlgd_data_monitoring/view_post_run_data/views/view_post_run_data_view.dart';
 
 class Choice {
   Choice({
@@ -62,7 +63,6 @@ class SelectCard extends StatelessWidget {
                           IconButton(
                         onPressed:(){
                           followLink;
-                          print("Hiii");
                         } ,
                         icon: Icon(Icons.email , color: choice.iconColor,),
                         iconSize:10,
@@ -363,12 +363,12 @@ class MyTextWidget extends StatelessWidget {
               ],
             ),
           ),
-          (isLines == false)
-              ? Container()
-              : Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 1,
-                  color: Colors.grey.withOpacity(0.5)),
+          // (isLines == false)
+          //     ? Container()
+          //     : Container(
+          //         width: MediaQuery.of(context).size.width,
+          //         height: 1,
+          //         color: Colors.grey.withOpacity(0.5)),
         ],
       ),
     );
@@ -381,7 +381,7 @@ class MlgdReportTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -389,6 +389,7 @@ class MlgdReportTabBar extends StatelessWidget {
               centerTitle: true,
               toolbarHeight: 60,
               bottom: const TabBar(
+                isScrollable: true,
                 tabs: [
                   Text(
                     "Date Wise",
@@ -398,13 +399,19 @@ class MlgdReportTabBar extends StatelessWidget {
                     "Run No Wise",
                     style: TextStyle(fontSize: 18),
                   ),
+                  Text(
+                    "Post Run Data",
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ],
               ),
             ),
             body: TabBarView(
+
               children: [
                 ViewMlgdDataDateWiseView(),
                 ViewMlgdDataRunWiseView(),
+                ViewPostRunDataView(),
               ],
             )));
   }
@@ -798,7 +805,7 @@ class TextBoxWidget extends StatelessWidget {
       this.autofocus,
       this.keyboardType,
       this.hintText,
-      this.height, this.readOnly})
+      this.height, this.readOnly, this.suffixIcon})
       : super(key: key);
   final TextEditingController controller;
   final String title;
@@ -809,6 +816,7 @@ class TextBoxWidget extends StatelessWidget {
   final bool? autofocus;
   final double? height;
   final bool? readOnly;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -827,6 +835,7 @@ class TextBoxWidget extends StatelessWidget {
           readOnly: readOnly??false,
           keyboardType: keyboardType ?? TextInputType.number,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon,
               hintText: hintText ?? "Your Answer",
               hintStyle: (hintText != null)
                   ? const TextStyle(color: Colors.black)

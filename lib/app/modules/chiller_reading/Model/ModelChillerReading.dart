@@ -25,7 +25,7 @@ class ModelChillerReading {
 }
 
 class ChillerReadingData {
-  int? averageLoad;
+  double? averageLoad;
   int? branchId;
   String? branchName;
   int? chillerId;
@@ -33,12 +33,12 @@ class ChillerReadingData {
   int? circulationPump1Status;
   int? circulationPump2Status;
   DateTime? createdOn;
-  int? inletTemperature;
-  int? outletTemperature;
+  double? inletTemperature;
+  double? outletTemperature;
   int? phaseId;
   String? phaseName;
   int? readingId;
-  int? processPumpPressure;
+  double? processPumpPressure;
 
   ChillerReadingData({
     this.averageLoad,

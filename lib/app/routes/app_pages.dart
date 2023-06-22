@@ -93,6 +93,8 @@ import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/bindings/view_m
 import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
 import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
+import '../modules/mlgd_data_monitoring/view_post_run_data/bindings/view_post_run_data_binding.dart';
+import '../modules/mlgd_data_monitoring/view_post_run_data/views/view_post_run_data_view.dart';
 import '../modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/bindings/view_ups_reading_branch_wise_binding.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
@@ -234,6 +236,11 @@ class AppPages {
           page: () => PreviewScreenView(),
           binding: PreviewScreenBinding(),
         ),
+        GetPage(
+          name: _Paths.VIEW_POST_RUN_DATA,
+          page: () =>  ViewPostRunDataView(),
+          binding: ViewPostRunDataBinding(),
+        ),
       ],
     ),
     GetPage(
@@ -322,7 +329,7 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.PROCESS_PUMP,
-          page: () =>  ProcessPumpView(),
+          page: () => ProcessPumpView(),
           binding: ProcessPumpBinding(),
         ),
       ],

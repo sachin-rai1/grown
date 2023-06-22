@@ -87,23 +87,23 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                             .map((phase) {
                                           return DropdownMenuItem<String>(
                                             onTap: () async {
-                                              controller.selectedPhaseId.value =
-                                                  phase.phaseId!;
+                                              controller.selectedPhaseId.value = phase.phaseId!;
 
-                                              if (controller
-                                                  .phaseDataList.isEmpty) {
-                                                controller
-                                                    .chillerDataList.value = [];
+                                              if (controller.phaseDataList.isEmpty) {
+                                                controller.chillerDataList.value = [];
                                               } else {
-                                                await controller.fetchChiller(
-                                                    phaseId: phase.phaseId!);
+                                                await controller.fetchChiller(phaseId: phase.phaseId!);
+                                                await controller.fetchProcessPump(phaseId: phase.phaseId!);
                                               }
 
-                                              if (controller.chillerDataList.isEmpty) {controller.compressorDataList.value = [];
-                                              } else {
-                                                await controller.fetchCompressor(chillerId: controller.chillerDataList[0].chillerId!);
-                                                controller.selectedChillerId.value =
-                                                    controller.chillerDataList[0].chillerId!;
+                                              if (controller.chillerDataList.isEmpty)
+                                              {
+                                                controller.compressorDataList.value = [];
+
+                                              } else
+                                              {
+                                                  await controller.fetchCompressor(chillerId: controller.chillerDataList[0].chillerId!);
+                                                  controller.selectedChillerId.value = controller.chillerDataList[0].chillerId!;
                                               }
                                             },
                                             value: phase.phaseName,

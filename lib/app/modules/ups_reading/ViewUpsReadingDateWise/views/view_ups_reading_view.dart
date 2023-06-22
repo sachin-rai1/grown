@@ -170,6 +170,13 @@ class ViewUpsReadingDateWiseView extends GetView<ViewUpsReadingDateWiseControlle
                                     .upsReadingDataList[index].dcNegativeVoltage
                                     .toString(),
                               ),
+                              MyTextWidget(
+                                title: "Date :  ",
+                                isLines: false,
+                                body: controller
+                                    .upsReadingDataList[index].createdOn
+                                    .toString(),
+                              ),
                             ],
                           ),
                         ),

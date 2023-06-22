@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/constants.dart';
 
 class RunNoDataController extends GetxController {
-
   var isLoading = false.obs;
   var runNoDataList = <RunNoData>[].obs;
   final formKey = GlobalKey<FormState>();
@@ -32,12 +31,12 @@ class RunNoDataController extends GetxController {
   final updateRegularPcsNumberController = TextEditingController();
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     fetchRunNoData();
   }
 
-  void clearData(){
+  void clearData() {
     runNoController.clear();
     runningHoursController.clear();
     size.value = "";
@@ -80,10 +79,7 @@ class RunNoDataController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       log("Error: $e");
-    }
-    finally{
-
-    }
+    } finally {}
   }
 
   Future<void> addRunNoData() async {
@@ -92,34 +88,33 @@ class RunNoDataController extends GetxController {
       var token = prefs.getString('token');
       isLoading.value = true;
       var response = await http.post(Uri.parse("$apiUrl/add_run_no"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        },
-        body: jsonEncode(<String , dynamic>{
-          "runNo":runNoController.text,
-          "holderSize":size.value,
-          "totalPcsNo":totalPcsNoController.text,
-          "totalPcsArea":totalPcsAreaController.text,
-          "bigPcsNo":bigPcsNoController.text,
-          "regularPcsNo":regularPcsNumberController.text,
-        })
-      );
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token"
+          },
+          body: jsonEncode(<String, dynamic>{
+            "runNo": runNoController.text,
+            "holderSize": size.value,
+            "totalPcsNo": totalPcsNoController.text,
+            "totalPcsArea": totalPcsAreaController.text,
+            "bigPcsNo": bigPcsNoController.text,
+            "regularPcsNo": regularPcsNumberController.text,
+          }));
+
       if (response.statusCode == 200) {
         isLoading.value = false;
         showToast(msg: "Run No Added Successfully");
         Get.back();
         fetchRunNoData();
       } else {
-        showToastError(msg: "Can't Add Run No");
+        showToastError(msg: response.body);
         isLoading.value = false;
       }
     } catch (e) {
       showToastError(msg: "Can't Add Run No");
       isLoading.value = false;
       log("Error: $e");
-    }
-    finally{
+    } finally {
       isLoading.value = false;
     }
   }
@@ -134,15 +129,14 @@ class RunNoDataController extends GetxController {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
           },
-          body: jsonEncode(<String , dynamic>{
-            "runningHours":updateRunningHoursController.text,
-            "holderSize":updateSize.value,
-            "totalPcsNo":updateTotalPcsNoController.text,
-            "totalPcsArea":updateTotalPcsAreaController.text,
-            "bigPcsNo":updateBigPcsNoController.text,
-            "regularPcsNo":updateRegularPcsNumberController.text,
-          })
-      );
+          body: jsonEncode(<String, dynamic>{
+            "runningHours": updateRunningHoursController.text,
+            "holderSize": updateSize.value,
+            "totalPcsNo": updateTotalPcsNoController.text,
+            "totalPcsArea": updateTotalPcsAreaController.text,
+            "bigPcsNo": updateBigPcsNoController.text,
+            "regularPcsNo": updateRegularPcsNumberController.text,
+          }));
       if (response.statusCode == 200) {
         isLoading.value = false;
         showToast(msg: "Run No Updated Successfully");
@@ -150,18 +144,16 @@ class RunNoDataController extends GetxController {
         fetchRunNoData();
         clearData();
       } else {
-        showToastError(msg: "Can't Update Run No");
+        showToastError(msg: response.body);
         isLoading.value = false;
       }
     } catch (e) {
       showToastError(msg: "Can't Update Run No");
       isLoading.value = false;
       log("Error: $e");
-    }
-    finally{
+    } finally {
       isLoading.value = false;
     }
-
   }
 
   Future<void> deleteRunNo({required int runId}) async {
@@ -169,12 +161,14 @@ class RunNoDataController extends GetxController {
       final prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       isLoading.value = true;
-      var response = await http.delete(Uri.parse("$apiUrl/delete_run_no/$runId"),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $token"
-          },
+      var response = await http.delete(
+        Uri.parse("$apiUrl/delete_run_no/$runId"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        },
       );
+
       if (response.statusCode == 200) {
         isLoading.value = false;
         showToast(msg: "Run No Deleted Successfully");
@@ -182,17 +176,17 @@ class RunNoDataController extends GetxController {
         fetchRunNoData();
         clearData();
       } else {
-        showToastError(msg: "Can't Delete Run No");
+        showToastError(msg: "Can't Delete Run No ${response.body}");
+        log(response.body);
         isLoading.value = false;
       }
     } catch (e) {
-      showToastError(msg: "Can't Delete Run No");
+
+      showToastError(msg: "Can't Delete Run No $e");
       isLoading.value = false;
       log("Error: $e");
-    }
-    finally{
+    } finally {
       isLoading.value = false;
     }
-
   }
 }

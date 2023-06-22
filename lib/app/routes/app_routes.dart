@@ -83,6 +83,8 @@ abstract class Routes {
   static const EMAIL_CONFIG = _Paths.EMAIL_CONFIG;
   static const EDIT_ASSIGNED_ENGINEER = _Paths.EDIT_ASSIGNED_ENGINEER;
   static const PROCESS_PUMP = _Paths.CHILLER_READING + _Paths.PROCESS_PUMP;
+  static const VIEW_POST_RUN_DATA =
+      _Paths.MLGD_DATA_MONITORING + _Paths.VIEW_POST_RUN_DATA;
 }
 
 abstract class _Paths {
@@ -144,4 +146,5 @@ abstract class _Paths {
   static const EMAIL_CONFIG = '/email-config';
   static const EDIT_ASSIGNED_ENGINEER = '/edit-assigned-engineer';
   static const PROCESS_PUMP = '/process-pump';
+  static const VIEW_POST_RUN_DATA = '/view-post-run-data';
 }
