@@ -1,9 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:get/get.dart';
-// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../data/constants.dart';
 import '../emp_model.dart';
 
@@ -40,6 +39,7 @@ class LabEmployeeManagementController extends GetxController {
         branchData.value = jsonDecode(response.body);
       }
       isLoading.value = false;
+      selectedBranch.value = branchData[0]["branch_name"];
       return branchData;
     } else {
       isLoading.value = false;

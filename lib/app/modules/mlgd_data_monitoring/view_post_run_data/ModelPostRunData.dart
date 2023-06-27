@@ -26,46 +26,46 @@ class ModelPostRunDataReading {
 
 class ModelPostRunData {
   double? averageGrowthHeight;
-  int? bigPcsNo;
-  int? breakagePcs;
-  int? clarityOnGrowth;
-  int? cleanPcsNo;
-  int? cleanPercentage;
+  num? bigPcsNo;
+  num? breakagePcs;
+  double? clarityOnGrowth;
+  num? cleanPcsNo;
+  double? cleanPercentage;
   DateTime? createdOn;
-  int? dotPcs;
-  int? finalHeight;
-  int? finalWeight;
+  num? dotPcs;
+  double? finalHeight;
+  double? finalWeight;
   String? holderSize;
-  int? inclusionPcs;
-  int? initialHeight;
-  int? initialWeight;
-  String? mlgdCreatedOn;
-  int? mlgdId;
-  String? mlgdUpdatedOn;
-  int? newGrowthHeight;
-  int? newGrowthWeight;
+  num? inclusionPcs;
+  double? initialHeight;
+  double? initialWeight;
+  DateTime? mlgdCreatedOn;
+  num? mlgdId;
+  DateTime? mlgdUpdatedOn;
+  num? newGrowthHeight;
+  num? newGrowthWeight;
   String? objective;
   String? operatorName;
-  int? postRunNo;
+  num? postRunNo;
   double? productionPerHour;
-  int? regularPcsNo;
+  num? regularPcsNo;
   String? remarks;
-  int? runNo;
-  int? runNoFk;
-  int? runId;
+  num? runNo;
+  num? runNoFk;
+  num? runId;
   DateTime? runNoCreated;
-  int? runningHours;
+  num? runningHours;
   String? shutDownReason;
-  int? t;
-  int? totalPcsArea;
-  int? totalPcsNo;
+  num? t;
+  num? totalPcsArea;
+  num? totalPcsNo;
   DateTime? updatedOn;
-  int? userIdFk;
+  num? userIdFk;
   String? userEmail;
   String? userName;
-  int? x;
-  int? y;
-  int? z;
+  num? x;
+  num? y;
+  num? z;
 
   ModelPostRunData({
     this.averageGrowthHeight,
@@ -115,9 +115,9 @@ class ModelPostRunData {
     averageGrowthHeight: json["average_growth_height"]?.toDouble(),
     bigPcsNo: json["bigPcsNo"],
     breakagePcs: json["breakagePcs"],
-    clarityOnGrowth: json["clarity_on_growth"],
+    clarityOnGrowth: json["clarity_on_growth"]?.toDouble(),
     cleanPcsNo: json["cleanPcsNo"],
-    cleanPercentage: json["clean_percentage"],
+    cleanPercentage: json["clean_percentage"]?.toDouble(),
     createdOn: json["created_on"] == null ? null : DateTime.parse(json["created_on"]),
     dotPcs: json["dotPcs"],
     finalHeight: json["finalHeight"],
@@ -126,9 +126,9 @@ class ModelPostRunData {
     inclusionPcs: json["inclusionPcs"],
     initialHeight: json["initial_height"],
     initialWeight: json["initial_weight"],
-    mlgdCreatedOn: json["mlgd_created_on"],
+    mlgdCreatedOn: json["mlgd_created_on"] == null ? null : DateTime.parse(json["mlgd_created_on"]),
     mlgdId: json["mlgd_id"],
-    mlgdUpdatedOn: json["mlgd_updated_on"],
+    mlgdUpdatedOn: json["mlgd_updated_on"] == null ? null : DateTime.parse(json["mlgd_updated_on"]),
     newGrowthHeight: json["new_growth_height"],
     newGrowthWeight: json["new_growth_weight"],
     objective: json["objective"],
@@ -136,7 +136,7 @@ class ModelPostRunData {
     postRunNo: json["postRunNO"],
     productionPerHour: json["production_per_hour"]?.toDouble(),
     regularPcsNo: json["regularPcsNo"],
-    remarks:json["remarks"],
+    remarks: json["remarks"],
     runNo: json["runNo"],
     runNoFk: json["runNoFk"],
     runId: json["run_id"],
@@ -170,9 +170,9 @@ class ModelPostRunData {
     "inclusionPcs": inclusionPcs,
     "initial_height": initialHeight,
     "initial_weight": initialWeight,
-    "mlgd_created_on": mlgdCreatedOn,
+    "mlgd_created_on": mlgdCreatedOn?.toIso8601String(),
     "mlgd_id": mlgdId,
-    "mlgd_updated_on": mlgdUpdatedOn,
+    "mlgd_updated_on": mlgdUpdatedOn?.toIso8601String(),
     "new_growth_height": newGrowthHeight,
     "new_growth_weight": newGrowthWeight,
     "objective": objective,
@@ -180,7 +180,7 @@ class ModelPostRunData {
     "postRunNO": postRunNo,
     "production_per_hour": productionPerHour,
     "regularPcsNo": regularPcsNo,
-    "remarks":remarks,
+    "remarks": remarks,
     "runNo": runNo,
     "runNoFk": runNoFk,
     "run_id": runId,

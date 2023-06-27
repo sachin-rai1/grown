@@ -22,52 +22,55 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                color: Colors.green,
-                height: height / 3,
-                minWidth: width,
-                onPressed: () {
-                  Get.to(()=> const MlgdDataEntryTabBar());
-                },
-                elevation: 2,
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:  [
-                    Icon(Icons.data_exploration , size: height*0.1,),
-                     const Text("DATA ENTRY"),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: MaterialButton(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MaterialButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Colors.orange,
+                  color: Colors.green,
                   height: height / 3,
                   minWidth: width,
                   onPressed: () {
-                    Get.to(()=> const MlgdReportTabBar());
+                    Get.to(()=> const MlgdDataEntryTabBar());
                   },
+                  elevation: 2,
                   child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children:  [
-                      Icon(Icons.summarize_sharp , size: height*0.1),
-                       const Text("VIEW REPORT"),
+                      Icon(Icons.data_exploration , size: height*0.1,),
+                       const Text("DATA ENTRY"),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    color: Colors.orange,
+                    height: height / 3,
+                    minWidth: width,
+                    onPressed: () {
+                      Get.to(()=> const MlgdReportTabBar());
+                    },
+                    child: Column(
+                      children:  [
+                        Icon(Icons.summarize_sharp , size: height*0.1),
+                         const Text("VIEW REPORT"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+

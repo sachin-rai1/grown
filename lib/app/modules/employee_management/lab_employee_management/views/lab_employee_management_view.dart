@@ -116,10 +116,9 @@ class LabEmployeeManagementView
                                     controller.requiredDesignations[index].id
                                   },
                                   {"branchId": controller.branchId.value},
-                                  {"branchName": controller.selectedBranch},
+                                  {"branchName": controller.selectedBranch.value},
                                   {
-                                    "designation": controller
-                                        .requiredDesignations[index].name
+                                    "designation": controller.requiredDesignations[index].name
                                   },
                                 ]);
                               },

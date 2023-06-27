@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,9 +43,9 @@ class DesignationLabEmployeeManagementController extends GetxController {
     argumentDesignationId = argumentData[0]["designationId"];
     argumentBranchId = argumentData[1]["branchId"];
     argBranchName = argumentData[2]["branchName"];
+    log(argBranchName.toString());
     argDesignationName = argumentData[3]["designation"];
-    print(argumentBranchId);
-    super.onInit();
+
 
   }
 
@@ -91,9 +92,10 @@ class DesignationLabEmployeeManagementController extends GetxController {
     var token = prefs.getString('token');
 
     var response = await http.get(Uri.parse('$apiUrl/special_skill'),
-        headers: {"Authorization": "Bearer $token"});
+        headers: {
+        "Authorization": "Bearer $token"
+    });
     specialSkillData.value = jsonDecode(response.body);
-    print(specialSkillData);
   }
 
   Future<void> updateEmployee(int id) async {
@@ -205,6 +207,7 @@ class DesignationLabEmployeeManagementController extends GetxController {
       }
     }
   }
+
   Future<void> deleteEmployee(int id) async {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();

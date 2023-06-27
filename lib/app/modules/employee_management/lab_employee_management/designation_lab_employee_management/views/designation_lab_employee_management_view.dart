@@ -61,33 +61,17 @@ class DesignationLabEmployeeManagementView
                                 children: [
                                   (privilage.value == "Admin" ||privilage.value == "Editor")? GestureDetector(
                                       onTap: () {
-                                        controller.designationId.value =
-                                        controller.employees[index]
-                                            .designationId!;
-                                        controller.branchId.value =
-                                        controller
-                                            .employees[index].branchId!;
-                                        controller.specialSkillId =
-                                        (controller.employees[index]
-                                            .ssId ==
-                                            null)
-                                            ? null
-                                            : controller
-                                            .employees[index].ssId!;
-                                        controller.hintText.value =
-                                        controller
-                                            .employees[index].empName!;
+                                        controller.designationId.value = controller.employees[index].designationId!;
+                                        controller.branchId.value = controller.employees[index].branchId!;
+                                        controller.specialSkillId = (controller.employees[index].ssId == null) ? null : controller.employees[index].ssId!;
+                                        controller.hintText.value = controller.employees[index].empName!;
                                         updateEmployee(
                                             context,
-                                            controller
-                                                .employees[index].empId!,
+                                            controller.employees[index].empId!,
                                             controller.hintText.value,
-                                            controller.employees[index]
-                                                .branchName!,
-                                            controller.employees[index]
-                                                .designationName!,
-                                            controller
-                                                .employees[index].ssName);
+                                            controller.employees[index].branchName!,
+                                            controller.employees[index].designationName!,
+                                            controller.employees[index].ssName);
                                       },
                                       child: const Icon(
                                         Icons.edit,

@@ -30,9 +30,9 @@ class PreRunViewDataController extends GetxController {
   @override
   void onInit(){
     super.onInit();
-    getAllData();
+    getAllPreRunData();
   }
-  Future<void> getAllData() async {
+  Future<void> getAllPreRunData() async {
     try {
       isLoading.value = true;
       final prefs = await SharedPreferences.getInstance();
@@ -54,7 +54,7 @@ class PreRunViewDataController extends GetxController {
   }
 
 
-  Future<void> getData({required int runNo}) async {
+  Future<http.Response> getPreRunDataRunNoWise({required int runNo}) async {
     try {
       isLoading.value = true;
       final prefs = await SharedPreferences.getInstance();
@@ -69,6 +69,10 @@ class PreRunViewDataController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelPreRunData.fromJson(json);
         preRunDataList.value = data.data ?? [];
+        return response;
+      }
+      else{
+        throw Exception();
       }
     } finally {
       isLoading.value = false;

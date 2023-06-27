@@ -10,7 +10,7 @@ import '../../../../data/constants.dart';
 
 class ViewMlgdDataRunWiseController extends GetxController {
 
-  Future<void> getData(runNo) async {
+  Future<http.Response> getData(runNo) async {
     isLoading.value = true;
     var url = "$apiUrl/view_mlgd_data?runNo=$runNo";
     final prefs = await SharedPreferences.getInstance();
@@ -27,10 +27,12 @@ class ViewMlgdDataRunWiseController extends GetxController {
       var data = ModelMlgdData.fromJson(json);
       mlgdDataList.value = data.data ?? [];
       isLoading.value = false;
+      return response;
     }
     else{
       isLoading.value = false;
       mlgdDataList.value = [];
+      throw Exception();
     }
   }
 

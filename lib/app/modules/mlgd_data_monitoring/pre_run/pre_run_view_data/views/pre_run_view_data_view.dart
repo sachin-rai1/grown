@@ -24,7 +24,7 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
               child: TextFormField(
                 keyboardType: TextInputType.number,
                 onFieldSubmitted: (value){
-                  controller.getData(
+                  controller.getPreRunDataRunNoWise(
                       runNo: controller.runNoController.text.isEmpty
                           ? 0
                           : int.parse(controller.runNoController.text));
@@ -34,7 +34,7 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                     suffixIcon: InkWell(
                         onTap: () {
 
-                          controller.getData(
+                          controller.getPreRunDataRunNoWise(
                               runNo: controller.runNoController.text.isEmpty
                                   ? 0
                                   : int.parse(controller.runNoController.text));
