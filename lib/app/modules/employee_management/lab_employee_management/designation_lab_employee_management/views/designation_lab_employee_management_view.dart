@@ -147,8 +147,6 @@ class DesignationLabEmployeeManagementView
                 return DropdownMenuItem<String>(
                   onTap: () {
                     controller.branchId.value = branch['branch_id'];
-                    print("controller.branchId.value");
-                    print(controller.branchId.value);
                   },
                   value: branch['branch_name'],
                   child: Text(branch['branch_name']),
@@ -165,8 +163,6 @@ class DesignationLabEmployeeManagementView
                     controller.designationId.value =
                     designation['designation_id'];
 
-                    print("controller.designationId.value");
-                    print(controller.designationId.value);
                   },
                   value: designation['designation_name'],
                   child: Text(designation['designation_name']),
@@ -236,8 +232,6 @@ class DesignationLabEmployeeManagementView
                 return DropdownMenuItem<String>(
                   onTap: () {
                     controller.branchId.value = branch['branch_id'];
-                    print("controller.branchId.value");
-                    print(controller.branchId.value);
                   },
                   value: branch['branch_name'],
                   child: Text(branch['branch_name']),
@@ -257,8 +251,6 @@ class DesignationLabEmployeeManagementView
                     controller.designationId.value =
                     designation['designation_id'];
 
-                    print("controller.designationId.value");
-                    print(controller.designationId.value);
                   },
                   value: designation['designation_name'],
                   child: Text(designation['designation_name']),
@@ -275,8 +267,6 @@ class DesignationLabEmployeeManagementView
                 return DropdownMenuItem<String>(
                   onTap: () {
                     controller.specialSkillId = designation['ss_id'];
-                    print("controller.specialSkillId");
-                    print(controller.specialSkillId);
                   },
                   value: designation['ss_name'],
                   child: Text(designation['ss_name']),

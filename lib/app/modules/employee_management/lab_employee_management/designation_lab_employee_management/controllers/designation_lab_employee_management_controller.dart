@@ -39,6 +39,7 @@ class DesignationLabEmployeeManagementController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     getEmployeeByDesignation(argumentData[0]["designationId"], argumentData[1]["branchId"]).whenComplete(() => getBranches().whenComplete(() => getDesignation().whenComplete(() => getSpecialSkill())));
     argumentDesignationId = argumentData[0]["designationId"];
     argumentBranchId = argumentData[1]["branchId"];
@@ -84,7 +85,6 @@ class DesignationLabEmployeeManagementController extends GetxController {
     var response = await http.get(Uri.parse('$apiUrl/designation'),
         headers: {"Authorization": "Bearer $token"});
     designationData.value = jsonDecode(response.body);
-    print(designationData);
   }
 
   Future<void> getSpecialSkill() async {

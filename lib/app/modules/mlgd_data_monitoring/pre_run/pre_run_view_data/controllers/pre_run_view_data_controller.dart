@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/constants.dart';
-import 'package:grown/app/modules/mlgd_data_monitoring/pre_run/pre_run_view_data/Model/ModelPreRunData.dart';
+import 'package:grown/app/modules/mlgd_data_monitoring/pre_run/pre_run_view_data/Model/model_pre_run_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart'as http;
 

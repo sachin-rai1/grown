@@ -381,7 +381,7 @@ class MlgdReportTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 1,
         child: Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -391,14 +391,14 @@ class MlgdReportTabBar extends StatelessWidget {
               bottom: const TabBar(
                 isScrollable: true,
                 tabs: [
-                  Text(
-                    "Date Wise",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  Text(
-                    "Run No Wise",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  // Text(
+                  //   "Date Wise",
+                  //   style: TextStyle(fontSize: 18),
+                  // ),
+                  // Text(
+                  //   "Run No Wise",
+                  //   style: TextStyle(fontSize: 18),
+                  // ),
                   Text(
                     "Post Run Data",
                     style: TextStyle(fontSize: 18),
@@ -409,8 +409,8 @@ class MlgdReportTabBar extends StatelessWidget {
             body: TabBarView(
 
               children: [
-                ViewMlgdDataDateWiseView(),
-                ViewMlgdDataRunWiseView(),
+                // ViewMlgdDataDateWiseView(),
+                // ViewMlgdDataRunWiseView(),
                 ViewPostRunDataView(),
               ],
             )));

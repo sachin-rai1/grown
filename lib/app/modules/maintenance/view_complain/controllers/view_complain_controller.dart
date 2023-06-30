@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grown/app/modules/maintenance/view_complain/Model/ModelComplainsView.dart';
+import 'package:grown/app/modules/maintenance/view_complain/Model/model_complains_view.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
@@ -11,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
-import '../../register_complain/Model/ModelProblems.dart';
+import '../../register_complain/Model/model_problems.dart';
 
 class ViewComplainController extends GetxController {
 

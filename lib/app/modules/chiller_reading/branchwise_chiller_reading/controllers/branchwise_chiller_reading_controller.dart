@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
-import '../../Model/ModelChillerCompressorReading.dart';
-import '../../Model/ModelChillerReading.dart';
+import '../../Model/model_chiller_compressor_reading.dart';
+import '../../Model/model_chiller_reading.dart';
 import 'package:http/http.dart' as http;
 
-import '../../Model/ModelProcessPumpReading.dart';
+import '../../Model/model_process_pump_reading.dart';
 import '../../controllers/chiller_reading_controller.dart';
 class BranchwiseChillerReadingController extends GetxController {
   Rx<String> selectedDate = DateTime.now().toString().obs;
@@ -98,8 +98,6 @@ class BranchwiseChillerReadingController extends GetxController {
     }
   }
   Future<void> deleteChillerReading({required int readingId}) async {
-    print("Selected Date");
-    print(selectedDate.value);
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

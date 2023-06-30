@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelChiller.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelCompressor.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelPhase.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_chiller.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_compressor.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_phase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../../data/constants.dart';
-import '../Model/ModelProcessPump.dart';
+import '../Model/model_process_pump.dart';
 
 class ChillerReadingController extends GetxController {
   var circulationPumpStatus1 = '0'.obs;
@@ -76,7 +76,6 @@ class ChillerReadingController extends GetxController {
   Future<void> fetchData() async {
     try {
       var prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString('token');
       var branchId = prefs.getInt("user_branch_id");
       await fetchBranches();
       await fetchPhases(branchId: branchId!);
@@ -108,7 +107,6 @@ class ChillerReadingController extends GetxController {
 
       if (response.statusCode == 200) {
         dynamic json = jsonDecode(response.body);
-        print(json);
         var data = ModelProcessPump.fromJson(json);
         processPumpDataList.value = data.data ?? [];
         int noOfOptions = processPumpDataList.length;
@@ -230,7 +228,6 @@ class ChillerReadingController extends GetxController {
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
       var data = ModelCompressor.fromJson(json);
-      print(json);
       compressorDataList.value = data.compressor ?? [];
       int noOfOptions = compressorDataList.length;
       compressorStatus.value = List.generate(noOfOptions, (index) => "0");

@@ -95,7 +95,6 @@ class RegisterComplainView extends GetView<RegisterComplainController> {
                                         .problemsDataList[index]
                                         .description!);
                                   }
-                                  print(controller.problem.join(","));
                                 },
                               );
                             });

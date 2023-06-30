@@ -119,7 +119,6 @@ class GasManifoldController extends GetxController {
         isLoading.value = false;
         fetchManifold();
       } else {
-        print(response.body);
         Fluttertoast.showToast(
             msg: "Cannot Update Manifold",
             toastLength: Toast.LENGTH_SHORT,

@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:grown/app/modules/maintenance/register_complain/Model/ModelFcmToken.dart';
+import 'package:grown/app/modules/maintenance/register_complain/Model/model_fcm_token.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/constants.dart';
-import '../Model/ModelProblems.dart';
+import '../Model/model_problems.dart';
 
 class RegisterComplainController extends GetxController {
 
@@ -275,7 +275,7 @@ class RegisterComplainController extends GetxController {
       minWidth: 500,
       minHeight: 500,
     );
-    return File(compressedImage!.path) ?? File(image.path);
+    return File(compressedImage!.path);
   }
 
   void getProblems() async {

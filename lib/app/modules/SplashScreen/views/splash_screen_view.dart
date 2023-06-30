@@ -2,11 +2,8 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:grown/app/modules/home/controllers/home_controller.dart';
-import 'package:grown/app/modules/home/views/home_view.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../login/controllers/login_controller.dart';
 import '../../login/views/login_view.dart';
 import '../controllers/splash_screen_controller.dart';
 

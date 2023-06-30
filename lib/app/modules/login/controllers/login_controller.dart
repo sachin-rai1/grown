@@ -113,7 +113,6 @@ class LoginController extends GetxController {
 
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var branchId = prefs.getInt('user_branch_id');
       var userId = prefs.getInt('user_id');
       var fbToken = prefs.getString('fToken');
 

@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:flutter/widgets.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelChillerCompressorReading.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelChillerReading.dart';
-import 'package:grown/app/modules/chiller_reading/Model/ModelProcessPumpReading.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_chiller_compressor_reading.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_chiller_reading.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_process_pump_reading.dart';
 import 'package:http/http.dart' as http;
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,8 +113,6 @@ class DatewiseChillerReadingController extends GetxController {
   }
 
   Future<void> deleteChillerReading({required int readingId}) async {
-    print("Selected Date");
-    print(selectedDate.value);
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');

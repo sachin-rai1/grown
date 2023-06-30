@@ -6,12 +6,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:grown/app/data/NotificationService.dart';
+import 'package:grown/app/data/notification_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../modules/login/Model/ModelUser.dart';
 
 
 String apiUrl = "http://ec2-34-197-250-249.compute-1.amazonaws.com/api";
@@ -35,7 +34,6 @@ class MailSending {
     try {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var userId = prefs.getInt('user_id');
       var response = await http.post(Uri.parse("$apiUrl/send_email"),
           body: jsonEncode(<String, dynamic>{
             "sender_email": email,
@@ -87,12 +85,9 @@ showToastError({msg}) {
 }
 
 class Api {
-  PushNotification? _notificationInfo;
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   static Future<void> getFirebaseMessagingToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('fToken');
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       announcement: true,
@@ -104,7 +99,6 @@ class Api {
     );
     await messaging.getToken().then((t) {
       if (t != null) {
-        token = t;
         log("Push Token : $t");
       }
     });

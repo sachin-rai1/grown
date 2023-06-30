@@ -12,7 +12,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'app/data/NotificationService.dart';
+import 'app/data/notification_service.dart';
 import 'app/data/constants.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';

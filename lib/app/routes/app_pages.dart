@@ -6,8 +6,7 @@ import '../modules/bcdi_classification/bindings/bcdi_classification_binding.dart
 import '../modules/bcdi_classification/views/bcdi_classification_view.dart';
 import '../modules/bcdi_detection/bindings/bcdi_detection_binding.dart';
 import '../modules/bcdi_detection/views/bcdi_detection_view.dart';
-import '../modules/camera_application/bindings/camera_application_binding.dart';
-import '../modules/camera_application/views/camera_application_view.dart';
+
 import '../modules/chiller_reading/bindings/chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/bindings/branchwise_chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/views/branchwise_chiller_reading_view.dart';
@@ -154,17 +153,17 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.ELECTRICAL_EMPLOYEE_MANAGEMENT,
-          page: () => ElectricalEmployeeManagementView(),
+          page: () => const ElectricalEmployeeManagementView(),
           binding: ElectricalEmployeeManagementBinding(),
         ),
         GetPage(
           name: _Paths.GAS_EMPLOYEE_MANAGEMENT,
-          page: () => GasEmployeeManagementView(),
+          page: () => const GasEmployeeManagementView(),
           binding: GasEmployeeManagementBinding(),
         ),
         GetPage(
           name: _Paths.IT_EMPLOYEE_MANAGEMENT,
-          page: () => ItEmployeeManagementView(),
+          page: () => const ItEmployeeManagementView(),
           binding: ItEmployeeManagementBinding(),
         ),
         GetPage(
@@ -333,11 +332,6 @@ class AppPages {
           binding: ProcessPumpBinding(),
         ),
       ],
-    ),
-    GetPage(
-      name: _Paths.CAMERA_APPLICATION,
-      page: () => CameraApplicationView(),
-      binding: CameraApplicationBinding(),
     ),
     GetPage(
       name: _Paths.LOGIN,

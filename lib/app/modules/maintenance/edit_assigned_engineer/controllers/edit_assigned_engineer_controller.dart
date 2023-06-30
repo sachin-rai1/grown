@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/constants.dart';
 import 'package:http/http.dart' as http;
 
-import '../../assign_engineer/Model/ModelEngineers.dart';
-import '../../engineer/ModelEngineerProblems.dart';
+import '../../assign_engineer/Model/model_engineers.dart';
+import '../../engineer/model_engineer_problem.dart';
 
 class EditAssignedEngineerController extends GetxController {
   var isLoading = false.obs;
@@ -165,7 +164,6 @@ class EditAssignedEngineerController extends GetxController {
       try {
         var response = await http.Response.fromStream(await request.send());
         if (response.statusCode == 200) {
-          var ticket = ticketNo;
           log('Engineer assigned successfully');
           for(int i=0; i<engineerIdList.length;i++){
             await engineerInsert(complainId: complainId, engineerId: engineerIdList[i]);

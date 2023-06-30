@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:grown/app/data/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../../ModelGasMonitorData.dart';
+import '../../model_gas_monitor_data.dart';
 
 class GasMonitorController extends GetxController {
   @override

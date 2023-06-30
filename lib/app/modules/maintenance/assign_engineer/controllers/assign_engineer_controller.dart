@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:grown/app/modules/maintenance/assign_engineer/Model/ModelEngineers.dart';
+import 'package:grown/app/modules/maintenance/assign_engineer/Model/model_engineers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
-import '../../register_complain/Model/ModelFcmToken.dart';
-import '../../view_complain/Model/ModelComplainsView.dart';
+import '../../view_complain/Model/model_complains_view.dart';
 import 'package:http/http.dart' as http;
 
 class AssignEngineerController extends GetxController {
@@ -31,7 +30,6 @@ class AssignEngineerController extends GetxController {
 
     var prefs = await SharedPreferences.getInstance();
     var receiverEmail = prefs.getString('receiver_email');
-    var userEmail = prefs.getString("user_email");
     log(engineerMails.join(","));
     log(receiverEmail.toString());
     log(msg);
@@ -138,7 +136,6 @@ class AssignEngineerController extends GetxController {
     } else {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var branchId = prefs.getInt('user_branch_id');
 
 
       String url = "$apiUrl/assign_engineer/$complainId";

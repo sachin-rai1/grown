@@ -71,7 +71,6 @@ class GasesController extends GetxController {
         isLoading.value = false;
         fetchGases().whenComplete(() => gasBankOperatorController.fetchGases());
       } else {
-        print(response.body);
         Fluttertoast.showToast(
             msg: "Cannot Add Gas",
             toastLength: Toast.LENGTH_SHORT,
@@ -120,7 +119,6 @@ class GasesController extends GetxController {
         isLoading.value = false;
         fetchGases().whenComplete(() => gasBankOperatorController.fetchGases());
       } else {
-        print(response.body);
         Fluttertoast.showToast(
             msg: "Cannot Update Gas",
             toastLength: Toast.LENGTH_SHORT,

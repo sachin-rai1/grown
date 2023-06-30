@@ -3,7 +3,7 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
-
+  
   static const HOME = _Paths.HOME;
   static const BCDI_DETECTION = _Paths.BCDI_DETECTION;
   static const BCDI_CLASSIFICATION = _Paths.BCDI_CLASSIFICATION;

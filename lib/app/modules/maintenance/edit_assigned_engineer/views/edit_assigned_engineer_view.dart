@@ -30,12 +30,9 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.engineerProblemDataList.length,
                     itemBuilder: (context, index) {
-                      var photos = "";
                       for (int i = 0; i <
                           controller.engineerProblemDataList[index].photos!
                               .length; i++) {
-                        photos =
-                            controller.engineerProblemDataList[index].photos![i].toString();
                       }
 
                       return Padding(
@@ -388,7 +385,6 @@ class EditAssignedEngineerView extends GetView<EditAssignedEngineerController> {
                                controller.engineers.remove(controller.engineerDataList[index].engineers!);
                                controller.engineerMails.remove(controller.engineerDataList[index].userEmail!);
                              }
-                             print(controller.engineerMails);
                            },
                          );
                        });
