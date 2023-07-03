@@ -5,10 +5,10 @@ import 'package:grown/app/modules/chiller_reading/branchwise_chiller_reading/vie
 import 'package:grown/app/modules/chiller_reading/datewise_chiller_reading/views/datewise_chiller_reading_view.dart';
 import 'package:grown/app/modules/home/views/home_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/RunNoData/views/run_no_data_view.dart';
-import 'package:grown/app/modules/mlgd_data_monitoring/growing/views/growing_view.dart';
+
 import 'package:grown/app/modules/mlgd_data_monitoring/post_run/views/post_run_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/pre_run/views/pre_run_view.dart';
-import 'package:grown/app/modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
+
 import 'package:grown/app/modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
 import 'package:grown/app/modules/ups_reading/ViewUpsReadingDateWise/views/view_ups_reading_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -17,8 +17,9 @@ import '../modules/gas_bank_operator/GasManifold/views/gas_manifold_view.dart';
 import '../modules/gas_bank_operator/GasVendor/views/gas_vendor_view.dart';
 import '../modules/gas_bank_operator/Gases/views/gases_view.dart';
 import '../modules/gas_bank_operator/SearchBySerialNo/views/search_by_serial_no_view.dart';
-import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
-import '../modules/mlgd_data_monitoring/view_post_run_data/views/view_post_run_data_view.dart';
+
+import '../modules/mlgd_data_monitoring/post_run/run_no_wise_post_run_data/views/view_post_run_data_view.dart';
+import '../modules/mlgd_data_monitoring/running_data/views/growing_view.dart';
 
 class Choice {
   Choice({
@@ -74,7 +75,7 @@ class SelectCard extends StatelessWidget {
                   ? Icon(
                       choice.iconData,
                       color: choice.iconColor,
-                      size: w * 0.15,
+                      size: h * 0.10,
                     )
                   : Image.asset(
                       choice.image!,
@@ -170,6 +171,7 @@ class TextFormWidget extends StatelessWidget {
                       size: 30,
                     ),
                     decoration: InputDecoration(
+
                       contentPadding:
                           const EdgeInsets.only(left: 10, right: 10),
                       border: OutlineInputBorder(
@@ -376,43 +378,28 @@ class MyTextWidget extends StatelessWidget {
 }
 
 class MlgdReportTabBar extends StatelessWidget {
-  const MlgdReportTabBar({super.key});
+  const MlgdReportTabBar({super.key, required this.tabs, required this.children, this.title});
+  final List<Widget> tabs;
+  final List<Widget> children;
+  final Widget? title;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 1,
+        length: children.length,
         child: Scaffold(
             appBar: AppBar(
-              elevation: 0,
-              title: const Text("View Data"),
+              elevation: 1,
+              title:title?? const Text("View Data"),
               centerTitle: true,
               toolbarHeight: 60,
-              bottom: const TabBar(
+              bottom:  TabBar(
                 isScrollable: true,
-                tabs: [
-                  // Text(
-                  //   "Date Wise",
-                  //   style: TextStyle(fontSize: 18),
-                  // ),
-                  // Text(
-                  //   "Run No Wise",
-                  //   style: TextStyle(fontSize: 18),
-                  // ),
-                  Text(
-                    "Post Run Data",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
+                tabs: tabs
               ),
             ),
-            body: TabBarView(
-
-              children: [
-                // ViewMlgdDataDateWiseView(),
-                // ViewMlgdDataRunWiseView(),
-                ViewPostRunDataView(),
-              ],
+            body:  TabBarView(
+              children: children
             )));
   }
 }
@@ -847,5 +834,101 @@ class TextBoxWidget extends StatelessWidget {
         )
       ],
     );
+  }
+}
+class Responsive extends StatelessWidget {
+  const Responsive({
+    super.key,
+    required this.smallScreen,
+    this.mediumScreen,
+    this.onChange,
+    required this.bigScreen,
+  });
+  final Widget smallScreen;
+  final Widget? mediumScreen;
+  final Widget bigScreen;
+  final VoidCallback? onChange;
+
+  /* static bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 650;
+
+
+  static bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 850;*/
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        onChange?.call();
+
+        if (constraints.maxWidth >= 1100) {
+          return bigScreen;
+        } else if ( //
+        constraints.maxWidth >= 650.00 && constraints.maxWidth < 1100.00 //
+        ) {
+          return mediumScreen ?? bigScreen;
+        } else {
+          return smallScreen;
+        }
+      },
+    );
+  }
+}
+
+enum ScreenSize {
+  bigScreen,
+  mediumScreen,
+  smallScreen,
+}
+
+extension SizeConfig on BuildContext {
+  bool get isSmallScreen => MediaQuery.of(this).size.width < 650;
+  bool get isMediumScreen =>
+      MediaQuery.of(this).size.width >= 650 &&
+          MediaQuery.of(this).size.width < 1100;
+  bool get isBigScreen => MediaQuery.of(this).size.width >= 1100;
+}
+
+class ResponsiveNew extends StatelessWidget {
+
+  const ResponsiveNew({
+    super.key,
+    required this.mobile,
+    this.tablet,
+    required this.desktop,
+  });
+  final Widget mobile;
+  final Widget? tablet;
+  final Widget desktop;
+
+// This size work fine on my design, maybe you need some customization depends on your design
+
+  // This isMobile, isTablet, isDesktop helep us later
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < 850;
+
+  static bool isTablet(BuildContext context) =>
+      MediaQuery.of(context).size.width < 1100 &&
+          MediaQuery.of(context).size.width >= 850;
+
+  static bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= 1100;
+
+  @override
+  Widget build(BuildContext context) {
+    final _size = MediaQuery.of(context).size;
+    // If our width is more than 1100 then we consider it a desktop
+    if (_size.width >= 1100) {
+      return desktop;
+    }
+    // If width it less then 1100 and more then 850 we consider it as tablet
+    else if (_size.width >= 850 && tablet != null) {
+      return tablet!;
+    }
+    // Or less then that we called it mobile
+    else {
+      return mobile;
+    }
   }
 }

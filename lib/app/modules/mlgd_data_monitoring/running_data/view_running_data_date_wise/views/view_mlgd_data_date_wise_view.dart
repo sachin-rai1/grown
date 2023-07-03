@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
-import '../../../../data/widgets.dart';
+import '../../../../../data/widgets.dart';
 import '../controllers/view_mlgd_data_date_wise_controller.dart';
 
 class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {

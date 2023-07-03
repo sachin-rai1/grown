@@ -6,7 +6,6 @@ import '../modules/bcdi_classification/bindings/bcdi_classification_binding.dart
 import '../modules/bcdi_classification/views/bcdi_classification_view.dart';
 import '../modules/bcdi_detection/bindings/bcdi_detection_binding.dart';
 import '../modules/bcdi_detection/views/bcdi_detection_view.dart';
-
 import '../modules/chiller_reading/bindings/chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/bindings/branchwise_chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/views/branchwise_chiller_reading_view.dart';
@@ -74,13 +73,17 @@ import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/views/mlgd_bottom_n
 import '../modules/mlgd_data_monitoring/RunNoData/bindings/run_no_data_binding.dart';
 import '../modules/mlgd_data_monitoring/RunNoData/views/run_no_data_view.dart';
 import '../modules/mlgd_data_monitoring/bindings/mlgd_data_monitoring_binding.dart';
-import '../modules/mlgd_data_monitoring/growing/bindings/growing_binding.dart';
-import '../modules/mlgd_data_monitoring/growing/views/growing_view.dart';
 import '../modules/mlgd_data_monitoring/post_run/bindings/post_run_binding.dart';
+import '../modules/mlgd_data_monitoring/post_run/date_wise_post_run_data/bindings/date_wise_post_run_data_binding.dart';
+import '../modules/mlgd_data_monitoring/post_run/date_wise_post_run_data/views/date_wise_post_run_data_view.dart';
+import '../modules/mlgd_data_monitoring/post_run/run_no_wise_post_run_data/bindings/view_post_run_data_binding.dart';
+import '../modules/mlgd_data_monitoring/post_run/run_no_wise_post_run_data/views/view_post_run_data_view.dart';
 import '../modules/mlgd_data_monitoring/post_run/views/post_run_view.dart';
 import '../modules/mlgd_data_monitoring/pre_run/bindings/pre_run_binding.dart';
 import '../modules/mlgd_data_monitoring/pre_run/camera_screen/bindings/camera_screen_binding.dart';
 import '../modules/mlgd_data_monitoring/pre_run/camera_screen/views/camera_screen_view.dart';
+import '../modules/mlgd_data_monitoring/pre_run/date_wise_pre_run_data/bindings/date_wise_pre_run_data_binding.dart';
+import '../modules/mlgd_data_monitoring/pre_run/date_wise_pre_run_data/views/date_wise_pre_run_data_view.dart';
 import '../modules/mlgd_data_monitoring/pre_run/gallery_screen/bindings/gallery_screen_binding.dart';
 import '../modules/mlgd_data_monitoring/pre_run/gallery_screen/views/gallery_screen_view.dart';
 import '../modules/mlgd_data_monitoring/pre_run/pre_run_view_data/bindings/pre_run_view_data_binding.dart';
@@ -88,12 +91,12 @@ import '../modules/mlgd_data_monitoring/pre_run/pre_run_view_data/views/pre_run_
 import '../modules/mlgd_data_monitoring/pre_run/preview_screen/bindings/preview_screen_binding.dart';
 import '../modules/mlgd_data_monitoring/pre_run/preview_screen/views/preview_screen_view.dart';
 import '../modules/mlgd_data_monitoring/pre_run/views/pre_run_view.dart';
-import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/bindings/view_mlgd_data_date_wise_binding.dart';
-import '../modules/mlgd_data_monitoring/view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
-import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
-import '../modules/mlgd_data_monitoring/view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
-import '../modules/mlgd_data_monitoring/view_post_run_data/bindings/view_post_run_data_binding.dart';
-import '../modules/mlgd_data_monitoring/view_post_run_data/views/view_post_run_data_view.dart';
+import '../modules/mlgd_data_monitoring/running_data/bindings/growing_binding.dart';
+import '../modules/mlgd_data_monitoring/running_data/view_running_data_date_wise/bindings/view_mlgd_data_date_wise_binding.dart';
+import '../modules/mlgd_data_monitoring/running_data/view_running_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
+import '../modules/mlgd_data_monitoring/running_data/view_running_data_run_wise/bindings/view_mlgd_data_run_wise_binding.dart';
+import '../modules/mlgd_data_monitoring/running_data/view_running_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
+import '../modules/mlgd_data_monitoring/running_data/views/growing_view.dart';
 import '../modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/bindings/view_ups_reading_branch_wise_binding.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
@@ -207,6 +210,13 @@ class AppPages {
           name: _Paths.POST_RUN,
           page: () => PostRunView(),
           binding: PostRunBinding(),
+          children: [
+            GetPage(
+              name: _Paths.DATE_WISE_POST_RUN_DATA,
+              page: () =>  DateWisePostRunDataView(),
+              binding: DateWisePostRunDataBinding(),
+            ),
+          ],
         ),
         GetPage(
           name: _Paths.PRE_RUN,
@@ -217,6 +227,11 @@ class AppPages {
               name: _Paths.PRE_RUN_VIEW_DATA,
               page: () => PreRunViewDataView(),
               binding: PreRunViewDataBinding(),
+            ),
+            GetPage(
+              name: _Paths.DATE_WISE_PRE_RUN_DATA,
+              page: () =>  DateWisePreRunDataView(),
+              binding: DateWisePreRunDataBinding(),
             ),
           ],
         ),
@@ -237,7 +252,7 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.VIEW_POST_RUN_DATA,
-          page: () =>  ViewPostRunDataView(),
+          page: () => ViewPostRunDataView(),
           binding: ViewPostRunDataBinding(),
         ),
       ],

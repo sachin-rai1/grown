@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/widgets.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/Model/model_mlgd_data.dart';
-import 'package:grown/app/modules/mlgd_data_monitoring/Model/model_run_no.dart';
-import 'package:grown/app/modules/mlgd_data_monitoring/view_post_run_data/model_post_run_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../controllers/view_post_run_data_controller.dart';
-
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
 
 class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
   ViewPostRunDataView({Key? key}) : super(key: key);
@@ -17,200 +12,203 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Obx(() {
-      return controller.isLoading.value
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-          itemCount: controller.postRunDataList.length,
-          itemBuilder: (context, index) {
-            List<DataProcess> getChartData() {
-              String formattedDate =
-              DateFormat('dd MMM').format(controller.now);
-              return <DataProcess>[
-                DataProcess(
-                    date: controller.changeDateTimeFormat(
-                        controller.postRunDataList[index].runNoCreated!),
-                    x: double.parse(
-                        controller.postRunDataList[index].x!.toString()),
-                    y: double.parse(
-                        controller.postRunDataList[index].y!.toString()),
-                    t: double.parse(
-                        controller.postRunDataList[index].t!.toString()),
-                    z: double.parse(
-                        controller.postRunDataList[index].z!.toString()),
-                    cleanPercentage: double.parse(controller
-                        .postRunDataList[index].cleanPercentage
-                        .toString())),
-                DataProcess(
-                    date: controller.changeDateTimeFormat(
-                        controller.postRunDataList[index].createdOn!),
-                    x: double.parse(
-                        controller.postRunDataList[index].x!.toString()),
-                    y: double.parse(
-                        controller.postRunDataList[index].y!.toString()),
-                    t: double.parse(
-                        controller.postRunDataList[index].t!.toString()),
-                    z: double.parse(
-                        controller.postRunDataList[index].z!.toString()),
-                    cleanPercentage: double.parse(controller
-                        .postRunDataList[index].cleanPercentage
-                        .toString())),
-              ];
-            }
+    return Scaffold(body: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: TextFormField(
+            keyboardType: TextInputType.number,
+            onFieldSubmitted: (value){
+              controller.getPostRunDataRunNoWise(
+                  runNo: controller.runNoController.text.isEmpty
+                      ? 0
+                      : int.parse(controller.runNoController.text));
+            },
+            controller: controller.runNoController,
+            decoration: InputDecoration(
+                suffixIcon: InkWell(
+                    onTap: () {
 
-            return Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Card(
-                color: Colors.cyanAccent.shade100,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15, vertical: 10),
-                  child: Column(
-                    children: [
-                      MyTextWidget(
-                        title: "Run No",
-                        body: controller.postRunDataList[index].runNoFk!
-                            .toString(),
-                      ),
-                      MyTextWidget(
-                        title: "Final Height",
-                        body: controller.postRunDataList[index].finalHeight!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "New Growth Height",
-                        body: controller
-                            .postRunDataList[index].newGrowthHeight!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Average Growth Height",
-                        body: controller
-                            .postRunDataList[index].averageGrowthHeight!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Objective",
-                        body: controller.postRunDataList[index].objective,
-                      ),
-                      MyTextWidget(
-                        title: "Final Weight",
-                        body: controller.postRunDataList[index].finalWeight!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "New Growth Weight",
-                        body: controller
-                            .postRunDataList[index].newGrowthWeight!
-                            .toStringAsFixed(2),
-                      ),
+                      controller.getPostRunDataRunNoWise(
+                          runNo: controller.runNoController.text.isEmpty
+                              ? 0
+                              : int.parse(controller.runNoController.text));
+                    },
+                    child: const Icon(
+                      Icons.search,
+                      size: 35,
+                    )),
+                contentPadding: const EdgeInsets.only(left: 10),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                hintText: "Enter Run No",
+                constraints: const BoxConstraints(maxHeight: 45)),
+          ),
+        ),
+        Expanded(
+          child: Obx(() {
+            return controller.isLoading.value
+                ? const Center(child: CircularProgressIndicator()):
+                controller.postRunDataList.isEmpty?
+                    const Center(child: Text("No Data Found"),)
+                : ListView.builder(
+                itemCount: controller.postRunDataList.length,
+                itemBuilder: (context, index) {
 
-                      MyTextWidget(
-                        title: "Clarity On New Growth ",
-                        body: controller
-                            .postRunDataList[index].clarityOnGrowth!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Total Duration",
-                        body: controller
-                            .postRunDataList[index].runningHours!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Production/Hour",
-                        body: controller
-                            .postRunDataList[index].productionPerHour!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Area Cover",
-                        body: controller
-                            .postRunDataList[index].totalPcsArea!
-                            .toStringAsFixed(2),
-                      ),
-                      MyTextWidget(
-                        title: "Shut Down Reason",
-                        body: controller
-                            .postRunDataList[index].shutDownReason
-                            .toString(),
-                      ),
-                      MyTextWidget(
-                        title: "Remarks",
-                        body: controller.postRunDataList[index].remarks!
-                            .toString(),
-                      ),
-                      MyTextWidget(
-                        title: "Started On",
-                        body: controller
-                            .postRunDataList[index].runNoCreated!
-                            .toString(),
-                      ),
-                      MyTextWidget(
-                        title: "Finished On",
-                        body: controller.postRunDataList[index].createdOn!
-                            .toString(),
-                      ),
-
-                      MyTextWidget(
-                          title: "Clean %",
-                          body: controller.postRunDataList[index]
-                              .cleanPercentage!.toStringAsFixed(2)
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    child: Card(
+                      color: Colors.cyanAccent.shade100,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Column(
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.getPreRunData(
-                                    runNO: int.parse(controller
-                                        .postRunDataList[index].runNo!
-                                        .toString()));
-                                viewPreRunData(context: context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange),
-                              child: const Text("View Pre Run Data"),
+                            MyTextWidget(
+                              title: "Run No",
+                              body: controller.postRunDataList[index].runNoFk!
+                                  .toString(),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                controller.getRunningData(
-                                    runNO: int.parse(controller
-                                        .postRunDataList[index].runNo!
-                                        .toString()));
-                                viewRunningData(context: context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.amber),
-                              child: const Text("View Running Data"),
+                            MyTextWidget(
+                              title: "Final Height",
+                              body: controller.postRunDataList[index].finalHeight!
+                                  .toStringAsFixed(2),
                             ),
+                            MyTextWidget(
+                              title: "New Growth Height",
+                              body: controller
+                                  .postRunDataList[index].newGrowthHeight!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Average Growth Height",
+                              body: controller
+                                  .postRunDataList[index].averageGrowthHeight!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Objective",
+                              body: controller.postRunDataList[index].objective,
+                            ),
+                            MyTextWidget(
+                              title: "Final Weight",
+                              body: controller.postRunDataList[index].finalWeight!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "New Growth Weight",
+                              body: controller
+                                  .postRunDataList[index].newGrowthWeight!
+                                  .toStringAsFixed(2),
+                            ),
+
+                            MyTextWidget(
+                              title: "Clarity On New Growth ",
+                              body: controller
+                                  .postRunDataList[index].clarityOnGrowth!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Total Duration",
+                              body: controller
+                                  .postRunDataList[index].runningHours!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Production/Hour",
+                              body: controller
+                                  .postRunDataList[index].productionPerHour!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Area Cover",
+                              body: controller
+                                  .postRunDataList[index].totalPcsArea!
+                                  .toStringAsFixed(2),
+                            ),
+                            MyTextWidget(
+                              title: "Shut Down Reason",
+                              body: controller
+                                  .postRunDataList[index].shutDownReason
+                                  .toString(),
+                            ),
+                            MyTextWidget(
+                              title: "Remarks",
+                              body: controller.postRunDataList[index].remarks!
+                                  .toString(),
+                            ),
+                            MyTextWidget(
+                              title: "Started On",
+                              body: controller
+                                  .postRunDataList[index].runNoCreated!
+                                  .toString(),
+                            ),
+                            MyTextWidget(
+                              title: "Finished On",
+                              body: controller.postRunDataList[index].createdOn!
+                                  .toString(),
+                            ),
+
+                            MyTextWidget(
+                                title: "Clean %",
+                                body: controller.postRunDataList[index]
+                                    .cleanPercentage!.toStringAsFixed(2)
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      controller.getPreRunData(
+                                          runNO: int.parse(controller
+                                              .postRunDataList[index].runNo!
+                                              .toString()));
+                                      viewPreRunData(context: context);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange),
+                                    child: const Text("View Pre Run Data"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      controller.getRunningData(
+                                          runNO: int.parse(controller
+                                              .postRunDataList[index].runNo!
+                                              .toString()));
+                                      viewRunningData(context: context);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.amber),
+                                    child: const Text("View Running Data"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                controller.getRunningData(runNO: controller.postRunDataList[index].runNo!.toInt());
+                                showGraph(context: context);
+                              },
+                              icon: const Icon(Icons.auto_graph),
+                              label: const Text("View Graph"),)
                           ],
                         ),
                       ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          controller.getRunningData(
-                              runNO: controller.postRunDataList[index].runNo!
-                                  .toInt());
-
-                          showGraph(context: context);
-                        },
-                        icon: const Icon(Icons.auto_graph),
-                        label: const Text("View Graph"),)
-                    ],
-                  ),
-                ),
-              ),
-            );
-          });
-    }));
+                    ),
+                  );
+                });
+          }),
+        ),
+      ],
+    ));
   }
 
   void viewPreRunData({required BuildContext context}) {
     showBottomSheet(
+        shape: const RoundedRectangleBorder(),
         context: context,
         builder: (context) {
           return Obx(() {
@@ -316,6 +314,9 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
 
   void viewRunningData({required BuildContext context}) {
     showBottomSheet(
+      shape: const RoundedRectangleBorder(),
+        backgroundColor: Colors.blueGrey,
+
         context: context,
         builder: (context) {
           return Obx(
@@ -358,32 +359,7 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.end,
-                                children: [
-                                  InkWell(
-                                      onTap: () {},
-                                      child: const Icon(
-                                        Icons.edit_note_outlined,
-                                        size: 35,
-                                        color: Colors.deepPurpleAccent,
-                                      )),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  InkWell(
-                                      onTap: () {},
-                                      child: const Icon(
-                                        Icons.delete_forever_sharp,
-                                        size: 30,
-                                        color: Colors.red,
-                                      )),
-                                ],
-                              ),
-                            ),
+
                             MyTextWidget(
                               title: "Date : ",
                               body: controller
@@ -537,86 +513,63 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
         return (controller.isRunningDataLoading.value == true)?
         const Center(child: CircularProgressIndicator(),):
         SfCartesianChart(
-        tooltipBehavior: TooltipBehavior(
-          enable: true,
-          canShowMarker: true
-        ),
-          crosshairBehavior: CrosshairBehavior(
-            enable: true
-          ),
+          enableAxisAnimation: true,
+          tooltipBehavior: TooltipBehavior(enable: true, canShowMarker: true),
+          crosshairBehavior: CrosshairBehavior(enable: true),
           enableMultiSelection: true,
-          title: ChartTitle(
-              text:
-              'Min of Power,Max Of Plenum, Max Of Pressure and Max Of Clean by Time ',
-              textStyle: const TextStyle(
-                  fontSize: 12, color: Colors.blue),
-              alignment: ChartAlignment.near),
           zoomPanBehavior: ZoomPanBehavior(
+            enablePanning: true,
             enablePinching: true,
             zoomMode: ZoomMode.xy,
           ),
           backgroundColor: Colors.white,
           legend: Legend(
-              isVisible: true,
-              borderWidth: 2,
-              position: LegendPosition.top,
-              isResponsive: true),
-          primaryXAxis: CategoryAxis(title: AxisTitle(text: 'Time' '')),
+            isVisible: true,
+            borderWidth: 2,
+            position: LegendPosition.top,
+            isResponsive: true,
+          ),
+          primaryXAxis: CategoryAxis(title: AxisTitle(text: 'Time'), ),
           primaryYAxis: NumericAxis(title: AxisTitle(text: 'X')),
-          axes: <ChartAxis>[
-            CategoryAxis(
-                name: 'xAxis', opposedPosition: true),
-            NumericAxis(
-              name: 'yAxis',
-              title: AxisTitle(text: 'Y,Z,T,Clean%'),
-              opposedPosition: true,
-            )
-          ],
-          series: <CartesianSeries>[
-            StepLineSeries<MlgdData, dynamic>(
+          series: [
+            LineSeries<MlgdData, dynamic>(
               name: "X",
+              dataSource: controller.mlgdDataList,
+              xValueMapper: (MlgdData dataProcess, _) => controller.changeDateTimeFormat(dataProcess.createdOn!),
+              yValueMapper: (MlgdData dataProcess, _) => dataProcess.x! / 100,
+            ),
+            LineSeries<MlgdData, dynamic>(
+              name: 'Y',
               dataSource: controller.mlgdDataList,
               xValueMapper: (MlgdData dataProcess, _) =>
                   controller.changeDateTimeFormat(dataProcess.createdOn!),
-              yValueMapper: (MlgdData dataProcess, _) => dataProcess.x,
+              yValueMapper: (MlgdData dataProcess, _) => dataProcess.t,
             ),
-            StepLineSeries<MlgdData, dynamic>(
-                name: 'Y',
-                dataSource: controller.mlgdDataList,
-                xValueMapper: (MlgdData dataProcess, _) =>
-                    controller.changeDateTimeFormat(dataProcess.createdOn!),
-                yValueMapper: (MlgdData dataProcess, _) => dataProcess.t,
-                xAxisName: 'xAxis',
-                yAxisName: 'yAxis'),
-            StepLineSeries<MlgdData, dynamic>(
-                name: 'Z',
-                dataSource: controller.mlgdDataList,
-                xValueMapper: (MlgdData dataProcess, _) =>
-                    controller.changeDateTimeFormat(dataProcess.createdOn!),
-                yValueMapper: (MlgdData dataProcess, _) =>
-                dataProcess.y,
-                xAxisName: 'xAxis',
-                yAxisName: 'yAxis'),
-            StepLineSeries<MlgdData, dynamic>(
-                name: 'T',
-                dataSource: controller.mlgdDataList,
-                xValueMapper: (MlgdData dataProcess, _) =>
-                    controller.changeDateTimeFormat(dataProcess.createdOn!),
-                yValueMapper: (MlgdData dataProcess, _) =>
-                dataProcess.z,
-                xAxisName: 'xAxis',
-                yAxisName: 'yAxis'),
-            StepLineSeries<MlgdData, dynamic>(
-                name: 'Clean %',
-                dataSource: controller.mlgdDataList,
-                xValueMapper: (MlgdData dataProcess, _) =>
-                    controller.changeDateTimeFormat(dataProcess.createdOn!),
-                yValueMapper: (MlgdData dataProcess, _) =>
-                dataProcess.cleanPcsNo! / dataProcess.totalPcsNo! * 100,
-                xAxisName: 'xAxis',
-                yAxisName: 'yAxis'),
+            LineSeries<MlgdData, dynamic>(
+              name: 'Z',
+              dataSource: controller.mlgdDataList,
+              xValueMapper: (MlgdData dataProcess, _) =>
+                  controller.changeDateTimeFormat(dataProcess.createdOn!),
+              yValueMapper: (MlgdData dataProcess, _) => dataProcess.y,
+            ),
+            LineSeries<MlgdData, dynamic>(
+              name: 'T',
+              dataSource: controller.mlgdDataList,
+              xValueMapper: (MlgdData dataProcess, _) =>
+                  controller.changeDateTimeFormat(dataProcess.createdOn!),
+              yValueMapper: (MlgdData dataProcess, _) => dataProcess.z,
+            ),
+            LineSeries<MlgdData, dynamic>(
+              name: 'Clean %',
+              dataSource: controller.mlgdDataList,
+              xValueMapper: (MlgdData dataProcess, _) =>
+                  controller.changeDateTimeFormat(dataProcess.createdOn!),
+              yValueMapper: (MlgdData dataProcess, _) =>
+              dataProcess.cleanPcsNo! / dataProcess.totalPcsNo! * 100,
+            ),
           ],
         );
+
       });
     });
   }

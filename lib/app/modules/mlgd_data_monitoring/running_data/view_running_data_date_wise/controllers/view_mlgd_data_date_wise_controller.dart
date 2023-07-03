@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../data/constants.dart';
+import '../../../../../data/constants.dart';
 
 class ViewMlgdDataDateWiseController extends GetxController {
 

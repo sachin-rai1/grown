@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../../data/widgets.dart';
+import '../../../../../data/widgets.dart';
 import '../controllers/view_mlgd_data_run_wise_controller.dart';
 
 class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {

@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/Model/model_mlgd_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
 
-import '../../../../data/constants.dart';
+import '../../../../../data/constants.dart';
 
 class ViewMlgdDataRunWiseController extends GetxController {
 
@@ -24,12 +26,14 @@ class ViewMlgdDataRunWiseController extends GetxController {
     );
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
+      log(json.toString());
       var data = ModelMlgdData.fromJson(json);
       mlgdDataList.value = data.data ?? [];
       isLoading.value = false;
       return response;
     }
     else{
+      log(response.statusCode.toString());
       isLoading.value = false;
       mlgdDataList.value = [];
       throw Exception();
@@ -48,6 +52,7 @@ class ViewMlgdDataRunWiseController extends GetxController {
   final zController = TextEditingController();
   final tController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  var isZoomed = false.obs;
 
   Future<void> updateMlgdData({required int mlgdId}) async {
     try {
@@ -133,5 +138,9 @@ class ViewMlgdDataRunWiseController extends GetxController {
     finally{
       isLoading.value = false;
     }
+  }
+
+  String changeDateTimeFormat(DateTime dateTime) {
+    return DateFormat('dd MMM HH:mm').format(dateTime);
   }
 }

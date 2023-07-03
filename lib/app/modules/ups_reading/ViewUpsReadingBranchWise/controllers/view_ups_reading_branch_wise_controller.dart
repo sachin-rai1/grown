@@ -75,26 +75,14 @@ class ViewUpsReadingBranchWiseController extends GetxController {
       'Content-Type': 'application/json'
     },
         body: jsonEncode(<String, dynamic>{
-          "branch_id": (selectedBranchId.value == 0)
-              ? branchId
-              : selectedBranchId.value,
+          "branch_id": (selectedBranchId.value == 0) ? branchId : selectedBranchId.value,
           "ups_id": (selectedUpsId.value == 0) ? upsId : selectedUpsId.value,
-          "loads_on_ups_r": (loadOnUpsRController.text == "")
-              ? lur
-              : loadOnUpsRController.text,
-          "loads_on_ups_y": (loadOnUpsYController.text == "")
-              ? luy
-              : loadOnUpsYController.text,
-          "loads_on_ups_b": (loadOnUpsBController.text == "")
-              ? lub
-              : loadOnUpsBController.text,
+          "loads_on_ups_r": (loadOnUpsRController.text == "") ? lur : loadOnUpsRController.text,
+          "loads_on_ups_y": (loadOnUpsYController.text == "") ? luy : loadOnUpsYController.text,
+          "loads_on_ups_b": (loadOnUpsBController.text == "") ? lub : loadOnUpsBController.text,
           "led_status": (ledStatus.value == "") ? led.value : ledStatus.value,
-          "dc_positive_voltage": (positiveVoltageController.text == "")
-              ? positive
-              : positiveVoltageController.text,
-          "dc_negative_voltage": (negativeVoltageController.text == "")
-              ? negative
-              : negativeVoltageController.text
+          "dc_positive_voltage": (positiveVoltageController.text == "") ? positive : positiveVoltageController.text,
+          "dc_negative_voltage": (negativeVoltageController.text == "") ? negative : negativeVoltageController.text
         })
     );
 

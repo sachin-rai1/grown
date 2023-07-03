@@ -14,11 +14,11 @@ class MaintenanceView extends GetView<MaintenanceController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight: (privilage.value != "Admin") ? 0 : kToolbarHeight,
-          backgroundColor: (privilage.value != "Admin")
+          toolbarHeight: (privilage.value == "Maintenance Engineer") ? 0 : kToolbarHeight,
+          backgroundColor: (privilage.value =="Maintenance Engineer")
               ? Colors.transparent
               : Colors.blue,
-          title: (privilage.value != "Admin")
+          title: (privilage.value =="Maintenance Engineer")
               ? const Text("")
               : const Text("Maintenance"),
           centerTitle: true,
@@ -33,7 +33,7 @@ class MaintenanceView extends GetView<MaintenanceController> {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 15,
                 ),
-                children: List.generate(controller.adminList.length, (index) {
+                children:List.generate(privilage.value=="User"?controller.userList.length: controller.adminList.length, (index) {
                   return Center(
                       child: (privilage.value == "User")
                           ? SelectCard(choice: controller.userList[index])

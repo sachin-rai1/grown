@@ -3,7 +3,7 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
-  
+
   static const HOME = _Paths.HOME;
   static const BCDI_DETECTION = _Paths.BCDI_DETECTION;
   static const BCDI_CLASSIFICATION = _Paths.BCDI_CLASSIFICATION;
@@ -85,6 +85,12 @@ abstract class Routes {
   static const PROCESS_PUMP = _Paths.CHILLER_READING + _Paths.PROCESS_PUMP;
   static const VIEW_POST_RUN_DATA =
       _Paths.MLGD_DATA_MONITORING + _Paths.VIEW_POST_RUN_DATA;
+  static const DATE_WISE_POST_RUN_DATA = _Paths.MLGD_DATA_MONITORING +
+      _Paths.POST_RUN +
+      _Paths.DATE_WISE_POST_RUN_DATA;
+  static const DATE_WISE_PRE_RUN_DATA = _Paths.MLGD_DATA_MONITORING +
+      _Paths.PRE_RUN +
+      _Paths.DATE_WISE_PRE_RUN_DATA;
 }
 
 abstract class _Paths {
@@ -147,4 +153,6 @@ abstract class _Paths {
   static const EDIT_ASSIGNED_ENGINEER = '/edit-assigned-engineer';
   static const PROCESS_PUMP = '/process-pump';
   static const VIEW_POST_RUN_DATA = '/view-post-run-data';
+  static const DATE_WISE_POST_RUN_DATA = '/date-wise-post-run-data';
+  static const DATE_WISE_PRE_RUN_DATA = '/date-wise-pre-run-data';
 }

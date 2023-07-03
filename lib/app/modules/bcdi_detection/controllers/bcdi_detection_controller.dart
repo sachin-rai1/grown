@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -14,28 +15,34 @@ import 'package:pdf/widgets.dart' as pw;
 import '../model_bcdi_detection.dart';
 
 class BcdiDetectionController extends GetxController {
-  Rx<File?> image = Rx<File?>(null);
-  CroppedFile? croppedFile;
-  TextEditingController? idTextController;
-  TextEditingController? titleTextController;
+  Rx<File?> image = Rx<File?>(null); // Reactive variable for storing the image file
+  CroppedFile? croppedFile; // Variable for storing the cropped image file
+  TextEditingController? idTextController; // Text controller for an ID input field (not used in the provided code)
+  TextEditingController? titleTextController; // Text controller for a title input field (not used in the provided code)
 
-  var classData = [].obs;
-  var percentageData = [].obs;
-  var imageString = "".obs;
-  dynamic cleanConfidence;
-  dynamic cleanClassValue;
-  var isLoading = false.obs;
-  var id = 0.obs;
-  var classStatus = "".obs;
+  var classData = [].obs; // Observable list for storing class data
+  var percentageData = [].obs; // Observable list for storing percentage data
+  var imageString = "".obs; // Observable string for storing image data as a base64 string
+  dynamic cleanConfidence; // Dynamic variable for storing clean confidence value (not used in the provided code)
+  dynamic cleanClassValue; // Dynamic variable for storing clean class value (not used in the provided code)
+  var isLoading = false.obs; // Observable boolean indicating whether the app is currently loading
+  var id = 0.obs; // Observable ID value (not used in the provided code)
+  var classStatus = "".obs; // Observable string for storing class status
 
-  Rx<File?> resizedFile = Rx<File?>(null);
-  TextEditingController runNo = TextEditingController();
+  Rx<File?> resizedFile = Rx<File?>(null); // Reactive variable for storing the resized image file
+  TextEditingController runNo = TextEditingController(); // Text controller for the "Run No" input field
 
+// Function for checking internet connectivity
   Future<void> hasNetwork() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        _cropImage();
+        if(!kIsWeb) {
+          if (Platform.isIOS || Platform.isAndroid) {
+
+            _cropImage(); // Crop the image if on a web platform
+          }
+        }
       }
     } on SocketException catch (e) {
       log(e.toString());
@@ -51,9 +58,10 @@ class BcdiDetectionController extends GetxController {
     }
   }
 
+// Function for cropping the image
   Future<void> _cropImage() async {
     croppedFile = await ImageCropper().cropImage(
-      sourcePath: image.value!.path,
+      sourcePath: image.value!.path, // Path of the original image
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.ratio3x2,
@@ -72,42 +80,39 @@ class BcdiDetectionController extends GetxController {
         IOSUiSettings(
           title: 'Cropper',
         ),
-
       ],
     );
-    final bytes = await croppedFile?.readAsBytes();
-    final resizedImage = img.decodeImage(bytes!);
-    final resized = img.copyResize(resizedImage!, width: 512, height: 512);
-    final tempDir = await getTemporaryDirectory();
-    resizedFile.value = File('${tempDir.path}/resized${DateTime.now().microsecondsSinceEpoch}.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
 
-    upload(resizedFile.value!);
+    final bytes = await croppedFile?.readAsBytes(); // Read the cropped image as bytes
+    final resizedImage = img.decodeImage(bytes!); // Decode the image bytes
+    final resized = img.copyResize(resizedImage!, width: 512, height: 512); // Resize the image
+    final tempDir = await getTemporaryDirectory(); // Get the temporary directory
+    resizedFile.value = File('${tempDir.path}/resized${DateTime.now().microsecondsSinceEpoch}.jpeg')..writeAsBytesSync(img.encodeJpg(resized)); // Save the resized image to a file
 
+    upload(resizedFile.value!); // Upload the resized image
   }
 
+// Function for uploading the image file
   upload(File imageFile) async {
     try {
-        isLoading.value = true;
-        classData.value = [];
-      // ignore: deprecated_member_use
-      var stream = http.ByteStream(DelegatingStream.typed(resizedFile.value!.openRead()));
-      var length = await resizedFile.value?.length();
-      var uploadURL = "http://ec2-54-227-80-131.compute-1.amazonaws.com/predict";
+      isLoading.value = true; // Set loading state to true
+      classData.value = []; // Clear the class data list
+
+      var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead())); // Create a byte stream from the resized image file
+      var length = await resizedFile.value?.length(); // Get the length of the resized image file
+      var uploadURL = "http://ec2-54-227-80-131.compute-1.amazonaws.com/predict"; // URL for uploading the image
       var uri = Uri.parse(uploadURL);
-      var request = http.MultipartRequest("POST", uri);
-      var multipartFile = http.MultipartFile('file', stream, length!,
-          filename: (imageFile.path));
-      request.files.add(multipartFile);
-        var response = await http.Response.fromStream(await request.send());
-
-
+      var request = http.MultipartRequest("POST", uri); // Create a multipart request
+      var multipartFile = http.MultipartFile('file', stream, length!, filename: (imageFile.path)); // Create a multipart file from the image stream
+      request.files.add(multipartFile); // Add the multipart file to the request
+      var response = await http.Response.fromStream(await request.send()); // Send the request and get the response
+      log(response.statusCode.toString());
       if (response.statusCode == 200) {
-          var json = jsonDecode(response.body);
-          var xyz = ModelBcdiDetection.fromJson(json);
-          imageString.value = xyz.image!;
-          classData.value = xyz.modelBcdiDetectionClass!;
-          percentageData.value = xyz.percentage!;
-        // });
+        var json = jsonDecode(response.body);
+        var xyz = ModelBcdiDetection.fromJson(json);
+        imageString.value = xyz.image!; // Store the image as a base64 string
+        classData.value = xyz.modelBcdiDetectionClass!; // Store the detected class data
+        percentageData.value = xyz.percentage!; // Store the detected class percentages
       } else if (response.statusCode == 502) {
         Get.showSnackbar(const GetSnackBar(
           backgroundColor: Colors.red,
@@ -119,19 +124,20 @@ class BcdiDetectionController extends GetxController {
       } else {
         Get.showSnackbar(
             GetSnackBar(
-          backgroundColor: Colors.red,
-          message: "Some Error occur",
-          title: response.statusCode.toString(),
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(milliseconds: 2000),
-        ));
-          isLoading.value = false;
+              backgroundColor: Colors.red,
+              message: "Some Error occur",
+              title: response.statusCode.toString(),
+              snackPosition: SnackPosition.TOP,
+              duration: const Duration(milliseconds: 2000),
+            ));
+        isLoading.value = false; // Set loading state to false
       }
     } finally {
-        isLoading.value = false;
+      isLoading.value = false; // Set loading state to false
     }
   }
 
+// Function for saving the data as a PDF
   savePdf(BuildContext context) async {
     if (resizedFile.value == null) {
       Get.showSnackbar(const GetSnackBar(
@@ -148,8 +154,8 @@ class BcdiDetectionController extends GetxController {
         duration: Duration(milliseconds: 1500),
       ));
     } else {
-      var h = MediaQuery.of(context).size.height;
-      final pdf = pw.Document();
+      var h = MediaQuery.of(context).size.height; // Get the device screen height
+      final pdf = pw.Document(); // Create a PDF document
       (classData == [])
           ? Get.showSnackbar(const GetSnackBar(
         message: "Please try again",
@@ -238,23 +244,36 @@ class BcdiDetectionController extends GetxController {
       ));
     }
   }
+  XFile? pickerImage;
 
+// Function for picking an image from the gallery
   Future<void> pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickerImage = await picker.pickImage(source: ImageSource.gallery);
+    pickerImage = await picker.pickImage(source: ImageSource.gallery);
 
-    log('image path : ${pickerImage?.path} -- MimeType : ${pickerImage?.mimeType}');
+    log('image path : ${pickerImage?.path}');
     image.value = File(pickerImage!.path);
-    hasNetwork();
 
+    if(!kIsWeb) {
+      if (Platform.isAndroid || Platform.isIOS) {
+        hasNetwork(); // Check for network connection and crop the image
+      }
+      else {
+        log(image.value.toString());
+        upload(image.value!);
+        // Process.run('start', [pickerImage!.path]);
+        // Open the image file
+      }
+    }
   }
 
+// Function for picking an image from the camera
   Future<void> pickImageFromCamera() async {
-
     final ImagePicker picker = ImagePicker();
     final XFile? pickerImage = await picker.pickImage(source: ImageSource.camera);
     log('image path : ${pickerImage?.path} -- MimeType : ${pickerImage?.mimeType}');
-      image.value = File(pickerImage!.path);
-    hasNetwork();
+    image.value = File(pickerImage!.path);
+    hasNetwork(); // Check for network connection and crop the image
   }
+
 }

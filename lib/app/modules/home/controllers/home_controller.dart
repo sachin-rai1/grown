@@ -16,10 +16,13 @@ import '../../maintenance/views/maintenance_view.dart';
 import '../../ups_reading/views/ups_reading_view.dart';
 
 class HomeController extends GetxController {
-  final scrollController = ScrollController();
+  final scrollController = ScrollController();// Scroll controller for GridView scrolling
 
-  final gridViewKey = GlobalKey();
 
+  final gridViewKey = GlobalKey();  // Key for accessing the GridView widget
+
+
+// List of choices for the admin department
   List<Choice> adminList = <Choice>[
     Choice(
         title: 'BCDI-DETECTION',
@@ -80,6 +83,7 @@ class HomeController extends GetxController {
         onTap: () => Get.to(() =>  EmailConfigView())),
   ];
 
+  // List of choices for the lab department
   List<Choice> labList = <Choice>[
     Choice(
         title: 'BCDI-DETECTION',
@@ -103,6 +107,7 @@ class HomeController extends GetxController {
         onTap: () => Get.to(() => MaintenanceView())),
   ];
 
+  // List of choices for the electrical department
   List<Choice> electricalList = <Choice>[
     Choice(
         title: 'UPS READING',
@@ -118,6 +123,7 @@ class HomeController extends GetxController {
         onTap: () => Get.to(() => EmployeeManagementView())),
   ];
 
+  // List of choices for the gas department
   List<Choice> gasList = <Choice>[
     Choice(
         title: 'GAS BANK OPERATOR',
@@ -129,6 +135,7 @@ class HomeController extends GetxController {
         onTap: () => Get.to(() => EmployeeManagementView())),
   ];
 
+  // List of choices for the IT department
   List<Choice> itList = <Choice>[
     Choice(
         title: 'EMPLOYEE-MANAGEMENT',

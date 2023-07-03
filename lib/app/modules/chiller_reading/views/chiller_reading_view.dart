@@ -301,9 +301,6 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                               });
                         }),
 
-
-
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -331,19 +328,15 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                         dropDown: true,
                                         titleText: "Chiller",
                                         dropDownOnChanged: (newValue) {
-                                          controller.selectedChiller(
-                                              newValue.toString());
+                                          controller.selectedChiller(newValue.toString());
                                         },
                                         dropDownItems: controller
                                             .chillerDataList
                                             .map((chiller) {
                                           return DropdownMenuItem<String>(
                                             onTap: () async {
-                                              controller.selectedChillerId
-                                                  .value = chiller.chillerId!;
-                                              await controller.fetchCompressor(
-                                                  chillerId: controller
-                                                      .selectedChillerId.value);
+                                              controller.selectedChillerId.value = chiller.chillerId!;
+                                              await controller.fetchCompressor(chillerId: controller.selectedChillerId.value);
                                               await controller.getCompressorStatus();
                                             },
                                             value: chiller.chillerName,

@@ -12,11 +12,6 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: const Text("View Data"),
-          centerTitle: true,
-        ),
         body: Column(
           children: [
             Padding(
@@ -51,12 +46,12 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
               ),
             ),
             Obx(
-              () => controller.isLoading.value == true
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  :(controller.preRunDataList.isEmpty)?const Center(child: Text("No Data Found"),) :Expanded(
-                      child: ListView.builder(
+              () =>Expanded(
+                      child: controller.isLoading.value == true
+                          ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                          :(controller.preRunDataList.isEmpty)?const Center(child: Text("No Data Found"),) : ListView.builder(
                           itemCount: controller.preRunDataList.length,
                           itemBuilder: (context, index) {
                             var imageType = "";

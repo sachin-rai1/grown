@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import '../../../../data/widgets.dart';
 import '../../RunNoData/views/run_no_data_view.dart';
-import '../../view_mlgd_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
-import '../../view_mlgd_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
+import '../../running_data/view_running_data_date_wise/views/view_mlgd_data_date_wise_view.dart';
+import '../../running_data/view_running_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
 import '../../views/mlgd_data_monitoring_view.dart';
 import '../controllers/mlgd_bottom_navigation_controller.dart';
 

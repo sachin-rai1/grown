@@ -6,24 +6,26 @@ import '../../../../data/constants.dart';
 import '../emp_model.dart';
 
 class LabEmployeeManagementController extends GetxController {
-  var selectedBranch = "".obs;
-  var branchId = 1.obs;
-  var designationDetails = <DesignationCount>[].obs;
+  var selectedBranch = "".obs; // Observable variable for the selected branch name
+  var branchId = 1.obs; // Observable variable for the branch ID
+  var designationDetails = <DesignationCount>[].obs; // Observable list of DesignationCount objects representing designation details
 
-  var specialSkill = <DesignationCount>[].obs;
-  var totalMachines = 0.obs;
-  var totalEmployees = 0.obs;
-  var requireEmployees = 0.obs;
+  var specialSkill = <DesignationCount>[].obs; // Observable list of DesignationCount objects representing special skills
+  var totalMachines = 0.obs; // Observable variable for the total number of machines
+  var totalEmployees = 0.obs; // Observable variable for the total number of employees
+  var requireEmployees = 0.obs; // Observable variable for the required number of employees
 
-  var requiredDesignations = <DesignationCount>[].obs;
-  var requiredSkill = <DesignationCount>[].obs;
-  var branchData = [].obs;
-  var isLoading = false.obs;
+  var requiredDesignations = <DesignationCount>[].obs; // Observable list of DesignationCount objects representing required designations
+  var requiredSkill = <DesignationCount>[].obs; // Observable list of DesignationCount objects representing required skills
+  var branchData = [].obs; // Observable list for branch data
+  var isLoading = false.obs; // Observable variable indicating if data is being loaded
+
   @override
   void onInit() {
     super.onInit();
     fetchBranches().whenComplete(() => fetchEmployeesByBranchDetails(branchId.value));
   }
+
   Future<List> fetchBranches() async {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
@@ -38,7 +40,7 @@ class LabEmployeeManagementController extends GetxController {
         branchData.value = jsonDecode(response.body);
       }
       isLoading.value = false;
-      selectedBranch.value = branchData[0]["branch_name"];
+      selectedBranch.value = branchData[0]["branch_name"]; // Set the selected branch to the first branch in the list
       return branchData;
     } else {
       isLoading.value = false;
@@ -46,26 +48,24 @@ class LabEmployeeManagementController extends GetxController {
     }
   }
 
-
   Future<void> fetchEmployeesByBranchDetails(int id) async {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    var response =
-    await http.get(Uri.parse('$apiUrl/employees_branch/$id'), headers: {
+    var response = await http.get(Uri.parse('$apiUrl/employees_branch/$id'), headers: {
       'Authorization': 'Bearer $token',
     });
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       final employees = Employees.fromJson(data);
-      designationDetails.value = employees.designationCounts ?? [];
-      specialSkill.value = employees.skillCounts ?? [];
-      totalMachines.value = employees.totalNoOfMachine!.noOfMachines!;
-      totalEmployees.value = employees.totalEmployee!;
-      requireEmployees.value = employees.requireEmployees!;
-      requiredDesignations.value  = employees.requiredDesignationPerHundredMachine ?? [];
-      requiredSkill.value = employees.requiredSkillsPerHundredMachine ?? [];
+      designationDetails.value = employees.designationCounts ?? []; // Update the designation details with the fetched data
+      specialSkill.value = employees.skillCounts ?? []; // Update the special skills with the fetched data
+      totalMachines.value = employees.totalNoOfMachine!.noOfMachines!; // Update the total number of machines
+      totalEmployees.value = employees.totalEmployee!; // Update the total number of employees
+      requireEmployees.value = employees.requireEmployees!; // Update the required number of employees
+      requiredDesignations.value = employees.requiredDesignationPerHundredMachine ?? []; // Update the required designations with the fetched data
+      requiredSkill.value = employees.requiredSkillsPerHundredMachine ?? []; // Update the required skills with the fetched data
       isLoading.value = false;
     }
   }

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/widgets.dart';
+import 'package:grown/app/modules/mlgd_data_monitoring/reportScreen/report_screen.screen.dart';
 import '../controllers/mlgd_data_monitoring_controller.dart';
 
 class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
@@ -55,7 +58,7 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
                     height: height / 3,
                     minWidth: width,
                     onPressed: () {
-                      Get.to(()=> const MlgdReportTabBar());
+                      Get.to(()=> const ReportScreenScreen());
                     },
                     child: Column(
                       children:  [
@@ -72,5 +75,8 @@ class MlgdDataMonitoringView extends GetView<MlgdDataMonitoringController> {
       ),
     );
   }
+
+
 }
+
 

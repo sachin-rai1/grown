@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/login/views/login_view.dart';
@@ -41,8 +43,12 @@ class LoginController extends GetxController {
         userId.value = data["user_id"];
         var userEmail = data["user_email"];
 
-        final fcmToken = await FirebaseMessaging.instance.getToken();
-        prefs.setString('fToken', fcmToken!);
+        if (!kIsWeb){
+          if(Platform.isAndroid || Platform.isIOS) {
+            final fcmToken = await FirebaseMessaging.instance.getToken();
+            prefs.setString('fToken', fcmToken!);
+          }
+      }
 
         prefs.setString("token", token);
         prefs.setString('privilage', privilage.value);

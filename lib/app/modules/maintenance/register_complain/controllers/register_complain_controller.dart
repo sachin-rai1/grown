@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:grown/app/modules/maintenance/register_complain/Model/model_fcm_token.dart';
@@ -233,10 +234,14 @@ class RegisterComplainController extends GetxController {
             log('Data inserted successfully');
             showToast(msg: "Complain Register Successfully");
 
-            await Api.sendPushNotification(
-                msg: "Ticket No : ${ticketNo.value}",
-                token: fcmToken,
-                title: "New Ticket Assigned");
+            if(!kIsWeb) {
+              if(Platform.isAndroid || Platform.isIOS) {
+                await Api.sendPushNotification(
+                    msg: "Ticket No : ${ticketNo.value}",
+                    token: fcmToken,
+                    title: "New Ticket Assigned");
+              }
+            }
             await clearData();
             await sendEmail(
               msg: ""
@@ -251,6 +256,7 @@ class RegisterComplainController extends GetxController {
 
           } else {
             showToastError(msg: response.body);
+            log(response.body.toString());
           }
         } catch (e) {
           log('Error: $e');

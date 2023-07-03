@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/maintenance/assign_engineer/Model/model_engineers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -156,11 +158,16 @@ class AssignEngineerController extends GetxController {
             await getFirebaseTokenData(userId: engineerIdList[i]);
           }
           await getComplains();
-          if (fcmToken.isNotEmpty) {
-            await Api.sendPushNotification(
-                msg: "Ticket No : $ticketNo",
-                token: fcmToken,
-                title: "New Ticket Assigned");
+
+          if(!kIsWeb) {
+            if (Platform.isAndroid || Platform.isIOS) {
+              if (fcmToken.isNotEmpty) {
+                await Api.sendPushNotification(
+                    msg: "Ticket No : $ticketNo",
+                    token: fcmToken,
+                    title: "New Ticket Assigned");
+              }
+            }
           }
 
           await sendEmail(msg: ""
