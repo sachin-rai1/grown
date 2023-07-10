@@ -59,8 +59,10 @@ class EngineerController extends GetxController {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
       var userId = prefs.getInt("user_id");
+      var branchID = prefs.getInt("user_branch_id");
+
       var response = await http.get(
-          Uri.parse("$apiUrl/engineer_read?engineer_id=$userId"),
+          Uri.parse("$apiUrl/engineer_read/$branchID?engineer_id=$userId"),
           headers: {
             'Authorization': 'Bearer $token',
             'Content-type': 'application/json',
@@ -70,7 +72,7 @@ class EngineerController extends GetxController {
         var data = ModelEngineersProblems.fromJson(json);
         engineerProblemDataList.value = data.data ?? [];
       } else {
-        log('failed');
+        log(response.body.toString());
       }
     } catch (e) {
       log(e.toString());

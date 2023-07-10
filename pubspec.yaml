@@ -1,5 +1,5 @@
 name: grown
-version: 1.0.0+1
+version: 1.1.2
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -41,6 +41,7 @@ dependencies:
   flutter_native_timezone: 2.0.0
   welltested: 1.0.4
   syncfusion_flutter_charts: any
+  package_info_plus: 4.0.2
   flutter: 
     sdk: flutter
 
@@ -58,6 +59,5 @@ flutter_launcher_icons:
 flutter: 
   assets: 
     - assets/images/
-#    - .env
   uses-material-design: true
 

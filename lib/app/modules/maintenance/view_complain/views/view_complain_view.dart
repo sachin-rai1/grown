@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -35,11 +36,12 @@ class ViewComplainView extends GetView<ViewComplainController> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: controller.complainsDataList.length,
                               itemBuilder: (context, index) {
+
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
                                   child: Card(
-                                    color: Colors.indigo.shade100,
+                                    color:controller.complainsDataList[index].status==2?Colors.greenAccent:controller.complainsDataList[index].status==1?Colors.yellow.shade200: Colors.indigo.shade100,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15, vertical: 10),
@@ -131,32 +133,26 @@ class ViewComplainView extends GetView<ViewComplainController> {
                                                       top: 10, bottom: 10),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
+                                                      BorderRadius.circular(
+                                                          10)),
                                                   child: const Padding(
                                                     padding:
-                                                        EdgeInsets.all(8.0),
+                                                    EdgeInsets.all(8.0),
                                                     child: Text("Problems : ",
                                                         style: TextStyle(
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                             fontSize: 18)),
                                                   ),
                                                 ),
                                                 ListView.builder(
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
+                                                  physics: const NeverScrollableScrollPhysics(),
                                                   shrinkWrap: true,
-                                                  itemCount: controller
-                                                      .complainsDataList[index]
-                                                      .problems!
-                                                      .length,
+                                                  itemCount: controller.complainsDataList[index].problems!.length,
                                                   itemBuilder:
                                                       (context, problemIndex) {
                                                     return Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 10),
+                                                      padding: const EdgeInsets.only(top: 10),
                                                       child: Container(
                                                         decoration: BoxDecoration(
                                                             color: Colors.cyan,
@@ -184,6 +180,45 @@ class ViewComplainView extends GetView<ViewComplainController> {
                                                     );
                                                   },
                                                 ),
+
+                                                (controller.complainsDataList[index].solvedProblems!.isEmpty)?Container(): Card(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 10, bottom: 10),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                                  child: const Padding(
+                                                    padding:
+                                                    EdgeInsets.all(8.0),
+                                                    child: Text("Solved Problems : ",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                            FontWeight.w500,
+                                                            fontSize: 18)),
+                                                  ),
+                                                ),
+
+                                                ListView.builder(
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount: controller.complainsDataList[index].solvedProblems!.length,
+                                                  itemBuilder: (context, solvedIndex) {
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 10),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.cyan, borderRadius: BorderRadius.circular(10)),
+                                                        child: Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: Text(
+                                                                controller.complainsDataList[index].solvedProblems![solvedIndex],
+                                                                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18))),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+
                                                 Card(
                                                   margin: const EdgeInsets.only(
                                                       top: 10, bottom: 10),
@@ -207,11 +242,7 @@ class ViewComplainView extends GetView<ViewComplainController> {
                                                     padding:
                                                         const EdgeInsets.all(
                                                             8.0),
-                                                    child: Text(
-                                                        controller
-                                                            .complainsDataList[
-                                                                index]
-                                                            .problemDescription!,
+                                                    child: Text(controller.complainsDataList[index].problemDescription!,
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w600,

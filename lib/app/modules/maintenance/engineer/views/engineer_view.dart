@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class EngineerView extends GetView<EngineerController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:(privilage.value == "Maintenance Engineer" )?null: AppBar(
+        appBar:AppBar(
           title: const Text('Complain To Be Solve'),
           centerTitle: true,
         ),
@@ -41,7 +42,7 @@ class EngineerView extends GetView<EngineerController> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
                         child: Card(
-                          color: Colors.indigo.shade100,
+                          color:controller.engineerProblemDataList[index].status==2?Colors.greenAccent:controller.engineerProblemDataList[index].status==1?Colors.yellow.shade200: Colors.indigo.shade100,
                           child: ListTile(
                             onTap: () {},
                             title: Column(
@@ -129,9 +130,7 @@ class EngineerView extends GetView<EngineerController> {
                                       ListView.builder(
                                         physics: const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
-                                        itemCount: controller
-                                            .engineerProblemDataList[index]
-                                            .problemsAssigned!.length,
+                                        itemCount: controller.engineerProblemDataList[index].problemsAssigned!.length,
                                         itemBuilder: (context, problemIndex) {
                                           return Padding(
                                             padding: const EdgeInsets.only(top: 10),
@@ -398,9 +397,14 @@ class EngineerView extends GetView<EngineerController> {
               ),
             ),
             ElevatedButton(
+
               onPressed: () {
                 if(problemsAssigned.length == controller.problem.length){
                  controller.status.value = 2;
+
+                }
+                else if(controller.problem.isEmpty){
+                  controller.status.value = 0;
                 }
                 else{
                   controller.status.value = 1;

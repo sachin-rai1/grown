@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 String apiUrl = "http://ec2-34-197-250-249.compute-1.amazonaws.com/api";
+// String apiUrl = kIsWeb?'http://127.0.0.1:5000/api': 'http://10.0.2.2:5000/api';
 // String apiUrl = "http://192.168.6.201:5000/api";
 RxString privilage = "".obs;
 RxString departmentName = "".obs;
@@ -101,6 +102,8 @@ class Api {
       if (t != null) {
         log("Push Token : $t");
       }
+    }).catchError((error) {
+      log('Firebase token retrieval error: $error');
     });
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {

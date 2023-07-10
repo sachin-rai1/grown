@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/chiller_reading/Model/model_chiller.dart';
+import 'package:grown/app/modules/chiller_reading/Model/model_chiller_and_compressor.dart';
 import 'package:grown/app/modules/chiller_reading/Model/model_compressor.dart';
 import 'package:grown/app/modules/chiller_reading/Model/model_phase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,10 @@ import '../../../data/constants.dart';
 import '../Model/model_process_pump.dart';
 
 class ChillerReadingController extends GetxController {
+
+  final formKey = GlobalKey<FormState>();
+
+
   var circulationPumpStatus1 = '0'.obs;
   var circulationPumpStatus2 = '0'.obs;
 
@@ -47,6 +52,11 @@ class ChillerReadingController extends GetxController {
   var processPumpStatus = [].obs;
   RxList<RxMap<String, dynamic>> processPumpStatusDataList = RxList<RxMap<String, dynamic>>();
 
+  var chillerAndCompressorDataList = <ChillerAndCompressorData>[].obs;
+  var isChillerAndCompressorLoading = false.obs;
+  var chillerCompressorStatus = [].obs;
+  RxList<RxMap<String, dynamic>> chillerCompressorStatusDataList = RxList<RxMap<String, dynamic>>();
+
 
 
   var compressorStatus = [].obs;
@@ -54,15 +64,95 @@ class ChillerReadingController extends GetxController {
   var isCompressorLoading = false.obs;
   RxList<RxMap<String, dynamic>> compressorStatusDataList = RxList<RxMap<String, dynamic>>();
   var latestReadingId = 0.obs;
-
   var isUpload = false.obs;
-
   final processPumpPressureController = TextEditingController();
+
+  List<TextEditingController> textControllers = [];
+
 
   @override
   void onInit() {
     super.onInit();
     fetchData();
+  }
+
+  Future<void> fetchChillerAndCompressor({required int phaseId}) async{
+    try {
+      log(phaseId.toString());
+      isChillerAndCompressorLoading.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      final response = await http.get(Uri.parse('$apiUrl/get_chillers_by_compressor/$phaseId'), headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        dynamic json = jsonDecode(response.body);
+        var data = ModelChillerAndCompressor.fromJson(json);
+        chillerAndCompressorDataList.value = data.data ?? [];
+        int noOfOptions = chillerAndCompressorDataList.length;
+        chillerCompressorStatus.value = List.generate(noOfOptions, (index) => "0");
+
+        for (int i = 0; i < chillerAndCompressorDataList.length; i++) {
+          textControllers.add(TextEditingController());
+        }
+        log(textControllers.length.toString());
+      } else {
+        chillerAndCompressorDataList.value = [];
+      }
+    }
+    catch(e){
+      log(e.toString());
+    }
+    finally{
+      isChillerAndCompressorLoading.value = false;
+    }
+
+  }
+  Map<int, Map<String, dynamic>> combinedData = {};
+
+  Future<void> getChillerCompressorStatus() async {
+    try {
+      chillerCompressorStatusDataList.value = [];
+      for (int index = 0; index < chillerAndCompressorDataList.length; index++) {
+        chillerCompressorStatusDataList.addAll([
+          RxMap<String, dynamic>({
+            "chiller_id": chillerAndCompressorDataList[index].chillerId,
+            "compressor_id": chillerAndCompressorDataList[index].compressorId.toString(),
+            "status": chillerCompressorStatus[index].toString()
+          }),
+        ]);
+      }
+
+
+      for (var data in chillerCompressorStatusDataList) {
+        var chillerId = data['chiller_id'];
+        if (combinedData.containsKey(chillerId)) {
+          combinedData[chillerId]?['compressors'].add({
+            'compressor_id': data['compressor_id'],
+            'status': data['status'],
+          });
+        } else {
+          combinedData[chillerId] = {
+            'chiller_id': chillerId,
+            'compressors': [
+              {
+                'compressor_id': data['compressor_id'],
+                'status': data['status'],
+              }
+            ]
+          };
+        }
+      }
+
+      List<Map<String, dynamic>> combinedJsonData = combinedData.values.toList();
+      String jsonString = json.encode(combinedJsonData);
+      log(jsonString);
+    }
+    catch(e){
+      log(e.toString());
+      throw Exception();
+    }
   }
 
   void clearData(){
@@ -71,6 +161,8 @@ class ChillerReadingController extends GetxController {
     averageLoadController.clear();
     compressorStatusController.clear();
     negativeVoltageController.clear();
+    processPumpPressureController.clear();
+
   }
 
   Future<void> fetchData() async {
@@ -82,6 +174,7 @@ class ChillerReadingController extends GetxController {
       await fetchProcessPump(phaseId: phaseDataList[0].phaseId!);
       await fetchChiller(phaseId: phaseDataList[0].phaseId!);
       await fetchCompressor(chillerId: chillerDataList[0].chillerId!);
+      await fetchChillerAndCompressor(phaseId: phaseDataList[0].phaseId!);
 
       await getCompressorStatus();
       await getProcessPumpStatus();
@@ -239,43 +332,52 @@ class ChillerReadingController extends GetxController {
     }
   }
 
-  Future<void> addChillerReadingData() async {
-    var prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    var branchId = prefs.getInt("user_branch_id");
-    final response = await http.post(Uri.parse('$apiUrl/add_chiller_reading'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-type': 'application/json'
-        },
-        body: jsonEncode(<dynamic, String>{
-          "branch_id": branchId.toString(),
-          "phase_id": selectedPhaseId.value.toString(),
-          "inlet_temperature": inletTemperatureController.text,
-          "outlet_temperature": outletTemperatureController.text,
-          "process_pump_pressure":processPumpPressureController.text,
-          "chiller_id": selectedChillerId.value.toString(),
-          "average_load": averageLoadController.text,
-          "circulation_pump_1_status":circulationPumpStatus1.value,
-          "circulation_pump_2_status":circulationPumpStatus2.value
-        }));
+  Future<void> addChillerReadingData({required int chillerId , required String chillerName}) async {
+    try {
+      isUpload.value = true;
+      var prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var branchId = prefs.getInt("user_branch_id");
+      final response = await http.post(Uri.parse('$apiUrl/add_chiller_reading'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-type': 'application/json'
+          },
+          body: jsonEncode(<dynamic, String>{
+            "branch_id": branchId.toString(),
+            "phase_id": selectedPhaseId.value.toString(),
+            "inlet_temperature": inletTemperatureController.text,
+            "outlet_temperature": outletTemperatureController.text,
+            "process_pump_pressure": processPumpPressureController.text,
+            "chiller_id": chillerId.toString(),
+            "average_load": averageLoadController.text,
+            "circulation_pump_1_status": circulationPumpStatus1.value,
+            "circulation_pump_2_status": circulationPumpStatus2.value
+          }));
 
-    var jsonData = jsonDecode(response.body);
-    log(jsonData.toString());
-    if (response.statusCode == 200) {
-      latestReadingId.value = jsonData['reading_id'];
-      insertDataToAPI(readingId: latestReadingId.value);
-    } else {
-      log(response.statusCode.toString());
-      showToastError(msg: jsonData["message"].toString());
+      var jsonData = jsonDecode(response.body);
+      log(jsonData.toString());
+      if (response.statusCode == 200) {
+        latestReadingId.value = jsonData['reading_id'];
+        insertDataToAPI(readingId: latestReadingId.value);
+      } else {
+        log(response.statusCode.toString());
+        showToastError(msg: jsonData["message"].toString());
+      }
+    }
+    catch(e){
+      throw Exception();
+    }
+    finally{
+      isUpload.value = false;
+      showToast(msg: "$chillerName Uploaded");
     }
   }
 
   Future<void> insertDataToAPI({required int readingId}) async {
     try {
-      isUpload.value = true;
-      for (int i = 0; i < compressorDataList.length; i++) {
-        await addCompressorData(chillerReadingId: readingId, data: compressorStatusDataList[i]);
+      for (int i = 0; i < chillerCompressorStatusDataList.length; i++) {
+        await addCompressorData(chillerReadingId: readingId, data:chillerCompressorStatusDataList[i]);
       }
       for(int i=0; i<processPumpDataList.length; i++){
           await addProcessPumpData(chillerReadingId: readingId, data: processPumpStatusDataList[i]);
@@ -284,11 +386,6 @@ class ChillerReadingController extends GetxController {
     catch(e){
       showToastError(msg: e);
     }
-    finally{
-      showToast(msg: "Uploaded");
-      isUpload.value = false;
-    }
-
   }
 
   Future<void> addProcessPumpData({required int chillerReadingId, required var data}) async {
@@ -310,7 +407,6 @@ class ChillerReadingController extends GetxController {
       showToastError(msg: jsonData["message"].toString());
     }
   }
-
 
   Future<void> addCompressorData({required int chillerReadingId, required var data}) async {
     var prefs = await SharedPreferences.getInstance();

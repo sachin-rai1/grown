@@ -98,6 +98,7 @@ class BcdiDetectionController extends GetxController {
       isLoading.value = true; // Set loading state to true
       classData.value = []; // Clear the class data list
 
+      // ignore: deprecated_member_use
       var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead())); // Create a byte stream from the resized image file
       var length = await resizedFile.value?.length(); // Get the length of the resized image file
       var uploadURL = "http://ec2-54-227-80-131.compute-1.amazonaws.com/predict"; // URL for uploading the image

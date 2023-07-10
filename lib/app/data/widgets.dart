@@ -18,7 +18,6 @@ import '../modules/gas_bank_operator/GasVendor/views/gas_vendor_view.dart';
 import '../modules/gas_bank_operator/Gases/views/gases_view.dart';
 import '../modules/gas_bank_operator/SearchBySerialNo/views/search_by_serial_no_view.dart';
 
-import '../modules/mlgd_data_monitoring/post_run/run_no_wise_post_run_data/views/view_post_run_data_view.dart';
 import '../modules/mlgd_data_monitoring/running_data/views/growing_view.dart';
 
 class Choice {
@@ -917,13 +916,13 @@ class ResponsiveNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     // If our width is more than 1100 then we consider it a desktop
-    if (_size.width >= 1100) {
+    if (size.width >= 1100) {
       return desktop;
     }
     // If width it less then 1100 and more then 850 we consider it as tablet
-    else if (_size.width >= 850 && tablet != null) {
+    else if (size.width >= 850 && tablet != null) {
       return tablet!;
     }
     // Or less then that we called it mobile

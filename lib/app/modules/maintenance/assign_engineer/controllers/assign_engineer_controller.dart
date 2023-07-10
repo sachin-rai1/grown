@@ -92,6 +92,7 @@ class AssignEngineerController extends GetxController {
         'Authorization': 'Bearer $token',
         'Content-type': 'application/json',
       });
+      log(response.body.toString());
       if (response.statusCode == 200) {
         var json = jsonDecode(response.body);
         var data = ModelViewComplain.fromJson(json);
@@ -153,8 +154,7 @@ class AssignEngineerController extends GetxController {
         if (response.statusCode == 200) {
           log('Engineer assigned successfully');
           for (int i = 0; i < engineerIdList.length; i++) {
-            await engineerInsert(
-                complainId: complainId, engineerId: engineerIdList[i]);
+            await engineerInsert(complainId: complainId, engineerId: engineerIdList[i]);
             await getFirebaseTokenData(userId: engineerIdList[i]);
           }
           await getComplains();

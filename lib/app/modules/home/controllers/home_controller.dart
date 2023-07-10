@@ -9,6 +9,7 @@ import 'package:grown/app/modules/feedback/views/feedback_view.dart';
 import 'package:grown/app/modules/gas_bank_operator/views/gas_bank_operator_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
 import 'package:grown/app/modules/user_management/views/user_management_view.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../../main.dart';
 import '../../../data/widgets.dart';
@@ -20,6 +21,20 @@ class HomeController extends GetxController {
 
 
   final gridViewKey = GlobalKey();  // Key for accessing the GridView widget
+  String appVersion = "";
+  String appName = '';
+
+  void package() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    appVersion = packageInfo.version;
+    appName = packageInfo.appName;
+  }
+
+  @override
+  void onInit(){
+    super.onInit();
+    package();
+  }
 
 
 // List of choices for the admin department

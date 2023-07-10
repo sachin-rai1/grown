@@ -32,6 +32,7 @@ class LoginController extends GetxController {
             "user_email": userName.text,
             "user_password": password.text,
           }));
+      log(response.request.toString());
       if (response.statusCode == 200) {
         data = jsonDecode(response.body);
         var token = data["token"];
@@ -45,7 +46,10 @@ class LoginController extends GetxController {
 
         if (!kIsWeb){
           if(Platform.isAndroid || Platform.isIOS) {
-            final fcmToken = await FirebaseMessaging.instance.getToken();
+            final fcmToken = await FirebaseMessaging.instance.getToken().catchError((error) {
+              log('Firebase token retrieval error: $error');
+              return '';
+            });
             prefs.setString('fToken', fcmToken!);
           }
       }

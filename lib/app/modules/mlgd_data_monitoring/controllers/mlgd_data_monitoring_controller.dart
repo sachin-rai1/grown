@@ -138,6 +138,7 @@ class MlgdDataMonitoringController extends GetxController {
       request.headers.addAll({'Authorization': 'Bearer $token'});
       request.files.add(await http.MultipartFile.fromPath(
           'frontView', frontImage.path, filename: (frontImage.path)));
+
       request.files.add(await http.MultipartFile.fromPath(
           'topView', topImage.path, filename: (topImage.path)));
 

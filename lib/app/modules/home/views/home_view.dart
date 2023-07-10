@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/constants.dart';
@@ -12,8 +13,24 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){
+            showDialog(context: context, builder: (context){
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MyTextWidget(title: "App Name    : ", body: controller.appName, ),
+                    MyTextWidget(title: "App Version : ",body: controller.appVersion,),
+                  ],
+                ),
+              );
+            });
+          }, icon:const Icon(Icons.info_outline) , color: Colors.blue,iconSize: 30),
+        ],
         leading: IconButton(
           onPressed: () {
             logoutDialogBox(context); // Function call to show a logout dialog box

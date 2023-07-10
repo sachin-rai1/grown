@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final modelViewComplain = modelViewComplainFromJson(jsonString);
+
 import 'dart:convert';
 
 ModelViewComplain modelViewComplainFromJson(String str) => ModelViewComplain.fromJson(json.decode(str));
@@ -34,14 +38,16 @@ class Complain {
   String? privilege;
   String? problemDescription;
   List<String>? problems;
+  List<String>? solvedProblems;
+  int? status;
   String? ticketNo;
-  dynamic updatedOn;
+  String? updatedOn;
   int? userBranchId;
-  dynamic userCreatedOnUserTb;
+  String? userCreatedOnUserTb;
   String? userEmail;
   int? userId;
   String? userName;
-  dynamic userUpdatedOnUserTb;
+  String? userUpdatedOnUserTb;
 
   Complain({
     this.branchId,
@@ -57,6 +63,8 @@ class Complain {
     this.privilege,
     this.problemDescription,
     this.problems,
+    this.solvedProblems,
+    this.status,
     this.ticketNo,
     this.updatedOn,
     this.userBranchId,
@@ -81,6 +89,8 @@ class Complain {
     privilege: json["privilege"],
     problemDescription: json["problem_description"],
     problems: json["problems"] == null ? [] : List<String>.from(json["problems"]!.map((x) => x)),
+    solvedProblems: json["solved_problems"] == null ? [] : List<String>.from(json["solved_problems"]!.map((x) => x)),
+    status: json["status"],
     ticketNo: json["ticketNo"],
     updatedOn: json["updated_on"],
     userBranchId: json["user_branch_id"],
@@ -105,6 +115,8 @@ class Complain {
     "privilege": privilege,
     "problem_description": problemDescription,
     "problems": problems == null ? [] : List<dynamic>.from(problems!.map((x) => x)),
+    "solved_problems": solvedProblems == null ? [] : List<dynamic>.from(solvedProblems!.map((x) => x)),
+    "status": status,
     "ticketNo": ticketNo,
     "updated_on": updatedOn,
     "user_branch_id": userBranchId,
