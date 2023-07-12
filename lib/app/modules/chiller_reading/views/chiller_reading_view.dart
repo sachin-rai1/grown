@@ -482,19 +482,27 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                               List<int> isChillerInserted = [];
                               try {
 
-                                  for (int i = 0; i < controller.chillerAndCompressorDataList.length; i++) {
-
-                                    if(!isChillerInserted.contains(controller.chillerAndCompressorDataList[i].chillerId!)) {
-
-                                      isChillerInserted.add(controller.chillerAndCompressorDataList[i].chillerId!);
-
-                                      controller.addChillerReadingData(
-                                        chillerId: controller.chillerAndCompressorDataList[i].chillerId!,
-                                        chillerName: controller.chillerAndCompressorDataList[i].chillerName!,
-                                      );
-
-                                    }
+                                for (int i=0 ; i<controller.combinedJsonData.length ; i++){
+                                        controller.addChillerReadingData(
+                                          i:i,
+                                          chillerId: controller.chillerAndCompressorDataList[i].chillerId!,
+                                          chillerName: controller.chillerAndCompressorDataList[i].chillerName!,
+                                        );
                                 }
+
+                                //   for (int i = 0; i < controller.chillerAndCompressorDataList.length; i++) {
+                                //
+                                //     if(!isChillerInserted.contains(controller.chillerAndCompressorDataList[i].chillerId!)) {
+                                //
+                                //       isChillerInserted.add(controller.chillerAndCompressorDataList[i].chillerId!);
+                                //
+                                //       controller.addChillerReadingData(
+                                //         chillerId: controller.chillerAndCompressorDataList[i].chillerId!,
+                                //         chillerName: controller.chillerAndCompressorDataList[i].chillerName!,
+                                //       );
+                                //
+                                //     }
+                                // }
                               }
                               catch(e){
                                 log(e.toString());

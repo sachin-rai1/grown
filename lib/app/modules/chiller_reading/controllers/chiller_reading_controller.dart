@@ -110,9 +110,12 @@ class ChillerReadingController extends GetxController {
 
   }
   Map<int, Map<String, dynamic>> combinedData = {};
+  List<Map<String, dynamic>> combinedJsonData = [];
 
   Future<void> getChillerCompressorStatus() async {
     try {
+      combinedJsonData.clear();
+      combinedData.clear();
       chillerCompressorStatusDataList.value = [];
       for (int index = 0; index < chillerAndCompressorDataList.length; index++) {
         chillerCompressorStatusDataList.addAll([
@@ -144,10 +147,11 @@ class ChillerReadingController extends GetxController {
           };
         }
       }
+      combinedJsonData = combinedData.values.toList();
+      log(combinedJsonData.toString());
 
-      List<Map<String, dynamic>> combinedJsonData = combinedData.values.toList();
-      String jsonString = json.encode(combinedJsonData);
-      log(jsonString);
+      log(jsonEncode(combinedJsonData[0]["compressors"][0]));
+
     }
     catch(e){
       log(e.toString());
@@ -332,7 +336,7 @@ class ChillerReadingController extends GetxController {
     }
   }
 
-  Future<void> addChillerReadingData({required int chillerId , required String chillerName}) async {
+  Future<void> addChillerReadingData({required int chillerId , required String chillerName ,required int i}) async {
     try {
       isUpload.value = true;
       var prefs = await SharedPreferences.getInstance();
@@ -359,7 +363,7 @@ class ChillerReadingController extends GetxController {
       log(jsonData.toString());
       if (response.statusCode == 200) {
         latestReadingId.value = jsonData['reading_id'];
-        insertDataToAPI(readingId: latestReadingId.value);
+        insertDataToAPI(i:i, readingId: latestReadingId.value);
       } else {
         log(response.statusCode.toString());
         showToastError(msg: jsonData["message"].toString());
@@ -374,11 +378,11 @@ class ChillerReadingController extends GetxController {
     }
   }
 
-  Future<void> insertDataToAPI({required int readingId}) async {
+  Future<void> insertDataToAPI({required int readingId , required int i}) async {
     try {
-      for (int i = 0; i < chillerCompressorStatusDataList.length; i++) {
-        await addCompressorData(chillerReadingId: readingId, data:chillerCompressorStatusDataList[i]);
-      }
+        for(int j =0 ; j<combinedJsonData[i]["compressors"].length ; j++){
+          await addCompressorData(chillerReadingId: readingId, data: combinedJsonData[i]["compressors"][j]);
+        }
       for(int i=0; i<processPumpDataList.length; i++){
           await addProcessPumpData(chillerReadingId: readingId, data: processPumpStatusDataList[i]);
       }
