@@ -21,15 +21,13 @@ import '../modules/gas_bank_operator/SearchBySerialNo/views/search_by_serial_no_
 import '../modules/mlgd_data_monitoring/running_data/views/growing_view.dart';
 
 class Choice {
-  Choice({
-    this.onTap,
-    required this.title,
-    this.image,
-    this.iconData,
-    this.iconColor,
-    this.uri
-
-  });
+  Choice(
+      {this.onTap,
+      required this.title,
+      this.image,
+      this.iconData,
+      this.iconColor,
+      this.uri});
 
   final String title;
   final String? image;
@@ -61,11 +59,14 @@ class SelectCard extends StatelessWidget {
                       uri: Uri.parse('https://flutter.dev'),
                       builder: (BuildContext context, FollowLink? followLink) =>
                           IconButton(
-                        onPressed:(){
+                        onPressed: () {
                           followLink;
-                        } ,
-                        icon: Icon(Icons.email , color: choice.iconColor,),
-                        iconSize:10,
+                        },
+                        icon: Icon(
+                          Icons.email,
+                          color: choice.iconColor,
+                        ),
+                        iconSize: 10,
                       ),
                     )
                   : Container(),
@@ -119,7 +120,9 @@ class TextFormWidget extends StatelessWidget {
       this.borderSideTextBox,
       this.borderSideDropDown,
       this.dropDownValue,
-      this.textHintStyle, this.minLines, this.obscureText})
+      this.textHintStyle,
+      this.minLines,
+      this.obscureText})
       : super(key: key);
   final List<DropdownMenuItem<Object>>? dropDownItems;
   final Function(Object?)? dropDownOnChanged;
@@ -143,7 +146,6 @@ class TextFormWidget extends StatelessWidget {
   final Object? dropDownValue;
   final TextStyle? textHintStyle;
   final bool? obscureText;
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +172,6 @@ class TextFormWidget extends StatelessWidget {
                       size: 30,
                     ),
                     decoration: InputDecoration(
-
                       contentPadding:
                           const EdgeInsets.only(left: 10, right: 10),
                       border: OutlineInputBorder(
@@ -185,11 +186,11 @@ class TextFormWidget extends StatelessWidget {
                 width: textBoxWidth,
                 color: Colors.grey.shade100,
                 child: TextFormField(
-                  obscureText: obscureText??false,
+                  obscureText: obscureText ?? false,
                   onChanged: onTextChanged,
                   controller: textController,
                   maxLines: maxLines,
-                  minLines: minLines ??1,
+                  minLines: minLines ?? 1,
                   readOnly: readOnly ?? false,
                   keyboardType: keyboardType ?? TextInputType.text,
                   onTap: onTapTextBox,
@@ -340,7 +341,6 @@ class MyTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-
       color: colors,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,7 +377,9 @@ class MyTextWidget extends StatelessWidget {
 }
 
 class MlgdReportTabBar extends StatelessWidget {
-  const MlgdReportTabBar({super.key, required this.tabs, required this.children, this.title});
+  const MlgdReportTabBar(
+      {super.key, required this.tabs, required this.children, this.title});
+
   final List<Widget> tabs;
   final List<Widget> children;
   final Widget? title;
@@ -389,17 +391,12 @@ class MlgdReportTabBar extends StatelessWidget {
         child: Scaffold(
             appBar: AppBar(
               elevation: 1,
-              title:title?? const Text("View Data"),
+              title: title ?? const Text("View Data"),
               centerTitle: true,
               toolbarHeight: 60,
-              bottom:  TabBar(
-                isScrollable: true,
-                tabs: tabs
-              ),
+              bottom: TabBar(isScrollable: true, tabs: tabs),
             ),
-            body:  TabBarView(
-              children: children
-            )));
+            body: TabBarView(children: children)));
   }
 }
 
@@ -530,7 +527,7 @@ class MyBottomNavigation extends StatelessWidget {
       required this.title1,
       required this.title2,
       required this.title3,
-      required this.title4,
+      this.title4,
       required this.screens,
       this.iconData1,
       this.iconData2,
@@ -545,7 +542,7 @@ class MyBottomNavigation extends StatelessWidget {
   final String title1;
   final String title2;
   final String title3;
-  final String title4;
+  final String? title4;
   final IconData? iconData1;
   final IconData? iconData2;
   final IconData? iconData3;
@@ -590,16 +587,16 @@ class MyBottomNavigation extends StatelessWidget {
         inactiveColorSecondary: Colors.grey,
         activeColorSecondary: Colors.white,
       ),
-      PersistentBottomNavBarItem(
-        textStyle: const TextStyle(fontSize: 16),
-        title: title4,
-        iconSize: 25,
-        icon: Icon(iconData4, size: 30),
-        activeColorPrimary: Colors.green,
-        inactiveColorPrimary: Colors.grey,
-        inactiveColorSecondary: Colors.grey,
-        activeColorSecondary: Colors.white,
-      ),
+      // PersistentBottomNavBarItem(
+      //   textStyle: const TextStyle(fontSize: 16),
+      //   title: title4,
+      //   iconSize: 25,
+      //   icon: Icon(iconData4, size: 30),
+      //   activeColorPrimary: Colors.green,
+      //   inactiveColorPrimary: Colors.grey,
+      //   inactiveColorSecondary: Colors.grey,
+      //   activeColorSecondary: Colors.white,
+      // ),
     ];
   }
 
@@ -609,36 +606,31 @@ class MyBottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => (selected.value == 0)
-          ? Container()
-          : PersistentTabView(
-              context,
-              controller: _controller,
-              items: _navBarsItems(),
-              navBarStyle: NavBarStyle.style7,
-              screens: _buildScreens(),
-              decoration: const NavBarDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: Offset(
-                        5.0,
-                        5.0,
-                      ),
-                      blurRadius: 6.0,
-                      spreadRadius: 2.0,
-                    ), //BoxShadow
-                    BoxShadow(
-                      // color: secondaryColor,
-                      offset: Offset(5.0, 5.0),
-                      blurRadius: 6.0,
-                      spreadRadius: 0.0,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15))),
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      items: _navBarsItems(),
+      navBarStyle: NavBarStyle.style7,
+      screens: _buildScreens(),
+      decoration: const NavBarDecoration(
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(
+                5.0,
+                5.0,
+              ),
+              blurRadius: 6.0,
+              spreadRadius: 2.0,
+            ), //BoxShadow
+            BoxShadow(
+              // color: secondaryColor,
+              offset: Offset(5.0, 5.0),
+              blurRadius: 6.0,
+              spreadRadius: 0.0,
             ),
+          ],
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
     );
   }
 }
@@ -782,17 +774,19 @@ class MyDrawer extends StatelessWidget {
 }
 
 class TextBoxWidget extends StatelessWidget {
-  const TextBoxWidget(
-      {Key? key,
-      required this.controller,
-      required this.title,
-      this.onChanged,
-      this.validator,
-      this.autofocus,
-      this.keyboardType,
-      this.hintText,
-      this.height, this.readOnly, this.suffixIcon})
-      : super(key: key);
+  const TextBoxWidget({
+    Key? key,
+    required this.controller,
+    required this.title,
+    this.onChanged,
+    this.validator,
+    this.autofocus,
+    this.keyboardType,
+    this.hintText,
+    this.height,
+    this.readOnly,
+    this.suffixIcon,
+  }) : super(key: key);
   final TextEditingController controller;
   final String title;
   final Function(String)? onChanged;
@@ -818,10 +812,10 @@ class TextBoxWidget extends StatelessWidget {
           autofocus: autofocus ?? false,
           validator: validator,
           onChanged: onChanged,
-          readOnly: readOnly??false,
+          readOnly: readOnly ?? false,
           keyboardType: keyboardType ?? TextInputType.number,
           decoration: InputDecoration(
-            suffixIcon: suffixIcon,
+              suffixIcon: suffixIcon,
               hintText: hintText ?? "Your Answer",
               hintStyle: (hintText != null)
                   ? const TextStyle(color: Colors.black)
@@ -835,6 +829,7 @@ class TextBoxWidget extends StatelessWidget {
     );
   }
 }
+
 class Responsive extends StatelessWidget {
   const Responsive({
     super.key,
@@ -843,6 +838,7 @@ class Responsive extends StatelessWidget {
     this.onChange,
     required this.bigScreen,
   });
+
   final Widget smallScreen;
   final Widget? mediumScreen;
   final Widget bigScreen;
@@ -864,8 +860,8 @@ class Responsive extends StatelessWidget {
         if (constraints.maxWidth >= 1100) {
           return bigScreen;
         } else if ( //
-        constraints.maxWidth >= 650.00 && constraints.maxWidth < 1100.00 //
-        ) {
+            constraints.maxWidth >= 650.00 && constraints.maxWidth < 1100.00 //
+            ) {
           return mediumScreen ?? bigScreen;
         } else {
           return smallScreen;
@@ -883,20 +879,22 @@ enum ScreenSize {
 
 extension SizeConfig on BuildContext {
   bool get isSmallScreen => MediaQuery.of(this).size.width < 650;
+
   bool get isMediumScreen =>
       MediaQuery.of(this).size.width >= 650 &&
-          MediaQuery.of(this).size.width < 1100;
+      MediaQuery.of(this).size.width < 1100;
+
   bool get isBigScreen => MediaQuery.of(this).size.width >= 1100;
 }
 
 class ResponsiveNew extends StatelessWidget {
-
   const ResponsiveNew({
     super.key,
     required this.mobile,
     this.tablet,
     required this.desktop,
   });
+
   final Widget mobile;
   final Widget? tablet;
   final Widget desktop;
@@ -909,7 +907,7 @@ class ResponsiveNew extends StatelessWidget {
 
   static bool isTablet(BuildContext context) =>
       MediaQuery.of(context).size.width < 1100 &&
-          MediaQuery.of(context).size.width >= 850;
+      MediaQuery.of(context).size.width >= 850;
 
   static bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= 1100;

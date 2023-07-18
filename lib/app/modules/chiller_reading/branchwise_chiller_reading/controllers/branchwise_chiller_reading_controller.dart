@@ -145,7 +145,6 @@ class BranchwiseChillerReadingController extends GetxController {
       showToast(msg: "Chiller Reading Updated Successfully");
       isLoading.value = false;
     } else {
-
       isLoading.value = false;
       showToastError(msg: "Can't Update ,${response.body}");
       log(response.body);

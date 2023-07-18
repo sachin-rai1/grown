@@ -43,8 +43,9 @@ class DatewiseChillerReadingController extends GetxController {
     isLoading.value = true;
     var prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var branchId = prefs.getInt('user_branch_id');
     final response = await http.get(
-        Uri.parse('$apiUrl/get_chiller_reading?created_on=$selectedDate'),
+        Uri.parse('$apiUrl/get_chiller_reading?created_on=$selectedDate&branch_id=$branchId'),
         headers: {
           'Authorization': 'Bearer $token',
         });

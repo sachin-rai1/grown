@@ -149,6 +149,7 @@ class BranchWiseChillerReadingView
                                     .chillerName,
                                 isLines: false,
                               ),
+
                             ],
                           ),
                           children: <Widget>[

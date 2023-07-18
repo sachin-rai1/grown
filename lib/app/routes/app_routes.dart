@@ -91,6 +91,14 @@ abstract class Routes {
   static const DATE_WISE_PRE_RUN_DATA = _Paths.MLGD_DATA_MONITORING +
       _Paths.PRE_RUN +
       _Paths.DATE_WISE_PRE_RUN_DATA;
+  static const PCC_READING = _Paths.PCC_READING;
+  static const INSERT_PCC_READING =
+      _Paths.PCC_READING + _Paths.INSERT_PCC_READING;
+  static const DATEWISE_PCC_READING =
+      _Paths.PCC_READING + _Paths.DATEWISE_PCC_READING;
+  static const BRANCHWISE_PCC_READING =
+      _Paths.PCC_READING + _Paths.BRANCHWISE_PCC_READING;
+  static const PCC_DATA = _Paths.PCC_READING + _Paths.PCC_DATA;
 }
 
 abstract class _Paths {
@@ -155,4 +163,9 @@ abstract class _Paths {
   static const VIEW_POST_RUN_DATA = '/view-post-run-data';
   static const DATE_WISE_POST_RUN_DATA = '/date-wise-post-run-data';
   static const DATE_WISE_PRE_RUN_DATA = '/date-wise-pre-run-data';
+  static const PCC_READING = '/pcc-reading';
+  static const INSERT_PCC_READING = '/insert-pcc-reading';
+  static const DATEWISE_PCC_READING = '/datewise-pcc-reading';
+  static const BRANCHWISE_PCC_READING = '/branchwise-pcc-reading';
+  static const PCC_DATA = '/pcc-data';
 }

@@ -98,6 +98,16 @@ import '../modules/mlgd_data_monitoring/running_data/view_running_data_run_wise/
 import '../modules/mlgd_data_monitoring/running_data/view_running_data_run_wise/views/view_mlgd_data_run_wise_view.dart';
 import '../modules/mlgd_data_monitoring/running_data/views/growing_view.dart';
 import '../modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
+import '../modules/pcc_reading/bindings/pcc_reading_binding.dart';
+import '../modules/pcc_reading/branchwise_pcc_reading/bindings/branchwise_pcc_reading_binding.dart';
+import '../modules/pcc_reading/branchwise_pcc_reading/views/branchwise_pcc_reading_view.dart';
+import '../modules/pcc_reading/datewise_pcc_reading/bindings/datewise_pcc_reading_binding.dart';
+import '../modules/pcc_reading/datewise_pcc_reading/views/datewise_pcc_reading_view.dart';
+import '../modules/pcc_reading/insert_pcc_reading/bindings/insert_pcc_reading_binding.dart';
+import '../modules/pcc_reading/insert_pcc_reading/views/insert_pcc_reading_view.dart';
+import '../modules/pcc_reading/pcc_data/bindings/pcc_data_binding.dart';
+import '../modules/pcc_reading/pcc_data/views/pcc_data_view.dart';
+import '../modules/pcc_reading/views/pcc_reading_view.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/bindings/view_ups_reading_branch_wise_binding.dart';
 import '../modules/ups_reading/ViewUpsReadingBranchWise/views/view_ups_reading_branch_wise_view.dart';
 import '../modules/ups_reading/ViewUpsReadingDateWise/bindings/view_ups_reading_binding.dart';
@@ -213,7 +223,7 @@ class AppPages {
           children: [
             GetPage(
               name: _Paths.DATE_WISE_POST_RUN_DATA,
-              page: () =>  DateWisePostRunDataView(),
+              page: () => DateWisePostRunDataView(),
               binding: DateWisePostRunDataBinding(),
             ),
           ],
@@ -230,7 +240,7 @@ class AppPages {
             ),
             GetPage(
               name: _Paths.DATE_WISE_PRE_RUN_DATA,
-              page: () =>  DateWisePreRunDataView(),
+              page: () => DateWisePreRunDataView(),
               binding: DateWisePreRunDataBinding(),
             ),
           ],
@@ -404,6 +414,33 @@ class AppPages {
       name: _Paths.EMAIL_CONFIG,
       page: () => EmailConfigView(),
       binding: EmailConfigBinding(),
+    ),
+    GetPage(
+      name: _Paths.PCC_READING,
+      page: () => const PccReadingView(),
+      binding: PccReadingBinding(),
+      children: [
+        GetPage(
+          name: _Paths.INSERT_PCC_READING,
+          page: () => InsertPccReadingView(),
+          binding: InsertPccReadingBinding(),
+        ),
+        GetPage(
+          name: _Paths.DATEWISE_PCC_READING,
+          page: () => DatewisePccReadingView(),
+          binding: DatewisePccReadingBinding(),
+        ),
+        GetPage(
+          name: _Paths.BRANCHWISE_PCC_READING,
+          page: () => BranchwisePccReadingView(),
+          binding: BranchwisePccReadingBinding(),
+        ),
+        GetPage(
+          name: _Paths.PCC_DATA,
+          page: () =>  PccDataView(),
+          binding: PccDataBinding(),
+        ),
+      ],
     ),
   ];
 }

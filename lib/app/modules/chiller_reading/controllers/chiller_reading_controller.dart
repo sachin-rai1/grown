@@ -148,9 +148,7 @@ class ChillerReadingController extends GetxController {
         }
       }
       combinedJsonData = combinedData.values.toList();
-      log(combinedJsonData.toString());
-
-      log(jsonEncode(combinedJsonData[0]["compressors"][0]));
+      log(combinedJsonData[0]["chiller_name"].toString());
 
     }
     catch(e){
@@ -383,6 +381,7 @@ class ChillerReadingController extends GetxController {
         for(int j =0 ; j<combinedJsonData[i]["compressors"].length ; j++){
           await addCompressorData(chillerReadingId: readingId, data: combinedJsonData[i]["compressors"][j]);
         }
+
       for(int i=0; i<processPumpDataList.length; i++){
           await addProcessPumpData(chillerReadingId: readingId, data: processPumpStatusDataList[i]);
       }

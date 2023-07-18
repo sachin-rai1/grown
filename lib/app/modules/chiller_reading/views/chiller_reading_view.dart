@@ -485,7 +485,7 @@ class ChillerReadingView extends GetView<ChillerReadingController> {
                                 for (int i=0 ; i<controller.combinedJsonData.length ; i++){
                                         controller.addChillerReadingData(
                                           i:i,
-                                          chillerId: controller.chillerAndCompressorDataList[i].chillerId!,
+                                          chillerId: controller.combinedJsonData[i]["chiller_id"],
                                           chillerName: controller.chillerAndCompressorDataList[i].chillerName!,
                                         );
                                 }

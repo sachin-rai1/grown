@@ -92,7 +92,7 @@ class ViewComplainController extends GetxController {
     }
   }
 
-
+  final scrollController = ScrollController();
   var isLoading = false.obs;
   var complainsDataList = <Complain>[].obs;
   var photosDataList = [].obs;
@@ -102,6 +102,7 @@ class ViewComplainController extends GetxController {
   void onInit(){
     super.onInit();
     getComplains().whenComplete(() => getPredefinedProblems());
+    scrollController.addListener(scrollListner);
   }
 
   Future<void> getComplains() async {
@@ -193,5 +194,11 @@ class ViewComplainController extends GetxController {
     finally{
       isLoading.value = false;
     }
+  }
+
+  void scrollListner() {
+  if(scrollController.position.pixels ==  scrollController.position.maxScrollExtent){
+    log("Hey");
+  }
   }
 }

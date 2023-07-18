@@ -8,6 +8,7 @@ import 'package:grown/app/modules/employee_management/views/employee_management_
 import 'package:grown/app/modules/feedback/views/feedback_view.dart';
 import 'package:grown/app/modules/gas_bank_operator/views/gas_bank_operator_view.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/views/mlgd_data_monitoring_view.dart';
+import 'package:grown/app/modules/pcc_reading/views/pcc_reading_view.dart';
 import 'package:grown/app/modules/user_management/views/user_management_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -66,7 +67,13 @@ class HomeController extends GetxController {
     Choice(
         title: 'CHILLER READING',
         image: "assets/images/chiller.png",
-        onTap: () => Get.to(() => ChillerReadingView())),
+        onTap: () => Get.to(() => ChillerReadingView())
+    ),
+    Choice(
+        title: 'PCC Reading',
+        image: "assets/images/pcc1.png",
+        onTap: () => Get.to(() => PccReadingView())
+    ),
     Choice(
         title: 'Maintenance',
         iconData: Icons.settings,
@@ -133,9 +140,14 @@ class HomeController extends GetxController {
         image: "assets/images/chiller.png",
         onTap: () => Get.to(() => ChillerReadingView())),
     Choice(
-        title: 'EMPLOYEE-MANAGEMENT',
-        image: "assets/images/empManagement.png",
-        onTap: () => Get.to(() => EmployeeManagementView())),
+        title: 'PCC Reading',
+        image: "assets/images/pcc1.png",
+        onTap: () => Get.to(() => PccReadingView())
+    ),
+    // Choice(
+    //     title: 'EMPLOYEE-MANAGEMENT',
+    //     image: "assets/images/empManagement.png",
+    //     onTap: () => Get.to(() => EmployeeManagementView())),
   ];
 
   // List of choices for the gas department
@@ -144,18 +156,18 @@ class HomeController extends GetxController {
         title: 'GAS BANK OPERATOR',
         image: "assets/images/gas.png",
         onTap: () => Get.to(() => GasBankOperatorView())),
-    Choice(
-        title: 'EMPLOYEE-MANAGEMENT',
-        image: "assets/images/empManagement.png",
-        onTap: () => Get.to(() => EmployeeManagementView())),
+    // Choice(
+    //     title: 'EMPLOYEE-MANAGEMENT',
+    //     image: "assets/images/empManagement.png",
+    //     onTap: () => Get.to(() => EmployeeManagementView())),
   ];
 
   // List of choices for the IT department
   List<Choice> itList = <Choice>[
-    Choice(
-        title: 'EMPLOYEE-MANAGEMENT',
-        image: "assets/images/empManagement.png",
-        onTap: () => Get.to(() => EmployeeManagementView())),
+    // Choice(
+    //     title: 'EMPLOYEE-MANAGEMENT',
+    //     image: "assets/images/empManagement.png",
+    //     onTap: () => Get.to(() => EmployeeManagementView())),
   ];
   List<Choice> nullList = <Choice>[];
 
