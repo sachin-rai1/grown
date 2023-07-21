@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:excel/excel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/chiller_reading/Model/model_chiller_compressor_reading.dart';
@@ -8,6 +11,7 @@ import 'package:grown/app/modules/chiller_reading/Model/model_process_pump_readi
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
@@ -29,6 +33,9 @@ class DatewiseChillerReadingController extends GetxController {
   var processPumpDataList = <ProcessPumpReading>[].obs;
   var isProcessPumpLoading = false.obs;
 
+  List<Map<String, dynamic>> jsonList = [];
+
+
   @override
   void onInit() {
     super.onInit();
@@ -38,6 +45,8 @@ class DatewiseChillerReadingController extends GetxController {
     selectedDate.value = formatted;
     fetchChillerReading(selectedDate: formatted);
   }
+
+
 
   Future<void> fetchChillerReading({required var selectedDate}) async {
     isLoading.value = true;
@@ -54,10 +63,13 @@ class DatewiseChillerReadingController extends GetxController {
       dynamic json = jsonDecode(response.body);
       var data = ModelChillerReading.fromJson(json);
       chillerReadingDataList.value = data.data ?? [];
+      log(json.toString());
+      jsonList = [json];
       isLoading.value = false;
     } else {
       isLoading.value = false;
       chillerReadingDataList.value = [];
+      jsonList = [];
       log(response.body.toString());
     }
   }

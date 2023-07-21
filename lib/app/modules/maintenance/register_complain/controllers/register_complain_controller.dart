@@ -215,17 +215,27 @@ class RegisterComplainController extends GetxController {
       if (images.isEmpty) {
         log("No Images Found");
       } else {
+
         for (var image in images) {
-          var compressedImage = await compressImage(image);
-          var stream = http.ByteStream(compressedImage.openRead());
-          var length = await compressedImage.length();
-          var multipartFile = http.MultipartFile(
-            'images',
-            stream,
-            length,
-            filename: compressedImage.path,
-          );
-          request.files.add(multipartFile);
+          if(!kIsWeb){
+            if(Platform.isWindows){
+              var stream = http.ByteStream(image.openRead());
+              var length = await image.length();
+              var multipartFile = http.MultipartFile('images', stream, length,filename: image.path,);
+              request.files.add(multipartFile);
+
+            }
+            else
+            {
+              var compressedImage = await compressImage(image);
+              var stream = http.ByteStream(compressedImage.openRead());
+              var length = await compressedImage.length();
+
+              var multipartFile = http.MultipartFile('images', stream, length,filename: compressedImage.path,);
+              request.files.add(multipartFile);
+            }
+          }
+
         }
 
         try {
@@ -253,7 +263,6 @@ class RegisterComplainController extends GetxController {
                   "Problem Description : ${descriptionController.text}",
             );
 
-
           } else {
             showToastError(msg: response.body);
             log(response.body.toString());
@@ -274,6 +283,7 @@ class RegisterComplainController extends GetxController {
   Future<File> compressImage(File image) async {
     final dir = await getTemporaryDirectory();
     final targetPath = "${dir.absolute.path}/${DateTime.now().millisecondsSinceEpoch}.jpg";
+
     final compressedImage = await FlutterImageCompress.compressAndGetFile(
       image.path,
       targetPath,
@@ -281,6 +291,7 @@ class RegisterComplainController extends GetxController {
       minWidth: 500,
       minHeight: 500,
     );
+    log(compressedImage.toString());
     return File(compressedImage!.path);
   }
 

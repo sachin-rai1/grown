@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
+import '../../../../data/constants.dart';
 import '../../../../data/widgets.dart';
 import '../controllers/datewise_chiller_reading_controller.dart';
 
@@ -24,50 +24,27 @@ class DateWiseChillerReadingView
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Select Date : ",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                MyDateWidget(
+                  initialValue: controller.selectedDate.value,
+                  onChanged: (val) {
+                    controller.selectedDate.value = val;
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
+                    controller.fetchChillerReading(selectedDate: controller.formatted);
+                  },
                 ),
-                Card(
-                  elevation: 1,
-                  color: Colors.grey.shade400,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DateTimePicker(
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                      suffixIcon: const Icon(
-                        Icons.edit,
-                        size: 25,
-                      ),
-                      border: InputBorder.none,
-                      constraints:
-                          BoxConstraints(maxHeight: 35, maxWidth: w / 2.5),
-                    ),
-                    type: DateTimePickerType.date,
-                    dateMask: 'dd/MM/yyyy',
-                    initialValue: controller.selectedDate.value,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    icon: const Icon(Icons.event),
-                    onChanged: (val) async {
-                      controller.selectedDate.value = val;
-                      final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                      controller.formatted = formatter.format(
-                          DateTime.parse(controller.selectedDate.value));
-                      await controller.fetchChillerReading(
-                          selectedDate: controller.formatted);
-                    },
-                    validator: (val) {
-                      return null;
-                    },
-                    onSaved: (val) => log(val.toString()),
-                  ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, right: 10),
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(onPressed: (){
+                        convertToExcel(jsonList: controller.jsonList,fileName: "DateWiseChillerReading");
+                      }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
                 ),
               ],
             ),

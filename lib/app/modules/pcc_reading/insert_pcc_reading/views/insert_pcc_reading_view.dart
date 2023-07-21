@@ -14,18 +14,7 @@ class InsertPccReadingView extends GetView<InsertPccReadingController> {
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PCC Daily Reading',
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        leading: BackButton(
-          onPressed: () { Get.back();},
-          color: Colors.black,
-        ),
-      ),
+
 
       body: RefreshIndicator(
         onRefresh: () {

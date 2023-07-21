@@ -28,6 +28,8 @@ class ViewUpsReadingDateWiseController extends GetxController {
   Rx<String> selectedDate = DateTime.now().toString().obs;
   dynamic formatted;
 
+  List<Map<String, dynamic>> jsonList = [];
+
 
   @override
   void onInit() {
@@ -55,6 +57,7 @@ class ViewUpsReadingDateWiseController extends GetxController {
       var json = jsonDecode(response.body);
       var upsData = ModelUpsReading.fromJson(json);
       upsReadingDataList.value = upsData.data!;
+      jsonList = [json];
       isLoading.value = false;
     } else {
       isLoading.value = false;

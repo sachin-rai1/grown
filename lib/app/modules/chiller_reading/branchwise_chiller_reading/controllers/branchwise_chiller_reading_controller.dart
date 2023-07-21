@@ -30,10 +30,16 @@ class BranchwiseChillerReadingController extends GetxController {
   var processPumpDataList = <ProcessPumpReading>[].obs;
   var isProcessPumpLoading = false.obs;
 
+  List<Map<String, dynamic>> jsonList = [];
+
+  var selectedBranchName = ''.obs;
+
   @override
-  void onInit(){
+  Future<void> onInit() async {
     super.onInit();
-    fetchChillerReading(branchId: chillerReadingController.branchDataList[0]["branch_id"]).whenComplete(() => selectedBranchId.value = chillerReadingController.branchDataList[0]["branch_id"]);
+    await fetchChillerReading(branchId: chillerReadingController.branchDataList[0]["branch_id"]);
+    selectedBranchId.value = chillerReadingController.branchDataList[0]["branch_id"];
+    selectedBranchName.value =  chillerReadingController.branchDataList[0]["branch_name"];
   }
 
 
@@ -70,10 +76,12 @@ class BranchwiseChillerReadingController extends GetxController {
       dynamic json = jsonDecode(response.body);
       var data = ModelChillerReading.fromJson(json);
       chillerReadingDataList.value = data.data ?? [];
+      jsonList = [json];
       isLoading.value = false;
     } else {
       isLoading.value = false;
       chillerReadingDataList.value = [];
+      jsonList = [];
       log(response.body.toString());
     }
   }

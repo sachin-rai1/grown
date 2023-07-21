@@ -66,6 +66,10 @@ import '../modules/maintenance/engineer/views/engineer_view.dart';
 import '../modules/maintenance/register_complain/bindings/register_complain_binding.dart';
 import '../modules/maintenance/register_complain/views/register_complain_view.dart';
 import '../modules/maintenance/view_complain/bindings/view_complain_binding.dart';
+import '../modules/maintenance/view_complain/branch_wise_complain/bindings/branch_wise_complain_binding.dart';
+import '../modules/maintenance/view_complain/branch_wise_complain/views/branch_wise_complain_view.dart';
+import '../modules/maintenance/view_complain/date_wise_complain/bindings/date_wise_complain_binding.dart';
+import '../modules/maintenance/view_complain/date_wise_complain/views/date_wise_complain_view.dart';
 import '../modules/maintenance/view_complain/views/view_complain_view.dart';
 import '../modules/maintenance/views/maintenance_view.dart';
 import '../modules/mlgd_data_monitoring/MlgdBottomNavigation/bindings/mlgd_bottom_navigation_binding.dart';
@@ -392,6 +396,18 @@ class AppPages {
           name: _Paths.VIEW_COMPLAIN,
           page: () => ViewComplainView(),
           binding: ViewComplainBinding(),
+          children: [
+            GetPage(
+              name: _Paths.DATE_WISE_COMPLAIN,
+              page: () =>  DateWiseComplainView(),
+              binding: DateWiseComplainBinding(),
+            ),
+            GetPage(
+              name: _Paths.BRANCH_WISE_COMPLAIN,
+              page: () =>  BranchWiseComplainView(),
+              binding: BranchWiseComplainBinding(),
+            ),
+          ],
         ),
         GetPage(
           name: _Paths.ASSIGN_ENGINEER,
@@ -437,7 +453,7 @@ class AppPages {
         ),
         GetPage(
           name: _Paths.PCC_DATA,
-          page: () =>  PccDataView(),
+          page: () => PccDataView(),
           binding: PccDataBinding(),
         ),
       ],

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import '../../../../data/constants.dart';
 import '../../../../data/widgets.dart';
 import '../controllers/view_ups_reading_controller.dart';
 
@@ -18,41 +19,29 @@ class ViewUpsReadingDateWiseView extends GetView<ViewUpsReadingDateWiseControlle
     return Scaffold(
       body: Column(
         children: [
-          Card(
-            elevation: 1,
-            color: Colors.grey.shade400,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: DateTimePicker(
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                suffixIcon: const Icon(
-                  Icons.edit,
-                  size: 20,
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyDateWidget(
+                  initialValue: controller.selectedDate.value,
+                  onChanged: (val) {
+                    controller.selectedDate.value = val;
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                    controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
+                    controller.fetchUpsReadingDataDateWise(controller.formatted);
+                  },
                 ),
-                border: InputBorder.none,
-
-                constraints:
-                BoxConstraints(maxHeight: 45, maxWidth: w / 2.5),
-              ),
-              type: DateTimePickerType.date,
-              dateMask: 'dd/MM/yyyy',
-              initialValue: controller.selectedDate.value,
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-              icon: const Icon(Icons.event),
-              onChanged: (val) {
-                controller.selectedDate.value = val;
-                final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
-                controller.fetchUpsReadingDataDateWise(controller.formatted);
-
-              },
-              validator: (val) {
-                return null;
-              },
-              onSaved: (val) => log(val.toString()),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, right: 10),
+                  child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(onPressed: (){
+                        convertToExcel(jsonList: controller.jsonList,fileName: "UpsReadingDateWise");
+                      }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
+                ),
+              ],
             ),
           ),
           Expanded(

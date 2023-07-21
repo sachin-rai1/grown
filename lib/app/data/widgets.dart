@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -364,20 +367,14 @@ class MyTextWidget extends StatelessWidget {
               ],
             ),
           ),
-          // (isLines == false)
-          //     ? Container()
-          //     : Container(
-          //         width: MediaQuery.of(context).size.width,
-          //         height: 1,
-          //         color: Colors.grey.withOpacity(0.5)),
         ],
       ),
     );
   }
 }
 
-class MlgdReportTabBar extends StatelessWidget {
-  const MlgdReportTabBar(
+class ReportTabBar extends StatelessWidget {
+  const ReportTabBar(
       {super.key, required this.tabs, required this.children, this.title});
 
   final List<Widget> tabs;
@@ -587,16 +584,16 @@ class MyBottomNavigation extends StatelessWidget {
         inactiveColorSecondary: Colors.grey,
         activeColorSecondary: Colors.white,
       ),
-      // PersistentBottomNavBarItem(
-      //   textStyle: const TextStyle(fontSize: 16),
-      //   title: title4,
-      //   iconSize: 25,
-      //   icon: Icon(iconData4, size: 30),
-      //   activeColorPrimary: Colors.green,
-      //   inactiveColorPrimary: Colors.grey,
-      //   inactiveColorSecondary: Colors.grey,
-      //   activeColorSecondary: Colors.white,
-      // ),
+      PersistentBottomNavBarItem(
+        textStyle: const TextStyle(fontSize: 16),
+        title: title4,
+        iconSize: 25,
+        icon: Icon(iconData4, size: 30),
+        activeColorPrimary: Colors.green,
+        inactiveColorPrimary: Colors.grey,
+        inactiveColorSecondary: Colors.grey,
+        activeColorSecondary: Colors.white,
+      ),
     ];
   }
 
@@ -927,5 +924,53 @@ class ResponsiveNew extends StatelessWidget {
     else {
       return mobile;
     }
+  }
+}
+
+
+class MyDateWidget extends StatelessWidget {
+  const MyDateWidget({super.key, this.initialValue, this.onChanged});
+
+  final String? initialValue;
+  final Function(String)? onChanged;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+
+        const Text("Select Date : ",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        ),
+        Card(
+          elevation: 1,
+          color: Colors.grey.shade400,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: DateTimePicker(
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              suffixIcon: const Icon(
+                Icons.edit,
+                size: 20,
+              ),
+              border: InputBorder.none,
+
+              constraints: BoxConstraints(maxHeight: 45, maxWidth: MediaQuery.of(context).size.width / 2.5),
+            ),
+            type: DateTimePickerType.date,
+            dateMask: 'dd/MM/yyyy',
+            initialValue: initialValue,
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+            icon: const Icon(Icons.event),
+            onChanged: onChanged,
+            validator: (val) {return null;},
+            onSaved: (val) => log(val.toString()),
+          ),
+        ),
+      ],
+    );
   }
 }

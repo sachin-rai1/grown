@@ -1,13 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:io';
+import 'package:excel/excel.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/constants.dart';
 import '../../datewise_pcc_reading/Model/view_model.dart';
 import 'package:http/http.dart' as http;
+
+
+
 
 class BranchwisePccReadingController extends GetxController {
   var isLoading = false.obs;
@@ -41,6 +48,9 @@ class BranchwisePccReadingController extends GetxController {
   var meter = "0".obs;
   var light = "0".obs;
   var fan = "0".obs;
+  List<Map<String, dynamic>> jsonList = [];
+
+  var selectedBranchName = ''.obs;
 
 
 
@@ -52,6 +62,7 @@ class BranchwisePccReadingController extends GetxController {
     super.onInit();
     await fetchBranches();
     selectedBranch.value = branchDataList[0]["branch_id"];
+    selectedBranchName.value = branchDataList[0]["branch_name"];
     await getPccData(branchId: selectedBranch.value);
   }
 
@@ -71,16 +82,22 @@ class BranchwisePccReadingController extends GetxController {
 
       isLoadings.value = true;
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        var data = ModelPccReport.fromJson(json);
+
+        var jsonDataList = jsonDecode(response.body);
+        var data = ModelPccReport.fromJson(jsonDataList);
         pccDataList.value = data.report ?? [];
+
+        jsonList = [jsonDataList];
+
         isLoading.value = false;
+
 
       }
       else
       {
         isLoading.value = false;
         pccDataList.value = [];
+        jsonList=[];
       }
     }
     finally
@@ -88,6 +105,59 @@ class BranchwisePccReadingController extends GetxController {
       isLoadings.value = false;
     }
 
+  }
+
+
+
+  Future<void> convertToExcel(List<Map<String, dynamic>> jsonList) async {
+    bool excelSuccess = await writeToFile(jsonList);
+    if (excelSuccess) {
+      log("Excel file created successfully.");
+      showToast(msg: "File Saved In Downloads OR Documents Folder");
+
+
+    } else {
+      log("Failed to create Excel file.");
+      showToastError(msg: "File Can't Save Try Again ");
+    }
+  }
+  Future<bool> writeToFile(List<Map<String, dynamic>> data) async {
+    try {
+      var excel = Excel.createExcel();
+      var sheet = excel['Sheet1'];
+
+      //write the header
+      sheet.appendRow(data[0]["Report"][0].keys.toList());
+
+      // Write the data
+      for(int i = 0 ; i<data[0]["Report"].length ; i++){
+        sheet.appendRow(data[0]["Report"][i].values.toList());
+      }
+
+
+      if(!kIsWeb) {
+        Directory? directory;
+
+        if (Platform.isIOS || Platform.isWindows) {
+          directory = await getApplicationDocumentsDirectory();
+        }
+        else {
+          directory = Directory('/storage/emulated/0/Download');
+        }
+
+        if (!await directory.exists()) {
+          directory = await getExternalStorageDirectory();
+        }
+
+        String filePath = '${directory!.path}/$selectedBranchName PccReadingBranchWise${DateTime.now().microsecondsSinceEpoch}.xlsx';
+        var file = File(filePath);
+        await file.writeAsBytes(excel.encode()!);
+      }
+      return true;
+    } catch (e) {
+      log("Error creating Excel file: $e");
+      return false;
+    }
   }
 
 //_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______
@@ -109,7 +179,8 @@ class BranchwisePccReadingController extends GetxController {
         Uri.parse(
             "$apiUrl/pcc_daily_reading_update/$id"
         ),
-        headers: { // complsary to set the header in  post API calling......
+        headers: {
+          // compulsory to set the header in  post API calling......
           'Authorization' : 'Bearer $token',
           'Content-type': 'application/json'
         },

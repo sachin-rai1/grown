@@ -16,12 +16,7 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.5,
-        title: const Text("View Data", style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
+
 
 
       body: Obx(() {
@@ -32,46 +27,27 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
           Column (
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 10 ,bottom: 10, left: 15, right: 15),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Select Date : ",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight
-                          .w500),
+                    MyDateWidget(
+                      initialValue: controller.selectedDate.value,
+                      onChanged: (val) {
+                        controller.selectedDate.value = val;
+                        final DateFormat formatter = DateFormat('yyyy-MM-dd');
+                        controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
+                        controller.getPccData(selectedDate: controller.formatted);
+                      },
                     ),
-                    Card(
-                      elevation: 1,
-                      color: Colors.grey.shade400,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DateTimePicker(
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          suffixIcon: const Icon(
-                            Icons.edit,
-                            size: 20,
-                          ),
-                          border: InputBorder.none,
 
-                          constraints: BoxConstraints(maxHeight: 45, maxWidth: MediaQuery.of(context).size.width / 2.5),
-                        ),
-                        type: DateTimePickerType.date,
-                        dateMask: 'dd/MM/yyyy',
-                        initialValue: controller.selectedDate.value,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        icon: const Icon(Icons.event),
-                        onChanged: (val) {
-                          controller.selectedDate.value = val;
-                          final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                          controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
-                          controller.getPccData(selectedDate: controller.formatted);
-                        },
-                        validator: (val) {return null;},
-                        onSaved: (val) => log(val.toString()),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, right: 10),
+                      child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(onPressed: (){
+                            controller.convertToExcel(controller.jsonList);
+                          }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
                     ),
                   ],
                 ),

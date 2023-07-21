@@ -30,7 +30,7 @@ class ReportScreenScreen extends GetView<ReportScreenController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButton(onPressed: (){
-                Get.to(() => MlgdReportTabBar(
+                Get.to(() => ReportTabBar(
                   title: const Text("Running Data Report"),
                   tabs: const [
                   Text("DateWise Data"),
@@ -47,7 +47,7 @@ class ReportScreenScreen extends GetView<ReportScreenController> {
                 )
               ), child: const Text("Running Data") ,),
               ElevatedButton(onPressed: (){
-                Get.to(()=> MlgdReportTabBar(
+                Get.to(()=> ReportTabBar(
                   tabs: const [
                     Text("Running Graph")
                   ],
@@ -63,7 +63,7 @@ class ReportScreenScreen extends GetView<ReportScreenController> {
                   )
               ), child: const Text("View Graph") ,),
               ElevatedButton(onPressed: (){
-                Get.to(() => MlgdReportTabBar(
+                Get.to(() => ReportTabBar(
                   title: const Text("Pre-Run Data Report"),
                   tabs: const [
                   Text("DateWise Data"),
@@ -80,7 +80,7 @@ class ReportScreenScreen extends GetView<ReportScreenController> {
                   )
               ), child: const Text("Pre-Run Data") ,),
               ElevatedButton(onPressed: (){
-                Get.to(() => MlgdReportTabBar(
+                Get.to(() => ReportTabBar(
                   title: const Text("Post-Run Data Report"),
                   tabs: const [
                     Text("DateWise Data"),

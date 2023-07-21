@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grown/app/data/constants.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -98,13 +100,22 @@ class BcdiDetectionController extends GetxController {
       isLoading.value = true; // Set loading state to true
       classData.value = []; // Clear the class data list
 
+
+      final bytes = await imageFile.readAsBytes();
+      final resizedImage = img.decodeImage(bytes);
+      final resized = img.copyResize(resizedImage!, width: 512, height: 512);
+      final tempDir = await getTemporaryDirectory();
+      log(tempDir.toString());
+
+      final resizedFile = File('${tempDir.path}/resized.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
       // ignore: deprecated_member_use
-      var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead())); // Create a byte stream from the resized image file
-      var length = await resizedFile.value?.length(); // Get the length of the resized image file
+      var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead())); // Create a byte stream from the resized image file
+      var length = await resizedFile.length(); // Get the length of the resized image file
+
       var uploadURL = "http://ec2-54-227-80-131.compute-1.amazonaws.com/predict"; // URL for uploading the image
       var uri = Uri.parse(uploadURL);
       var request = http.MultipartRequest("POST", uri); // Create a multipart request
-      var multipartFile = http.MultipartFile('file', stream, length!, filename: (imageFile.path)); // Create a multipart file from the image stream
+      var multipartFile = http.MultipartFile('file', stream, length, filename: (imageFile.path)); // Create a multipart file from the image stream
       request.files.add(multipartFile); // Add the multipart file to the request
       var response = await http.Response.fromStream(await request.send()); // Send the request and get the response
       log(response.statusCode.toString());
@@ -249,23 +260,31 @@ class BcdiDetectionController extends GetxController {
 
 // Function for picking an image from the gallery
   Future<void> pickImageFromGallery() async {
-    final ImagePicker picker = ImagePicker();
-    pickerImage = await picker.pickImage(source: ImageSource.gallery);
 
-    log('image path : ${pickerImage?.path}');
-    image.value = File(pickerImage!.path);
-
-    if(!kIsWeb) {
-      if (Platform.isAndroid || Platform.isIOS) {
-        hasNetwork(); // Check for network connection and crop the image
+    if(!kIsWeb){
+      if(Platform.isWindows){
+        FilePickerResult? result = await FilePicker.platform.pickFiles();
+        if (result != null) {
+            resizedFile.value = File(result.files.single.path!);
+            upload(resizedFile.value!);
+        } else {
+        }
       }
       else {
-        log(image.value.toString());
-        upload(image.value!);
-        // Process.run('start', [pickerImage!.path]);
-        // Open the image file
+        final ImagePicker picker = ImagePicker();
+        pickerImage = await picker.pickImage(source: ImageSource.gallery);
+
+        log('image path : ${pickerImage?.path}');
+        image.value = File(pickerImage!.path);
+
+        if (!kIsWeb) {
+          if (Platform.isAndroid || Platform.isIOS) {
+            hasNetwork(); // Check for network connection and crop the image
+          }
+        }
       }
     }
+
   }
 
 // Function for picking an image from the camera

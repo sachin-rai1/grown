@@ -89,10 +89,9 @@ class BcdiDetectionView extends GetView<BcdiDetectionController> {
               // Show the image after crop
               Obx(() => (
                   controller.resizedFile.value == null
-                      ? Container(height: h / 3, width: w, color: Colors.grey.withOpacity(0.1))
-                      : (Platform.isAndroid || Platform.isIOS)
-                      ? ClipRRect(child: Image.file(controller.resizedFile.value!, width: w, fit: BoxFit.fill))
-                      : Image.file(File(controller.pickerImage!.path))
+                      ? Container(height: h / 3, width: w, color: Colors.grey.withOpacity(0.1)) :
+                  ClipRRect(child: Image.file(controller.resizedFile.value!, width: w, fit: BoxFit.fill))
+
               )),
               const SizedBox(height: 10,),
 

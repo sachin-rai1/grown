@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../data/constants.dart';
 import '../../../../data/widgets.dart';
 import '../controllers/view_ups_reading_branch_wise_controller.dart';
 
@@ -17,6 +18,14 @@ class ViewUpsReadingBranchWiseView
     return Scaffold(
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10, right: 10),
+            child: Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(onPressed: (){
+                  convertToExcel(jsonList:controller.jsonList,fileName: "${controller.selectedBranchName.value} UpsReadingBranchWise");
+                }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
+          ),
           Obx(() => (controller.upsReadingController.branchDataList.isEmpty)
               ? const Center(
                   child: Text("No Data Found"),
@@ -34,6 +43,7 @@ class ViewUpsReadingBranchWiseView
                       dropDownItems: controller.upsReadingController.branchDataList.map((branch) {
                         return DropdownMenuItem<String>(
                           onTap: () {
+                            controller.selectedBranchName.value = branch['branch_name'];
                             controller.selectedBranchId.value = branch['branch_id'];
                             controller.fetchUpsReadingDataById(
                                 branchId: controller.selectedBranchId.value);

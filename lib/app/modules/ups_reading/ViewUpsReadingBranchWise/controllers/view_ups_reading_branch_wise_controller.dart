@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,9 @@ class ViewUpsReadingBranchWiseController extends GetxController {
   final loadOnUpsBController = TextEditingController();
   var selectedBranchId = 1.obs;
   var selectedUpsId = 0.obs;
+  List<Map<String, dynamic>> jsonList = [];
+
+  var selectedBranchName ='Maitri'.obs;
 
 
 
@@ -45,8 +49,10 @@ class ViewUpsReadingBranchWiseController extends GetxController {
 
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
+
       var upsData = ModelUpsReading.fromJson(json);
       upsReadingDataList.value = upsData.data!;
+      jsonList = [json];
 
       isLoading.value = false;
     } else {

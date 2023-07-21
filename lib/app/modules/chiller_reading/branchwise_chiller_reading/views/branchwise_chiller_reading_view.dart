@@ -19,6 +19,14 @@ class BranchWiseChillerReadingView
       body: Column(
         children: [
           Padding(
+            padding: const EdgeInsets.only(top: 10, right: 10),
+            child: Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(onPressed: (){
+                  convertToExcel(jsonList: controller.jsonList ,fileName: '${controller.selectedBranchName.value} BranchWiseChiller');
+                }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(vertical: 15 ,horizontal: 20),
             child: Obx(() =>
             (chillerReadingController.branchDataList.isEmpty)
@@ -42,6 +50,7 @@ class BranchWiseChillerReadingView
                   return DropdownMenuItem<String>(
                     onTap: () async {
                       controller.selectedBranchId.value = branch['branch_id'];
+                      controller.selectedBranchName.value = branch['branch_name'];
                       await controller.fetchChillerReading(branchId: controller.selectedBranchId.value);
                     },
                     value: branch['branch_name'],

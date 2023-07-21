@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -16,9 +19,10 @@ class BcdiClassificationController extends GetxController {
   TextEditingController? idTextController;
   TextEditingController? titleTextController;
   dynamic data;
-  dynamic confidence;
-  dynamic classValue;
-  dynamic isLoading = false.obs;
+  var confidence = ''.obs;
+  var classValue = ''.obs;
+  var image = ''.obs;
+  var isLoading = false.obs;
 
   var id = 0.obs;
   var statusCode = 0.obs;
@@ -29,6 +33,8 @@ class BcdiClassificationController extends GetxController {
 
   Future<void> hasNetwork() async {
     try {
+      isLoading.value = true;
+
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         _cropImage();
@@ -43,6 +49,9 @@ class BcdiClassificationController extends GetxController {
         snackPosition: SnackPosition.TOP,
         duration: Duration(milliseconds: 2000),
       ));
+    }
+    finally{
+      isLoading.value = false;
     }
   }
 
@@ -66,6 +75,32 @@ class BcdiClassificationController extends GetxController {
         IOSUiSettings(
           title: 'Cropper',
         ),
+
+      ],
+    );
+    final bytes = await croppedFile?.readAsBytes();
+    final resizedImage = img.decodeImage(bytes!);
+    final resized = img.copyResize(resizedImage!, width: 512, height: 512);
+    final tempDir = await getTemporaryDirectory();
+    resizedFile.value = File('${tempDir.path}/resized${DateTime.now().microsecondsSinceEpoch}.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
+
+    upload(resizedFile.value!);
+  }
+
+
+
+  Future<void> _cropWebImage(BuildContext context) async {
+    croppedFile = await ImageCropper().cropImage(
+      sourcePath: fileImage!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        WebUiSettings(context: context)
       ],
     );
     final bytes = await croppedFile?.readAsBytes();
@@ -94,35 +129,63 @@ class BcdiClassificationController extends GetxController {
     hasNetwork();
   }
 
+  // Future<void> uploadFromWebOrWindows(BuildContext context) async {
+  //   const XTypeGroup typeGroup = XTypeGroup(
+  //
+  //     label: 'images',
+  //     extensions: <String>['jpg', 'png', 'jpeg'],
+  //   );
+  //   final XFile? image = await openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
+  //   log('image path : ${image?.path} -- MimeType : ${image?.mimeType}');
+  //   fileImage = File(image!.path);
+  //   upload(fileImage!);
+  // }
+  Future<void> uploadFromWebOrWindows(BuildContext context) async {
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      if(kIsWeb) {
+        File file = File(result.files.single.bytes.toString());
+        log(file.toString());
+      }
+      else{
+        resizedFile.value = File(result.files.single.path!);
+        upload(resizedFile.value!);
+      }
+
+    } else {
+      // User canceled the picker
+    }
+  }
+
+
   upload(File imageFile) async {
     try {
-      isLoading.value = true;
-      final bytes = await imageFile.readAsBytes();
-      final resizedImage = img.decodeImage(bytes);
-      final resized = img.copyResize(resizedImage!, width: 512, height: 512);
-      final tempDir = await getTemporaryDirectory();
-      final resizedFile = File('${tempDir.path}/resized.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
-      var uploadURL = "http://ec2-34-196-165-184.compute-1.amazonaws.com/predict";
-      // ignore: deprecated_member_use
-      var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead()));
-      var length = await resizedFile.length();
-      var uri = Uri.parse(uploadURL);
-      var request = http.MultipartRequest("POST", uri);
-      var multipartFile = http.MultipartFile('file', stream, length,
-          filename: (imageFile.path));
-      request.files.add(multipartFile);
-      var response = await request.send();
+        isLoading.value = true;
+        final bytes = await imageFile.readAsBytes();
+        final resizedImage = img.decodeImage(bytes);
+        final resized = img.copyResize(resizedImage!, width: 512, height: 512);
+        final tempDir = await getTemporaryDirectory();
+        final resizedFile = File('${tempDir.path}/resized.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
+        var uploadURL = "http://ec2-34-196-165-184.compute-1.amazonaws.com/predict";
+        // ignore: deprecated_member_use
+        var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead()));
+        var length = await resizedFile.length();
+        var uri = Uri.parse(uploadURL);
+        var request = http.MultipartRequest("POST", uri);
+        var multipartFile = http.MultipartFile('file', stream, length, filename: (imageFile.path));
+        request.files.add(multipartFile);
+        var response = await request.send();
+
       statusCode.value = response.statusCode;
       if (response.statusCode == 200) {
-        response.stream
-            .transform(utf8.decoder)
-            .transform(json.decoder)
-            .listen((value) {
-          log("Value is :  $value");
+        response.stream.transform(utf8.decoder).transform(json.decoder).listen((value) {
           data = value;
 
-          classValue = data["class"].toString();
-          confidence = data["confidence"].toString();
+          classValue.value = data["Class"].toString();
+          confidence.value = data["Percentage"].toString();
+          image.value = data["image"].toString();
+
         });
       } else {
         isLoading.value = false;
@@ -131,6 +194,8 @@ class BcdiClassificationController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
   savePdf(BuildContext context) async {
     if (resizedFile.value == null) {
       Get.showSnackbar(const GetSnackBar(
@@ -163,7 +228,7 @@ class BcdiClassificationController extends GetxController {
                   height: h / 1.5,
                 ),
                 pw.Text(
-                  "Class :- ${classValue ?? ""}",
+                  "Class :- ${classValue.value}",
                   style: pw.TextStyle(
                       fontSize: 20, fontWeight: pw.FontWeight.bold),
                 ),
@@ -171,7 +236,7 @@ class BcdiClassificationController extends GetxController {
                   height: 10,
                 ),
                 pw.Text(
-                  "Confidence :- ${confidence ?? ""}",
+                  "Confidence :- ${confidence.value}",
                   style: pw.TextStyle(
                       fontSize: 20, fontWeight: pw.FontWeight.bold),
                 ),

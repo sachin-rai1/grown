@@ -1,4 +1,3 @@
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -12,18 +11,21 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.5,
-        title: const Text("View Data", style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
+
       body: Obx(() {
         return
           controller.isLoading.value == true ?
           const Center(child: CircularProgressIndicator()) :
           Column (
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10, right: 10),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                    child: IconButton(onPressed: (){
+                      controller.convertToExcel(controller.jsonList);
+                    }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
+              ),
               Obx(() => (controller.branchDataList.isEmpty) ?
               const Center(child: Text("No Branch Found"),) :
               Padding(
@@ -39,6 +41,7 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
                       return DropdownMenuItem<String>(
                         onTap: () {
                           controller.selectedBranchId.value = branch["branch_id"];
+                          controller.selectedBranchName.value = branch["branch_name"];
                           controller.getPccData(branchId: controller.selectedBranchId.value);
                         },
                         value: branch["branch_name"],
@@ -63,7 +66,7 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: controller.pccDataList.length,
                             itemBuilder: (context, index,) {
-                              var meterStatus = "";
+                                var meterStatus = "";
                               var lightStatus = "";
                               var fanStatus = "";
 
@@ -152,8 +155,6 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
                                             ),
                                           ],
                                         ),
-
-
                                         MyTextWidget(title: "Date : " , body: controller.pccDataList[index].pccDailyReadingCreatedOn,),
                                         MyTextWidget(title: "Branch : " , body: controller.pccDataList[index].branchName,),
                                         MyTextWidget(title: "PCC Name : " , body: controller.pccDataList[index].pccName,),
@@ -173,7 +174,6 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
                                         MyTextWidget(title: "R-E(Volt) : " , body: controller.pccDataList[index].rEVolt,),
                                         MyTextWidget(title: "Y-E(Volt) : " , body: controller.pccDataList[index].yEVolt,),
                                         MyTextWidget(title: "Remarks : " , body: controller.pccDataList[index].remarkIfAny,),
-
                                       ],
                                     ),
                                   ),
@@ -202,9 +202,7 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
 //_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____
 
 
-  void updatePccData(
-      {
-        required BuildContext context,
+  void updatePccData({required BuildContext context,
         required int id,
         required int branchIdFk,
         required int pccIdFk,
@@ -224,14 +222,8 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
         required String reVolt,
         required String yeVolt,
         required String beVolt,
-        required String reMark,
-
-
-      })
-
-  {
-
-    controller.aACB.text = loadAcb;
+        required String reMark,})
+  {controller.aACB.text = loadAcb;
     controller.mMFM.text = loadMfm;
     controller.pPowerFactorMFM.text = powerMfm;
     controller.neVolt.text = neVolt;
@@ -248,195 +240,6 @@ class BranchwisePccReadingView extends GetView<BranchwisePccReadingController> {
     controller.meter.value = meterStatus.toString();
     controller.light.value = lightStatus.toString();
     controller.fan.value = fanStatus.toString();
-    AlertDialog alertDialog = AlertDialog(
-      actions: [
-        ElevatedButton(onPressed: () => Get.back(), child: const Text("Cancel"),),
-        ElevatedButton(onPressed: () {
-          controller.updatePccData(
-            id: id,
-            branchIdFk: branchIdFk,
-            pccIdFk: pccIdFk,
-          );
-        },
-          child: const Text("Submit"),),
-      ],
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.aACB,
-              title: "Load(Amp.)-ACB ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.mMFM,
-              title: "Load(Amp.)-MFM",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.pPowerFactorMFM,
-              title: "Power Factor(MFM)",
-            ),
-
-            const SizedBox(height: 15),
-            const Text("All meter Status(PCC)",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('ON'),
-                  value: '1',
-                  groupValue: controller.meter.value,
-                  onChanged: (value) {
-                    controller.meter(value.toString());
-
-
-                  },
-                ),
-            ),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('OFF'),
-                  value: '0',
-                  groupValue: controller.meter.value,
-                  onChanged: (value) {
-                    controller.meter(value.toString());
-
-                  },
-                ),
-            ),
-
-            const SizedBox(height: 15),
-            const Text("All Light Status(PCC) ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('ON'),
-                  value: '1',
-                  groupValue: controller.light.value,
-                  onChanged: (value) {
-                    controller.light(value.toString());
-
-                  },
-                ),
-            ),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('OFF'),
-                  value: '0',
-                  groupValue: controller.light.value,
-                  onChanged: (value) {
-                    controller.light(value.toString());
-                    // controller.lightStatus.value = value.toString();
-                  },
-                ),
-            ),
-
-            const SizedBox(height: 15),
-            const Text("All Exhaust Fan Status ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('ON'),
-                  value: '1',
-                  groupValue: controller.fan.value,
-                  onChanged: (value) {
-                    controller.fan(value.toString());
-
-                  },
-                ),
-            ),
-
-            Obx(() =>
-                RadioListTile(
-                  title: const Text('OFF'),
-                  value: '0',
-                  groupValue: controller.fan.value,
-                  onChanged: (value) {
-                    controller.fan(value.toString());
-
-                  },
-                ),
-            ),
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.neVolt,
-              title: " N-E (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.ryVolt,
-              title: " R-Y (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.ybVolt,
-              title: " Y-B (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.brVolt,
-              title: " B-R (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.rnVolt,
-              title: " R-N (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.ynVolt,
-              title: " Y-N (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.bnVolt,
-              title: " B-N (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.reVolt,
-              title: " R-E (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.yeVolt,
-              title: " Y-E (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.beVolt,
-              title: " B-E (Volt) ",
-            ),
-
-            const SizedBox(height: 15),
-            TextBoxWidget(
-              controller: controller.remark,
-              title: " Remark ",
-            ),
-
-          ],
-        ),
-      ),
-    );
-
-
 
     showBottomSheet(context: context, builder: (context){
 

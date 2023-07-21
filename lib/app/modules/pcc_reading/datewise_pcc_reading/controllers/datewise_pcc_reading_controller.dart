@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../data/constants.dart';
 import '../Model/view_model.dart';
@@ -36,18 +40,11 @@ class DatewisePccReadingController extends GetxController {
   var meter = "0 ".obs;
   var light = " 0".obs;
   var fan = " 0".obs;
-
-
-
-
-
-
-
-
 //______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______//______
 
-  Rx<String> selectedDate = DateTime.now().toString().obs;
+  Rx<String> selectedDate = ''.obs;
   dynamic formatted;
+  List<Map<String, dynamic>> jsonList = [];
 
   @override
   void onInit() {
@@ -59,12 +56,12 @@ class DatewisePccReadingController extends GetxController {
     super.onInit();
   }
 
-
   void getPccData({required var selectedDate}) async {
     try {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      var response =await http.get(Uri.parse("$apiUrl/pcc_daily_reading_read?created_on=$selectedDate"),
+      var branchId = prefs.getInt('user_branch_id');
+      var response =await http.get(Uri.parse("$apiUrl/pcc_daily_reading_read?created_on=$selectedDate&branch_id_fk=$branchId"),
           headers: {
             'Authorization' : 'Bearer $token',
             'Content-type': 'application/json',
@@ -75,12 +72,15 @@ class DatewisePccReadingController extends GetxController {
         var json = jsonDecode(response.body);
         var data = ModelPccReport.fromJson(json);
         pccDataList.value = data.report ?? [];
+        jsonList = [json];
         isLoading.value = false;
+
       }
       else
       {
         isLoading.value = false;
         pccDataList.value = [];
+        jsonList=[];
 
       }
     }
@@ -94,6 +94,62 @@ class DatewisePccReadingController extends GetxController {
     }
   }
 
+
+  Future<void> convertToExcel(List<Map<String, dynamic>> jsonList) async {
+    bool excelSuccess = await writeToFile(jsonList);
+    if (excelSuccess) {
+      log("Excel file created successfully.");
+      showToast(msg: "File Saved In Downloads OR Documents Folder");
+
+
+    } else {
+      log("Failed to create Excel file.");
+      showToastError(msg: "File Can't Save Try Again ");
+    }
+  }
+  Future<bool> writeToFile(List<Map<String, dynamic>> data) async {
+    try {
+      var excel = Excel.createExcel();
+      var sheet = excel['Sheet1'];
+
+      //write the header
+      sheet.appendRow(data[0]["Report"][0].keys.toList());
+
+      // Write the data
+      for(int i = 0 ; i<data[0]["Report"].length ; i++){
+        sheet.appendRow(data[0]["Report"][i].values.toList());
+      }
+
+
+      if(!kIsWeb) {
+        Directory? directory;
+
+        if (Platform.isIOS || Platform.isWindows) {
+          directory = await getApplicationDocumentsDirectory();
+        }
+        else {
+          directory = Directory('/storage/emulated/0/Download');
+        }
+
+        if (!await directory.exists()) {
+          directory = await getExternalStorageDirectory();
+        }
+
+        String filePath = '${directory!.path}/PccReadingDateWise${DateTime.now().microsecondsSinceEpoch}.xlsx';
+        var file = File(filePath);
+        await file.writeAsBytes(excel.encode()!);
+      }
+      return true;
+    } catch (e) {
+      log("Error creating Excel file: $e");
+      return false;
+    }
+  }
+
+
+
+
+
 //_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______//_______
   void updatePccData ({
     required int id,
@@ -105,6 +161,8 @@ class DatewisePccReadingController extends GetxController {
     try {
       var prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var userId = prefs.getInt('user_id');
+
       final response = await http.put(
         Uri.parse(
             "$apiUrl/pcc_daily_reading_update/$id"
@@ -133,17 +191,18 @@ class DatewisePccReadingController extends GetxController {
           "y_e_volt":yeVolt.text,
           "b_e_volt":beVolt.text,
           "remark_If_any":remark.text,
-          "branch_id_fk":(selectedBranchIdFk.value == 0)? branchIdFk : selectedBranchIdFk.value,
-          "user_id_fk":"21",
-          "pcc_id_fk":(selectedPccIdFk.value == 0)? pccIdFk : selectedPccIdFk.value,
+          "user_id_fk":userId,
+          "pcc_id_fk":pccIdFk,
         }
         ),
       );
 
       if (response.statusCode == 200) {
         getPccData(selectedDate: selectedDate.value);
+        showToast(msg: "Data Updated Successfully");
       }
       else {
+        showToastError(msg: "Error ${response.body}");
       }
     }
     catch (e) {
@@ -152,15 +211,10 @@ class DatewisePccReadingController extends GetxController {
     finally{
       isLoading.value = false;
     }
-
   }
 
 
 //_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________
-
-  void clearData(){}
-
-
   deletePccData({required int id}) async {
 
     var prefs = await SharedPreferences.getInstance();

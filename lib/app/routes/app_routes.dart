@@ -99,6 +99,10 @@ abstract class Routes {
   static const BRANCHWISE_PCC_READING =
       _Paths.PCC_READING + _Paths.BRANCHWISE_PCC_READING;
   static const PCC_DATA = _Paths.PCC_READING + _Paths.PCC_DATA;
+  static const DATE_WISE_COMPLAIN =
+      _Paths.MAINTENANCE + _Paths.VIEW_COMPLAIN + _Paths.DATE_WISE_COMPLAIN;
+  static const BRANCH_WISE_COMPLAIN =
+      _Paths.MAINTENANCE + _Paths.VIEW_COMPLAIN + _Paths.BRANCH_WISE_COMPLAIN;
 }
 
 abstract class _Paths {
@@ -168,4 +172,6 @@ abstract class _Paths {
   static const DATEWISE_PCC_READING = '/datewise-pcc-reading';
   static const BRANCHWISE_PCC_READING = '/branchwise-pcc-reading';
   static const PCC_DATA = '/pcc-data';
+  static const DATE_WISE_COMPLAIN = '/date-wise-complain';
+  static const BRANCH_WISE_COMPLAIN = '/branch-wise-complain';
 }
