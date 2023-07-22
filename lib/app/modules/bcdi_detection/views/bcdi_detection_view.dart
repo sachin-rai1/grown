@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import '../controllers/bcdi_detection_controller.dart';
 
 class BcdiDetectionView extends GetView<BcdiDetectionController> {
@@ -144,16 +146,16 @@ class BcdiDetectionView extends GetView<BcdiDetectionController> {
               const SizedBox(height: 10,),
 
               // Display the image if available
-              Obx(() => (
-                  controller.classData.isEmpty
-                      ? Container()
-                      : Obx(() => (
-                      controller.isLoading.value == true
-                          ? Container()
-                          : Image.memory(base64Decode(controller.imageString.value))
-                  ))
-              )),
-
+              Obx(
+                    ()=> controller.isLoading.value == true || controller.imageString.value == ''
+                    ? Container()
+                    : CachedNetworkImage(
+                  imageUrl: controller.imageString.value,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

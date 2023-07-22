@@ -167,7 +167,7 @@ class BcdiClassificationController extends GetxController {
         final resized = img.copyResize(resizedImage!, width: 512, height: 512);
         final tempDir = await getTemporaryDirectory();
         final resizedFile = File('${tempDir.path}/resized.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
-        var uploadURL = "http://ec2-34-196-165-184.compute-1.amazonaws.com/predict";
+        var uploadURL = "http://ec2-34-197-250-249.compute-1.amazonaws.com:8001/classification";
         // ignore: deprecated_member_use
         var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead()));
         var length = await resizedFile.length();
@@ -178,13 +178,13 @@ class BcdiClassificationController extends GetxController {
         var response = await request.send();
 
       statusCode.value = response.statusCode;
+      log(statusCode.value.toString());
       if (response.statusCode == 200) {
         response.stream.transform(utf8.decoder).transform(json.decoder).listen((value) {
           data = value;
 
-          classValue.value = data["Class"].toString();
-          confidence.value = data["Percentage"].toString();
-          image.value = data["image"].toString();
+            classValue.value = data["Class"].toString();
+            image.value = data["image"];
 
         });
       } else {

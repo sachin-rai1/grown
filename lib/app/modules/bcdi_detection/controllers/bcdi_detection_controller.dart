@@ -100,7 +100,6 @@ class BcdiDetectionController extends GetxController {
       isLoading.value = true; // Set loading state to true
       classData.value = []; // Clear the class data list
 
-
       final bytes = await imageFile.readAsBytes();
       final resizedImage = img.decodeImage(bytes);
       final resized = img.copyResize(resizedImage!, width: 512, height: 512);
@@ -112,37 +111,31 @@ class BcdiDetectionController extends GetxController {
       var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead())); // Create a byte stream from the resized image file
       var length = await resizedFile.length(); // Get the length of the resized image file
 
-      var uploadURL = "http://ec2-54-227-80-131.compute-1.amazonaws.com/predict"; // URL for uploading the image
+      var uploadURL = "http://ec2-34-197-250-249.compute-1.amazonaws.com:8001/detection"; // URL for uploading the image
       var uri = Uri.parse(uploadURL);
       var request = http.MultipartRequest("POST", uri); // Create a multipart request
       var multipartFile = http.MultipartFile('file', stream, length, filename: (imageFile.path)); // Create a multipart file from the image stream
       request.files.add(multipartFile); // Add the multipart file to the request
-      var response = await http.Response.fromStream(await request.send()); // Send the request and get the response
-      log(response.statusCode.toString());
+      var response = await http.Response.fromStream(await request.send()); // Send the request and get the response      
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        var xyz = ModelBcdiDetection.fromJson(json);
-        imageString.value = xyz.image!; // Store the image as a base64 string
-        classData.value = xyz.modelBcdiDetectionClass!; // Store the detected class data
-        percentageData.value = xyz.percentage!; // Store the detected class percentages
-      } else if (response.statusCode == 502) {
-        Get.showSnackbar(const GetSnackBar(
-          backgroundColor: Colors.red,
-          message: "Please try after some time",
-          title: "No Internet Connection",
-          snackPosition: SnackPosition.TOP,
-          duration: Duration(milliseconds: 2000),
-        ));
-      } else {
-        Get.showSnackbar(
-            GetSnackBar(
-              backgroundColor: Colors.red,
-              message: "Some Error occur",
-              title: response.statusCode.toString(),
-              snackPosition: SnackPosition.TOP,
-              duration: const Duration(milliseconds: 2000),
-            ));
-        isLoading.value = false; // Set loading state to false
+
+        try {
+          var json = jsonDecode(response.body);
+          var data = ModelBcdiDetection.fromJson(json);
+
+          imageString.value = data.image!; // Store the image as a url
+
+          log(imageString.value);
+
+          classData.value = data.modelBcdiDetectionClass!; // Store the detected class data
+          percentageData.value = data.percentage!; // Store the detected class percentages
+        }
+        catch(e){
+          log(e.toString());
+        }
+      }
+      else {
+        showToastError(msg: "Unknown Error Occur ${response.statusCode}");
       }
     } finally {
       isLoading.value = false; // Set loading state to false
