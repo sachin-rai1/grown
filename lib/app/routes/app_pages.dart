@@ -6,6 +6,8 @@ import '../modules/bcdi_classification/bindings/bcdi_classification_binding.dart
 import '../modules/bcdi_classification/views/bcdi_classification_view.dart';
 import '../modules/bcdi_detection/bindings/bcdi_detection_binding.dart';
 import '../modules/bcdi_detection/views/bcdi_detection_view.dart';
+import '../modules/bcdi_multi_label/bindings/bcdi_multi_label_binding.dart';
+import '../modules/bcdi_multi_label/views/bcdi_multi_label_view.dart';
 import '../modules/chiller_reading/bindings/chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/bindings/branchwise_chiller_reading_binding.dart';
 import '../modules/chiller_reading/branchwise_chiller_reading/views/branchwise_chiller_reading_view.dart';
@@ -399,12 +401,12 @@ class AppPages {
           children: [
             GetPage(
               name: _Paths.DATE_WISE_COMPLAIN,
-              page: () =>  DateWiseComplainView(),
+              page: () => DateWiseComplainView(),
               binding: DateWiseComplainBinding(),
             ),
             GetPage(
               name: _Paths.BRANCH_WISE_COMPLAIN,
-              page: () =>  BranchWiseComplainView(),
+              page: () => BranchWiseComplainView(),
               binding: BranchWiseComplainBinding(),
             ),
           ],
@@ -457,6 +459,11 @@ class AppPages {
           binding: PccDataBinding(),
         ),
       ],
+    ),
+    GetPage(
+      name: _Paths.BCDI_MULTI_LABEL,
+      page: () => BcdiMultiLabelView(),
+      binding: BcdiMultiLabelBinding(),
     ),
   ];
 }

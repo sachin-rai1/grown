@@ -78,4 +78,28 @@ class PreRunViewDataController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> deletePreRunData({required int runId}) async {
+    try {
+      isLoading.value = true;
+      final prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      var response = await http.delete(
+          Uri.parse("$apiUrl/delete_pre_run_data/$runId"),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          });
+      if (response.statusCode == 200) {
+        showToast(msg: "Pre Run Deleted Successfully");
+        Get.back();
+        getAllPreRunData();
+      }
+      else{
+        throw Exception();
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

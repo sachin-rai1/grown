@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grown/app/data/constants.dart';
 import 'package:grown/app/data/widgets.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../controllers/pre_run_view_data_controller.dart';
 
@@ -114,6 +116,24 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            (privilage.value == "Admin")?Align(
+                                              alignment:Alignment.topRight,
+                                                child: IconButton(onPressed: (){
+                                                  showDialog(context: context, builder: (context){
+                                                    return AlertDialog(
+                                                      actions: [
+                                                        ElevatedButton(onPressed: () async {
+                                                          controller.deletePreRunData(runId: controller.preRunDataList[index].preRunNoId!);
+
+                                                        },style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text("Yes")),
+                                                        ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text("No")),
+                                                      ],
+                                                      content: const Text("Are You Sure want to delete ?"),
+                                                    );
+                                                  });
+
+                                                }, icon:const Icon(Icons.delete , color: Colors.red,))
+                                            ):Container(),
                                             MyTextWidget(
                                               title: "Run No : ",
                                               body:
@@ -141,9 +161,18 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 10,
                                                       horizontal: 3),
-                                              child: Image.network(controller
-                                                  .preRunDataList[index]
-                                                  .image!),
+                                              child: GestureDetector(
+                                                onTap: (){
+                                                  showBottomSheet(context: context,
+                                                      builder: (context) {
+                                                        return PhotoView(
+                                                          imageProvider: NetworkImage(controller.preRunDataList[index].image!),);
+                                                      });
+                                                },
+                                                child: Image.network(controller
+                                                    .preRunDataList[index]
+                                                    .image!),
+                                              ),
                                             )
                                           ],
                                         ),

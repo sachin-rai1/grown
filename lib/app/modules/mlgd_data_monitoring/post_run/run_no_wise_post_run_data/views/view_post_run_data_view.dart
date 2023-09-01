@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/data/widgets.dart';
 import 'package:grown/app/modules/mlgd_data_monitoring/Model/model_mlgd_data.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../controllers/view_post_run_data_controller.dart';
 
@@ -454,10 +455,12 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
                                     const Text("Front View "),
                                     GestureDetector(
                                       onTap: () {
-                                        enlargeImage(
-                                            frontView, context);
-                                        FocusScope.of(context)
-                                            .unfocus();
+                                        // enlargeImage(frontView, context);FocusScope.of(context).unfocus();
+                                        showBottomSheet(context: context,
+                                            builder: (context) {
+                                              return PhotoView(
+                                                imageProvider: NetworkImage(frontView),);
+                                            });
                                       },
                                       child: Image.network(
                                         frontView!,
@@ -472,9 +475,14 @@ class ViewPostRunDataView extends GetView<ViewPostRunDataController> {
                                     const Text("Top View"),
                                     GestureDetector(
                                       onTap: () {
-                                        enlargeImage(topView, context);
-                                        FocusScope.of(context)
-                                            .unfocus();
+                                        // enlargeImage(topView, context);
+                                        // FocusScope.of(context)
+                                        //     .unfocus();
+                                        showBottomSheet(context: context,
+                                            builder: (context) {
+                                              return PhotoView(
+                                                imageProvider: NetworkImage(topView),);
+                                            });
                                       },
                                       child: Image.network(
                                         topView!,

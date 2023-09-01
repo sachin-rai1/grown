@@ -71,21 +71,21 @@ class RunningDataGraph extends GetView<ViewMlgdDataRunWiseController> {
                       dataSource: controller.mlgdDataList,
                       xValueMapper: (MlgdData dataProcess, _) =>
                           controller.changeDateTimeFormat(dataProcess.createdOn!),
-                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.t,
+                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.y,
                     ),
                     LineSeries<MlgdData, dynamic>(
                       name: 'Z',
                       dataSource: controller.mlgdDataList,
                       xValueMapper: (MlgdData dataProcess, _) =>
                           controller.changeDateTimeFormat(dataProcess.createdOn!),
-                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.y,
+                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.z,
                     ),
                     LineSeries<MlgdData, dynamic>(
                       name: 'T',
                       dataSource: controller.mlgdDataList,
                       xValueMapper: (MlgdData dataProcess, _) =>
                           controller.changeDateTimeFormat(dataProcess.createdOn!),
-                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.z,
+                      yValueMapper: (MlgdData dataProcess, _) => dataProcess.t,
                     ),
                     LineSeries<MlgdData, dynamic>(
                       name: 'Clean %',

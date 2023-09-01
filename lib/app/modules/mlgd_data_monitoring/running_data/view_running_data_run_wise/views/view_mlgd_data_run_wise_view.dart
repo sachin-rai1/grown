@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 
+import '../../../../../data/constants.dart';
 import '../../../../../data/widgets.dart';
 import '../controllers/view_mlgd_data_run_wise_controller.dart';
 
@@ -26,15 +28,20 @@ class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           hintText: "Enter Run No",
+                          suffixIcon:IconButton(onPressed:() {
+                            controller.getData(controller.runController.text);
+                          }, icon: const Icon(Icons.search),
+                            color: Colors.teal,
+                            iconSize: 35,),
                           contentPadding: const EdgeInsets.only(left: 10),
-                          constraints: BoxConstraints(maxHeight: 40, maxWidth: w / 2),
+                          constraints: BoxConstraints(maxHeight: 40, maxWidth: w* 0.55),
                           border: const OutlineInputBorder()),
                     ),
-                    IconButton(onPressed:() {
-                      controller.getData(controller.runController.text);
-                    }, icon: const Icon(Icons.search),
-                      color: Colors.teal,
-                    iconSize: w * 0.1,)
+
+
+                    InkWell(onTap: (){
+                      convertToExcel(jsonList: controller.jsonList,fileName: "DateWiseRunningData");
+                    }, child: const Icon(Icons.download_for_offline , size: 45, color: Colors.blue,)),
                   ],
                 ),
               ),
@@ -135,8 +142,12 @@ class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {
                                               const Text("Front View "),
                                               GestureDetector(
                                                 onTap: (){
-                                                  enlargeImage(frontView, context);
-                                                  FocusScope.of(context).unfocus();
+                                                  showBottomSheet(context: context,
+                                                      builder: (context) {
+                                                        return PhotoView(
+                                                          imageProvider: NetworkImage(frontView),);
+                                                      });
+
                                                 },
                                                 child: Image.network(
                                                   frontView!,
@@ -151,8 +162,11 @@ class ViewMlgdDataRunWiseView extends GetView<ViewMlgdDataRunWiseController> {
                                               const Text("Top View"),
                                               GestureDetector(
                                                 onTap: (){
-                                                  enlargeImage(topView, context);
-                                                  FocusScope.of(context).unfocus();
+                                                  showBottomSheet(context: context,
+                                                      builder: (context) {
+                                                        return PhotoView(
+                                                          imageProvider: NetworkImage(topView),);
+                                                      });
 
                                                 },
                                                 child: Image.network(

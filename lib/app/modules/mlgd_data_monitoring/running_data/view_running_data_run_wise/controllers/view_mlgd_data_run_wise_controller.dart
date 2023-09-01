@@ -26,7 +26,13 @@ class ViewMlgdDataRunWiseController extends GetxController {
     );
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
-      log(json.toString());
+      jsonList =[json];
+      try {
+
+
+      } catch (e, s) {
+        print(s);
+      }
       var data = ModelMlgdData.fromJson(json);
       mlgdDataList.value = data.data ?? [];
       isLoading.value = false;
@@ -53,6 +59,7 @@ class ViewMlgdDataRunWiseController extends GetxController {
   final tController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   var isZoomed = false.obs;
+  List<Map<String, dynamic>> jsonList = [];
 
   Future<void> updateMlgdData({required int mlgdId}) async {
     try {

@@ -1,10 +1,3 @@
-
-
-
-// To parse this JSON data, do
-//
-//     final modelPccList = modelPccListFromJson(jsonString);
-
 import 'dart:convert';
 
 ModelPccList modelPccListFromJson(String str) => ModelPccList.fromJson(json.decode(str));

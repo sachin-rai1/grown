@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/bcdi_classification/views/bcdi_classification_view.dart';
 import 'package:grown/app/modules/bcdi_detection/views/bcdi_detection_view.dart';
+import 'package:grown/app/modules/bcdi_multi_label/views/bcdi_multi_label_view.dart';
 import 'package:grown/app/modules/chiller_reading/views/chiller_reading_view.dart';
 import 'package:grown/app/modules/email_config/views/email_config_view.dart';
 import 'package:grown/app/modules/employee_management/views/employee_management_view.dart';
@@ -11,7 +12,6 @@ import 'package:grown/app/modules/mlgd_data_monitoring/views/mlgd_data_monitorin
 import 'package:grown/app/modules/pcc_reading/views/pcc_reading_view.dart';
 import 'package:grown/app/modules/user_management/views/user_management_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import '../../../../main.dart';
 import '../../../data/widgets.dart';
 import '../../maintenance/views/maintenance_view.dart';
@@ -41,9 +41,13 @@ class HomeController extends GetxController {
 // List of choices for the admin department
   List<Choice> adminList = <Choice>[
     Choice(
-        title: 'BCDI-DETECTION',
+        title: 'BCDI-MULTI-LABEL-DETECTION',
         image: "assets/images/detection1.png",
-        onTap: () => Get.to(() => BcdiDetectionView())),
+        onTap: () => Get.to(() => BcdiMultiLabelView())),
+    // Choice(
+    //     title: 'BCDI-DETECTION',
+    //     image: "assets/images/detection1.png",
+    //     onTap: () => Get.to(() => BcdiDetectionView())),
     Choice(
         title: 'BCDI-CLASSIFICATION',
         image: "assets/images/classification.png",
@@ -72,7 +76,7 @@ class HomeController extends GetxController {
     Choice(
         title: 'PCC Reading',
         image: "assets/images/pcc1.png",
-        onTap: () => Get.to(() => PccReadingView())
+        onTap: () => Get.to(() => const PccReadingView())
     ),
     Choice(
         title: 'Maintenance',
@@ -142,7 +146,7 @@ class HomeController extends GetxController {
     Choice(
         title: 'PCC Reading',
         image: "assets/images/pcc1.png",
-        onTap: () => Get.to(() => PccReadingView())
+        onTap: () => Get.to(() => const PccReadingView())
     ),
     // Choice(
     //     title: 'EMPLOYEE-MANAGEMENT',

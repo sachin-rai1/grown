@@ -103,6 +103,7 @@ abstract class Routes {
       _Paths.MAINTENANCE + _Paths.VIEW_COMPLAIN + _Paths.DATE_WISE_COMPLAIN;
   static const BRANCH_WISE_COMPLAIN =
       _Paths.MAINTENANCE + _Paths.VIEW_COMPLAIN + _Paths.BRANCH_WISE_COMPLAIN;
+  static const BCDI_MULTI_LABEL = _Paths.BCDI_MULTI_LABEL;
 }
 
 abstract class _Paths {
@@ -174,4 +175,5 @@ abstract class _Paths {
   static const PCC_DATA = '/pcc-data';
   static const DATE_WISE_COMPLAIN = '/date-wise-complain';
   static const BRANCH_WISE_COMPLAIN = '/branch-wise-complain';
+  static const BCDI_MULTI_LABEL = '/bcdi-multi-label';
 }

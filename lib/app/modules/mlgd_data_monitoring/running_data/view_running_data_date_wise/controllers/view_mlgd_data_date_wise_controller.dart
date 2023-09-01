@@ -15,6 +15,7 @@ class ViewMlgdDataDateWiseController extends GetxController {
 
   var mlgdDataList = <MlgdData>[].obs;
   var isLoading = false.obs;
+  List<Map<String, dynamic>> jsonList = [];
 
   fetchMlgdData(startDate) async {
     try {
@@ -33,6 +34,7 @@ class ViewMlgdDataDateWiseController extends GetxController {
       if (response.statusCode == 200) {
           var json = jsonDecode(response.body);
           var data = ModelMlgdData.fromJson(json);
+          jsonList = [json];
           mlgdDataList.value = data.data ?? [];
           isLoading.value = false;
       } else {

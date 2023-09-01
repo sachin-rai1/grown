@@ -111,7 +111,7 @@ class BcdiDetectionController extends GetxController {
       var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead())); // Create a byte stream from the resized image file
       var length = await resizedFile.length(); // Get the length of the resized image file
 
-      var uploadURL = "http://ec2-34-197-250-249.compute-1.amazonaws.com:8001/detection"; // URL for uploading the image
+      var uploadURL = "https://api.maitriai.com:8001/detection"; // URL for uploading the image
       var uri = Uri.parse(uploadURL);
       var request = http.MultipartRequest("POST", uri); // Create a multipart request
       var multipartFile = http.MultipartFile('file', stream, length, filename: (imageFile.path)); // Create a multipart file from the image stream

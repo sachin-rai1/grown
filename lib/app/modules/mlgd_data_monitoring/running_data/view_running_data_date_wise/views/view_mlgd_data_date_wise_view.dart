@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 
+import '../../../../../data/constants.dart';
 import '../../../../../data/widgets.dart';
 import '../controllers/view_mlgd_data_date_wise_controller.dart';
 
@@ -67,6 +69,9 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                     onSaved: (val) => log(val.toString()),
                   ),
                 ),
+                InkWell(onTap: (){
+                  convertToExcel(jsonList: controller.jsonList,fileName: "DateWiseRunningData");
+                }, child: const Icon(Icons.download_for_offline , size: 45, color: Colors.blue,)),
               ],
             ),
           ),
@@ -119,6 +124,8 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                                     InkWell(onTap: (){
                                       deleteMlgdData(context: context, mlgdId: controller.mlgdDataList[index].mlgdId!,);
                                     }, child: const Icon(Icons.delete_forever_sharp , size: 30, color: Colors.red,)),
+                                    const SizedBox(width: 20,),
+
                                   ],
                                 ),
                               ),
@@ -166,8 +173,12 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                                       const Text("Front View "),
                                       GestureDetector(
                                         onTap: (){
-                                          enlargeImage(frontView, context);
-                                          FocusScope.of(context).unfocus();
+                                          showBottomSheet(context: context,
+                                              builder: (context) {
+                                                return PhotoView(
+                                                  imageProvider: NetworkImage(frontView),);
+                                              });
+
                                         },
                                         child: Image.network(
                                           frontView!,
@@ -182,8 +193,11 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                                       const Text("Top View"),
                                       GestureDetector(
                                         onTap: (){
-                                          enlargeImage(topView, context);
-                                          FocusScope.of(context).unfocus();
+                                          showBottomSheet(context: context,
+                                              builder: (context) {
+                                                return PhotoView(
+                                                  imageProvider: NetworkImage(topView),);
+                                              });
 
                                         },
                                         child: Image.network(

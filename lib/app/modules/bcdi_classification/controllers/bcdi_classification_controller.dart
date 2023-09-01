@@ -167,7 +167,7 @@ class BcdiClassificationController extends GetxController {
         final resized = img.copyResize(resizedImage!, width: 512, height: 512);
         final tempDir = await getTemporaryDirectory();
         final resizedFile = File('${tempDir.path}/resized.jpeg')..writeAsBytesSync(img.encodeJpg(resized));
-        var uploadURL = "http://ec2-34-197-250-249.compute-1.amazonaws.com:8001/classification";
+        var uploadURL = "https://api.maitriai.com:8001/classification";
         // ignore: deprecated_member_use
         var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead()));
         var length = await resizedFile.length();
