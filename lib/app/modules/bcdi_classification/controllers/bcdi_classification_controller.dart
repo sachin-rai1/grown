@@ -146,7 +146,6 @@ class BcdiClassificationController extends GetxController {
     if (result != null) {
       if(kIsWeb) {
         File file = File(result.files.single.bytes.toString());
-        log(file.toString());
       }
       else{
         resizedFile.value = File(result.files.single.path!);

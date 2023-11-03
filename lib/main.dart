@@ -88,9 +88,6 @@ Future<bool> checkLogging() async {
     }
 
     bool isTokenExpired = JwtDecoder.isExpired(token); // Checking if the token is expired
-
-    log(isTokenExpired.toString()); // Logging the token expiration status
-
     if (isTokenExpired == true) {
       showToastError(msg: "Your Login Expired \nPlease login Again"); // Showing an error message if the login is expired
       return false; // Returning false if the login is expired

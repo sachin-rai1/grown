@@ -20,9 +20,7 @@ class BcdiMultiLabelController extends GetxController {
   CroppedFile? croppedFile;
   TextEditingController? idTextController;
   TextEditingController? titleTextController;
-
   var classData = [].obs; // Observable list for storing class data
-
   var imageString = "".obs;
   dynamic cleanConfidence;
   dynamic cleanClassValue;
@@ -37,6 +35,14 @@ class BcdiMultiLabelController extends GetxController {
   var indexDt = [];
   var isUpdating = false.obs;
   var updateClass = false.obs;
+  var isInDepthBcdi = true.obs;
+
+  @override
+  void onInit(){
+    var argumentData =  Get.arguments;
+    isInDepthBcdi.value = argumentData['isInDepth'];
+    super.onInit();
+  }
 
 // Function for checking internet connectivity
   Future<void> hasNetwork() async {
@@ -50,9 +56,7 @@ class BcdiMultiLabelController extends GetxController {
         }
       }
     } on SocketException catch (e) {
-      log(e.toString());
       classData.value = [];
-
       Get.showSnackbar(const GetSnackBar(
         backgroundColor: Colors.red,
         message: "Please try after some time",
@@ -123,7 +127,9 @@ class BcdiMultiLabelController extends GetxController {
       var stream = http.ByteStream(DelegatingStream.typed(resizedFile.openRead()));
       var length = await resizedFile.length();
 
-      var uploadURL = "https://api.maitriai.com:8003/api/predict"; // URL for uploading the image
+      var uploadURL =isInDepthBcdi.value == true?
+        "https://api.maitriai.com:8003/api/predict":
+        "https://api.maitriai.com:8001/api/predict"; // URL for uploading the image
       var uri = Uri.parse(uploadURL);
       var request =
           http.MultipartRequest("POST", uri); // Create a multipart request

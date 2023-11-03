@@ -15,45 +15,48 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: TextFormField(
-                keyboardType: TextInputType.number,
-                onFieldSubmitted: (value){
-                  controller.getPreRunDataRunNoWise(
-                      runNo: controller.runNoController.text.isEmpty
-                          ? 0
-                          : int.parse(controller.runNoController.text));
-                },
-                controller: controller.runNoController,
-                decoration: InputDecoration(
-                    suffixIcon: InkWell(
-                        onTap: () {
-
-                          controller.getPreRunDataRunNoWise(
-                              runNo: controller.runNoController.text.isEmpty
-                                  ? 0
-                                  : int.parse(controller.runNoController.text));
-                        },
-                        child: const Icon(
-                          Icons.search,
-                          size: 35,
-                        )),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    hintText: "Enter Run No",
-                    constraints: const BoxConstraints(maxHeight: 45)),
-              ),
-            ),
-            Obx(
-              () =>Expanded(
-                      child: controller.isLoading.value == true
-                          ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                          :(controller.preRunDataList.isEmpty)?const Center(child: Text("No Data Found"),) : ListView.builder(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: TextFormField(
+            keyboardType: TextInputType.number,
+            onFieldSubmitted: (value) {
+              controller.getPreRunDataRunNoWise(
+                  runNo: controller.runNoController.text.isEmpty
+                      ? 0
+                      : int.parse(controller.runNoController.text));
+            },
+            controller: controller.runNoController,
+            decoration: InputDecoration(
+                suffixIcon: InkWell(
+                    onTap: () {
+                      controller.getPreRunDataRunNoWise(
+                          runNo: controller.runNoController.text.isEmpty
+                              ? 0
+                              : int.parse(controller.runNoController.text));
+                    },
+                    child: const Icon(
+                      Icons.search,
+                      size: 35,
+                    )),
+                contentPadding: const EdgeInsets.only(left: 10),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                hintText: "Enter Run No",
+                constraints: const BoxConstraints(maxHeight: 45)),
+          ),
+        ),
+        Obx(
+          () => Expanded(
+              child: controller.isLoading.value == true
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : (controller.preRunDataList.isEmpty)
+                      ? const Center(
+                          child: Text("No Data Found"),
+                        )
+                      : ListView.builder(
                           itemCount: controller.preRunDataList.length,
                           itemBuilder: (context, index) {
                             var imageType = "";
@@ -116,24 +119,49 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            (privilage.value == "Admin")?Align(
-                                              alignment:Alignment.topRight,
-                                                child: IconButton(onPressed: (){
-                                                  showDialog(context: context, builder: (context){
-                                                    return AlertDialog(
-                                                      actions: [
-                                                        ElevatedButton(onPressed: () async {
-                                                          controller.deletePreRunData(runId: controller.preRunDataList[index].preRunNoId!);
-
-                                                        },style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text("Yes")),
-                                                        ElevatedButton(onPressed: (){}, style: ElevatedButton.styleFrom(backgroundColor: Colors.red), child: const Text("No")),
-                                                      ],
-                                                      content: const Text("Are You Sure want to delete ?"),
-                                                    );
-                                                  });
-
-                                                }, icon:const Icon(Icons.delete , color: Colors.red,))
-                                            ):Container(),
+                                            (privilage.value == "Admin")
+                                                ? Align(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    child: IconButton(
+                                                        onPressed: () {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return AlertDialog(
+                                                                  actions: [
+                                                                    ElevatedButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          controller.deletePreRunData(
+                                                                              runId: controller.preRunDataList[index].preRunNoId!);
+                                                                        },
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: Colors
+                                                                                .green),
+                                                                        child: const Text(
+                                                                            "Yes")),
+                                                                    ElevatedButton(
+                                                                        onPressed:
+                                                                            () {},
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: Colors
+                                                                                .red),
+                                                                        child: const Text(
+                                                                            "No")),
+                                                                  ],
+                                                                  content:
+                                                                      const Text(
+                                                                          "Are You Sure want to delete ?"),
+                                                                );
+                                                              });
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.red,
+                                                        )))
+                                                : Container(),
                                             MyTextWidget(
                                               title: "Run No : ",
                                               body:
@@ -162,11 +190,18 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                                                       vertical: 10,
                                                       horizontal: 3),
                                               child: GestureDetector(
-                                                onTap: (){
-                                                  showBottomSheet(context: context,
+                                                onTap: () {
+                                                  showBottomSheet(
+                                                      context: context,
                                                       builder: (context) {
                                                         return PhotoView(
-                                                          imageProvider: NetworkImage(controller.preRunDataList[index].image!),);
+                                                          imageProvider:
+                                                              NetworkImage(
+                                                                  controller
+                                                                      .preRunDataList[
+                                                                          index]
+                                                                      .image!),
+                                                        );
                                                       });
                                                 },
                                                 child: Image.network(controller
@@ -180,8 +215,8 @@ class PreRunViewDataView extends GetView<PreRunViewDataController> {
                                     ),
                             );
                           })),
-            )
-          ],
-        ));
+        )
+      ],
+    ));
   }
 }

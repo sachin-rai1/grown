@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:grown/app/modules/bcdi_classification/views/bcdi_classification_view.dart';
@@ -12,42 +13,67 @@ import 'package:grown/app/modules/mlgd_data_monitoring/views/mlgd_data_monitorin
 import 'package:grown/app/modules/pcc_reading/views/pcc_reading_view.dart';
 import 'package:grown/app/modules/user_management/views/user_management_view.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../main.dart';
+import '../../../data/constants.dart';
 import '../../../data/widgets.dart';
 import '../../maintenance/views/maintenance_view.dart';
 import '../../ups_reading/views/ups_reading_view.dart';
+import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
-  final scrollController = ScrollController();// Scroll controller for GridView scrolling
+  final scrollController =
+      ScrollController(); // Scroll controller for GridView scrolling
 
-
-  final gridViewKey = GlobalKey();  // Key for accessing the GridView widget
+  final gridViewKey = GlobalKey(); // Key for accessing the GridView widget
   String appVersion = "";
   String appName = '';
+  var isNewVersion = false.obs;
+  var apkLink = "".obs;
 
-  void package() async {
+  Future<void> package() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     appVersion = packageInfo.version;
     appName = packageInfo.appName;
   }
 
   @override
-  void onInit(){
+  Future<void> onInit() async {
     super.onInit();
-    package();
+    await package();
+    await checkForApkUpdate();
   }
 
+  Future<void> checkForApkUpdate() async {
+    var prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    final response = await http.get(
+        Uri.parse('$apiUrl/check_for_apk_update?current_version=$appVersion'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        });
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      apkLink.value = data["apk_link"];
+      isNewVersion.value = data["is_new_version"];
+    } else {
+      throw Exception('Failed to load branches');
+    }
+  }
 
 // List of choices for the admin department
   List<Choice> adminList = <Choice>[
     Choice(
-        title: 'BCDI-MULTI-LABEL-DETECTION',
+        title: 'BCDI-IN-DEPTH',
         image: "assets/images/detection1.png",
-        onTap: () => Get.to(() => BcdiMultiLabelView())),
-    // Choice(
-    //     title: 'BCDI-DETECTION',
-    //     image: "assets/images/detection1.png",
-    //     onTap: () => Get.to(() => BcdiDetectionView())),
+        onTap: () =>
+            Get.to(() => BcdiMultiLabelView(), arguments: {"isInDepth": true})),
+    Choice(
+        title: 'BCDI',
+        image: "assets/images/detection1.png",
+        onTap: () => Get.to(() => BcdiMultiLabelView(),
+            arguments: {"isInDepth": false})),
     Choice(
         title: 'BCDI-CLASSIFICATION',
         image: "assets/images/classification.png",
@@ -71,13 +97,11 @@ class HomeController extends GetxController {
     Choice(
         title: 'CHILLER READING',
         image: "assets/images/chiller.png",
-        onTap: () => Get.to(() => ChillerReadingView())
-    ),
+        onTap: () => Get.to(() => ChillerReadingView())),
     Choice(
         title: 'PCC Reading',
         image: "assets/images/pcc1.png",
-        onTap: () => Get.to(() => const PccReadingView())
-    ),
+        onTap: () => Get.to(() => const PccReadingView())),
     Choice(
         title: 'Maintenance',
         iconData: Icons.settings,
@@ -101,20 +125,26 @@ class HomeController extends GetxController {
         title: 'Feedback',
         iconData: Icons.feedback_sharp,
         iconColor: Colors.blue,
-        onTap: () => Get.to(() =>  FeedbackView())),
+        onTap: () => Get.to(() => FeedbackView())),
     Choice(
         title: 'Email Setting',
         iconData: Icons.email_sharp,
         iconColor: Colors.red,
-        onTap: () => Get.to(() =>  EmailConfigView())),
+        onTap: () => Get.to(() => EmailConfigView())),
   ];
 
   // List of choices for the lab department
   List<Choice> labList = <Choice>[
     Choice(
-        title: 'BCDI-DETECTION',
+        title: 'BCDI-IN-DEPTH',
         image: "assets/images/detection1.png",
-        onTap: () => Get.to(() => BcdiDetectionView())),
+        onTap: () =>
+            Get.to(() => BcdiMultiLabelView(), arguments: {"isInDepth": true})),
+    Choice(
+        title: 'BCDI',
+        image: "assets/images/detection1.png",
+        onTap: () => Get.to(() => BcdiMultiLabelView(),
+            arguments: {"isInDepth": false})),
     Choice(
         title: 'BCDI-CLASSIFICATION',
         image: "assets/images/classification.png",
@@ -146,8 +176,7 @@ class HomeController extends GetxController {
     Choice(
         title: 'PCC Reading',
         image: "assets/images/pcc1.png",
-        onTap: () => Get.to(() => const PccReadingView())
-    ),
+        onTap: () => Get.to(() => const PccReadingView())),
     // Choice(
     //     title: 'EMPLOYEE-MANAGEMENT',
     //     image: "assets/images/empManagement.png",
@@ -174,5 +203,4 @@ class HomeController extends GetxController {
     //     onTap: () => Get.to(() => EmployeeManagementView())),
   ];
   List<Choice> nullList = <Choice>[];
-
 }

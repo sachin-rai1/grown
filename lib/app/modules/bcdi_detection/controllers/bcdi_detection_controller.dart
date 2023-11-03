@@ -266,8 +266,6 @@ class BcdiDetectionController extends GetxController {
       else {
         final ImagePicker picker = ImagePicker();
         pickerImage = await picker.pickImage(source: ImageSource.gallery);
-
-        log('image path : ${pickerImage?.path}');
         image.value = File(pickerImage!.path);
 
         if (!kIsWeb) {

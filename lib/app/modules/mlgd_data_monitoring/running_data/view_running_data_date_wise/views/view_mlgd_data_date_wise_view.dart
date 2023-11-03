@@ -89,7 +89,9 @@ class ViewMlgdDataDateWiseView extends GetView<ViewMlgdDataDateWiseController> {
                   itemBuilder: (BuildContext context, index) {
                     dynamic cleanPer = controller.mlgdDataList[index].cleanPcsNo! / controller.mlgdDataList[index].totalPcsNo! * 100;
                     var topView = controller.mlgdDataList[index].topView;
+                    print(topView);
                     var frontView = controller.mlgdDataList[index].frontView;
+                    print(frontView);
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 5),

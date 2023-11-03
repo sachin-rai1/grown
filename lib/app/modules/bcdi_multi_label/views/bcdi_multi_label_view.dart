@@ -8,8 +8,8 @@ import '../controllers/bcdi_multi_label_controller.dart';
 
 class BcdiMultiLabelView extends GetView<BcdiMultiLabelController> {
   BcdiMultiLabelView({Key? key}) : super(key: key);
-
   final bcdiMultiLabelController = Get.put(BcdiMultiLabelController());
+
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class BcdiMultiLabelView extends GetView<BcdiMultiLabelController> {
         ),
         elevation: 0,
         centerTitle: true,
-        title: const Text("BCDI DETECTION"),
+        title: Obx(()=> controller.isInDepthBcdi.value == true ?const Text("BCDI IN DEPTH"):const Text("BCDI DETECTION")),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),

@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -10,13 +8,13 @@ import '../controllers/datewise_pcc_reading_controller.dart';
 
 
 class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
-   DatewisePccReadingView({Key? key}) : super(key: key);
+  DatewisePccReadingView({Key? key}) : super(key: key);
 
   final datewisePccReadingController = Get.put(DatewisePccReadingController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
 
 
       body: Obx(() {
@@ -24,10 +22,11 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
           controller.isLoading.value == true ?
           const Center(child: CircularProgressIndicator(),)
               :
-          Column (
+          Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10 ,bottom: 10, left: 15, right: 15),
+                padding: const EdgeInsets.only(
+                    top: 10, bottom: 10, left: 15, right: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -36,8 +35,10 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       onChanged: (val) {
                         controller.selectedDate.value = val;
                         final DateFormat formatter = DateFormat('yyyy-MM-dd');
-                        controller.formatted = formatter.format(DateTime.parse(controller.selectedDate.value));
-                        controller.getPccData(selectedDate: controller.formatted);
+                        controller.formatted = formatter.format(DateTime.parse(
+                            controller.selectedDate.value));
+                        controller.getPccData(
+                            selectedDate: controller.formatted);
                       },
                     ),
 
@@ -45,19 +46,23 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       padding: const EdgeInsets.only(top: 10, right: 10),
                       child: Align(
                           alignment: Alignment.bottomRight,
-                          child: IconButton(onPressed: (){
+                          child: IconButton(onPressed: () {
                             controller.convertToExcel(controller.jsonList);
-                          }, icon: const Icon(Icons.download_rounded) , iconSize: 35 , color: Colors.blue,)),
+                          },
+                            icon: const Icon(Icons.download_rounded),
+                            iconSize: 35,
+                            color: Colors.blue,)),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child:  Obx(() {
+                child: Obx(() {
                   return
                     controller.pccDataList.isEmpty
                         ?
-                    Center(child: Lottie.asset('assets/lottie/no_data_found.json'),)
+                    Center(
+                      child: Lottie.asset('assets/lottie/no_data_found.json'),)
                         :
                     SingleChildScrollView(
                       child: Column(
@@ -71,7 +76,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                               var lightStatus = "";
                               var fanStatus = "";
 
-                              switch (controller.pccDataList[index].allMeterStatusPcc) {
+                              switch (controller.pccDataList[index]
+                                  .allMeterStatusPcc) {
                                 case 0:
                                   meterStatus = "OFF";
                                   break;
@@ -81,7 +87,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                                 default :
                                   meterStatus = "OFF";
                               }
-                              switch (controller.pccDataList[index].allLightStatusPcc) {
+                              switch (controller.pccDataList[index]
+                                  .allLightStatusPcc) {
                                 case 0:
                                   lightStatus = "OFF";
                                   break;
@@ -91,7 +98,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                                 default :
                                   lightStatus = "OFF";
                               }
-                              switch (controller.pccDataList[index].allExhaustFanStatus) {
+                              switch (controller.pccDataList[index]
+                                  .allExhaustFanStatus) {
                                 case 0:
                                   fanStatus = "OFF";
                                   break;
@@ -114,43 +122,91 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                                       top: 10, right: 10, left: 10, bottom: 10,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
                                       children: [
 
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .end,
                                           children: [
-                                            IconButton(icon: const Icon(Icons.edit, color: Colors.lightGreen),
+                                            IconButton(icon: const Icon(
+                                                Icons.edit,
+                                                color: Colors.lightGreen),
                                               onPressed: () {
-                                                updatePccData(context: context,
-                                                  id: controller.pccDataList[index].pccDailyReadingId!,
-                                                  branchIdFk: controller.pccDataList[index].branchIdFk!,
-                                                  pccIdFk: controller.pccDataList[index].pccIdFk!,
-                                                  loadAcb: controller.pccDataList[index].loadAmpAcb!,
-                                                  loadMfm: controller.pccDataList[index].loadAmpMfm!,
-                                                  powerMfm: controller.pccDataList[index].powerFactorMfm!,
-                                                  meterStatus: controller.pccDataList[index].allMeterStatusPcc!,
-                                                  lightStatus: controller.pccDataList[index].allLightStatusPcc!,
-                                                  fanStatus: controller.pccDataList[index].allExhaustFanStatus!,
-                                                  neVolt: controller.pccDataList[index].nEVolt!,
-                                                  ryVolt: controller.pccDataList[index].rYVolt!,
-                                                  ybVolt: controller.pccDataList[index].yBVolt!,
-                                                  brVolt: controller.pccDataList[index].bRVolt!,
-                                                  rnVolt: controller.pccDataList[index].rNVolt!,
-                                                  ynVolt: controller.pccDataList[index].yNVolt!,
-                                                  bnVolt: controller.pccDataList[index].bNVolt!,
-                                                  reVolt: controller.pccDataList[index].rEVolt!,
-                                                  yeVolt: controller.pccDataList[index].yEVolt!,
-                                                  beVolt: controller.pccDataList[index].bEVolt!,
-                                                  reMark: controller.pccDataList[index].remarkIfAny!,
+                                                updatePccData(
+                                                  context: context,
+                                                  id: controller
+                                                      .pccDataList[index]
+                                                      .pccDailyReadingId!,
+                                                  branchIdFk: controller
+                                                      .pccDataList[index]
+                                                      .branchIdFk!,
+                                                  pccIdFk: controller
+                                                      .pccDataList[index]
+                                                      .pccIdFk!,
+                                                  loadAcb: controller
+                                                      .pccDataList[index]
+                                                      .loadAmpAcb!,
+                                                  loadMfm: controller
+                                                      .pccDataList[index]
+                                                      .loadAmpMfm!,
+                                                  powerMfm: controller
+                                                      .pccDataList[index]
+                                                      .powerFactorMfm!,
+                                                  meterStatus: controller
+                                                      .pccDataList[index]
+                                                      .allMeterStatusPcc!,
+                                                  lightStatus: controller
+                                                      .pccDataList[index]
+                                                      .allLightStatusPcc!,
+                                                  fanStatus: controller
+                                                      .pccDataList[index]
+                                                      .allExhaustFanStatus!,
+                                                  neVolt: controller
+                                                      .pccDataList[index]
+                                                      .nEVolt!,
+                                                  ryVolt: controller
+                                                      .pccDataList[index]
+                                                      .rYVolt!,
+                                                  ybVolt: controller
+                                                      .pccDataList[index]
+                                                      .yBVolt!,
+                                                  brVolt: controller
+                                                      .pccDataList[index]
+                                                      .bRVolt!,
+                                                  rnVolt: controller
+                                                      .pccDataList[index]
+                                                      .rNVolt!,
+                                                  ynVolt: controller
+                                                      .pccDataList[index]
+                                                      .yNVolt!,
+                                                  bnVolt: controller
+                                                      .pccDataList[index]
+                                                      .bNVolt!,
+                                                  reVolt: controller
+                                                      .pccDataList[index]
+                                                      .rEVolt!,
+                                                  yeVolt: controller
+                                                      .pccDataList[index]
+                                                      .yEVolt!,
+                                                  beVolt: controller
+                                                      .pccDataList[index]
+                                                      .bEVolt!,
+                                                  reMark: controller
+                                                      .pccDataList[index]
+                                                      .remarkIfAny!,
                                                 );
                                               },
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.delete, color: Colors.red),
+                                              icon: const Icon(Icons.delete,
+                                                  color: Colors.red),
                                               onPressed: () {
                                                 deletePccData(context: context,
-                                                  id: controller.pccDataList[index].pccDailyReadingId!,
+                                                  id: controller
+                                                      .pccDataList[index]
+                                                      .pccDailyReadingId!,
                                                 );
                                               },
                                             ),
@@ -158,25 +214,64 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                                         ),
 
 
-                                        MyTextWidget(title: "Date : " , body: controller.pccDataList[index].pccDailyReadingCreatedOn,),
-                                        MyTextWidget(title: "Branch : " , body: controller.pccDataList[index].branchName,),
-                                        MyTextWidget(title: "PCC Name : " , body: controller.pccDataList[index].pccName,),
-                                        MyTextWidget(title: "Load(Amp.)-ACB : " , body: controller.pccDataList[index].loadAmpAcb,),
-                                        MyTextWidget(title: "Load(Amp.)-MFM : " , body: controller.pccDataList[index].loadAmpMfm,),
-                                        MyTextWidget(title: "Power Factor - MFM : " , body: controller.pccDataList[index].powerFactorMfm,),
-                                        MyTextWidget(title: "All Meter Status(PCC) :" , body: meterStatus,),
-                                        MyTextWidget(title: "All Light Status(PCC) :" , body: lightStatus,),
-                                        MyTextWidget(title: "All Exhaust Fan Status(PCC) :" , body: fanStatus,),
-                                        MyTextWidget(title: "N-E(Volt) : " , body: controller.pccDataList[index].nEVolt,),
-                                        MyTextWidget(title: "R-Y(Volt) : " , body: controller.pccDataList[index].rYVolt,),
-                                        MyTextWidget(title: "Y-B(Volt) : " , body: controller.pccDataList[index].yBVolt,),
-                                        MyTextWidget(title: "B-R(Volt) : " , body: controller.pccDataList[index].bRVolt,),
-                                        MyTextWidget(title: "R-N(Volt) : " , body: controller.pccDataList[index].rNVolt,),
-                                        MyTextWidget(title: "Y-N(Volt) : " , body: controller.pccDataList[index].yNVolt,),
-                                        MyTextWidget(title: "B-N(Volt) : " , body: controller.pccDataList[index].bNVolt,),
-                                        MyTextWidget(title: "R-E(Volt) : " , body: controller.pccDataList[index].rEVolt,),
-                                        MyTextWidget(title: "Y-E(Volt) : " , body: controller.pccDataList[index].yEVolt,),
-                                        MyTextWidget(title: "Remarks : " , body: controller.pccDataList[index].remarkIfAny,),
+                                        MyTextWidget(title: "Date : ",
+                                          body: controller.pccDataList[index]
+                                              .pccDailyReadingCreatedOn,),
+                                        MyTextWidget(title: "Branch : ",
+                                          body: controller.pccDataList[index]
+                                              .branchName,),
+                                        MyTextWidget(title: "PCC Name : ",
+                                          body: controller.pccDataList[index]
+                                              .pccName,),
+                                        MyTextWidget(title: "Load(Amp.)-ACB : ",
+                                          body: controller.pccDataList[index]
+                                              .loadAmpAcb,),
+                                        MyTextWidget(title: "Load(Amp.)-MFM : ",
+                                          body: controller.pccDataList[index]
+                                              .loadAmpMfm,),
+                                        MyTextWidget(
+                                          title: "Power Factor - MFM : ",
+                                          body: controller.pccDataList[index]
+                                              .powerFactorMfm,),
+                                        MyTextWidget(
+                                          title: "All Meter Status(PCC) :",
+                                          body: meterStatus,),
+                                        MyTextWidget(
+                                          title: "All Light Status(PCC) :",
+                                          body: lightStatus,),
+                                        MyTextWidget(
+                                          title: "All Exhaust Fan Status(PCC) :",
+                                          body: fanStatus,),
+                                        MyTextWidget(title: "N-E(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .nEVolt,),
+                                        MyTextWidget(title: "R-Y(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .rYVolt,),
+                                        MyTextWidget(title: "Y-B(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .yBVolt,),
+                                        MyTextWidget(title: "B-R(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .bRVolt,),
+                                        MyTextWidget(title: "R-N(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .rNVolt,),
+                                        MyTextWidget(title: "Y-N(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .yNVolt,),
+                                        MyTextWidget(title: "B-N(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .bNVolt,),
+                                        MyTextWidget(title: "R-E(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .rEVolt,),
+                                        MyTextWidget(title: "Y-E(Volt) : ",
+                                          body: controller.pccDataList[index]
+                                              .yEVolt,),
+                                        MyTextWidget(title: "Remarks : ",
+                                          body: controller.pccDataList[index]
+                                              .remarkIfAny,),
 
                                       ],
                                     ),
@@ -193,7 +288,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
               ),
             ],
           );
-
       },
 
       ),
@@ -202,39 +296,34 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
   }
 
 
-
 //_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____//_____
 
 
-  void updatePccData(
-      {
-        required BuildContext context,
-        required int id,
-        required int branchIdFk,
-        required int pccIdFk,
-        required String loadAcb,
-        required String loadMfm,
-        required String powerMfm,
-        required int meterStatus,
-        required int lightStatus,
-        required int fanStatus,
-        required String neVolt,
-        required String ryVolt,
-        required String ybVolt,
-        required String brVolt,
-        required String rnVolt,
-        required String ynVolt,
-        required String bnVolt,
-        required String reVolt,
-        required String yeVolt,
-        required String beVolt,
-        required String reMark,
+  void updatePccData({
+    required BuildContext context,
+    required int id,
+    required int branchIdFk,
+    required int pccIdFk,
+    required String loadAcb,
+    required String loadMfm,
+    required String powerMfm,
+    required int meterStatus,
+    required int lightStatus,
+    required int fanStatus,
+    required String neVolt,
+    required String ryVolt,
+    required String ybVolt,
+    required String brVolt,
+    required String rnVolt,
+    required String ynVolt,
+    required String bnVolt,
+    required String reVolt,
+    required String yeVolt,
+    required String beVolt,
+    required String reMark,
 
 
-      })
-
-  {
-
+  }) {
     controller.aACB.text = loadAcb;
     controller.mMFM.text = loadMfm;
     controller.pPowerFactorMFM.text = powerMfm;
@@ -254,7 +343,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
     controller.fan.value = fanStatus.toString();
     AlertDialog alertDialog = AlertDialog(
       actions: [
-        ElevatedButton(onPressed: () => Get.back(), child: const Text("Cancel"),),
+        ElevatedButton(
+          onPressed: () => Get.back(), child: const Text("Cancel"),),
         ElevatedButton(onPressed: () {
           controller.updatePccData(
             id: id,
@@ -298,8 +388,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   groupValue: controller.meter.value,
                   onChanged: (value) {
                     controller.meter(value.toString());
-
-
                   },
                 ),
             ),
@@ -311,13 +399,13 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   groupValue: controller.meter.value,
                   onChanged: (value) {
                     controller.meter(value.toString());
-
                   },
                 ),
             ),
 
             const SizedBox(height: 15),
-            const Text("All Light Status(PCC) ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+            const Text("All Light Status(PCC) ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
 
             Obx(() =>
                 RadioListTile(
@@ -326,7 +414,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   groupValue: controller.light.value,
                   onChanged: (value) {
                     controller.light(value.toString());
-
                   },
                 ),
             ),
@@ -344,7 +431,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
             ),
 
             const SizedBox(height: 15),
-            const Text("All Exhaust Fan Status ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+            const Text("All Exhaust Fan Status ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
 
             Obx(() =>
                 RadioListTile(
@@ -353,7 +441,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   groupValue: controller.fan.value,
                   onChanged: (value) {
                     controller.fan(value.toString());
-
                   },
                 ),
             ),
@@ -365,7 +452,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   groupValue: controller.fan.value,
                   onChanged: (value) {
                     controller.fan(value.toString());
-
                   },
                 ),
             ),
@@ -441,9 +527,7 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
     );
 
 
-
-    showBottomSheet(context: context, builder: (context){
-
+    showBottomSheet(context: context, builder: (context) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -491,13 +575,13 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       groupValue: controller.meter.value,
                       onChanged: (value) {
                         controller.meter(value.toString());
-
                       },
                     ),
                 ),
 
                 const SizedBox(height: 15),
-                const Text("All Light Status(PCC) ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                const Text("All Light Status(PCC) ",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
 
                 Obx(() =>
                     RadioListTile(
@@ -506,7 +590,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       groupValue: controller.light.value,
                       onChanged: (value) {
                         controller.light(value.toString());
-
                       },
                     ),
                 ),
@@ -524,7 +607,8 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                 ),
 
                 const SizedBox(height: 15),
-                const Text("All Exhaust Fan Status ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                const Text("All Exhaust Fan Status ",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
 
                 Obx(() =>
                     RadioListTile(
@@ -533,7 +617,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       groupValue: controller.fan.value,
                       onChanged: (value) {
                         controller.fan(value.toString());
-
                       },
                     ),
                 ),
@@ -545,7 +628,6 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                       groupValue: controller.fan.value,
                       onChanged: (value) {
                         controller.fan(value.toString());
-
                       },
                     ),
                 ),
@@ -623,8 +705,11 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
                   );
                 },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 10)
+                      backgroundColor: Colors.orange,
+                      fixedSize: Size(MediaQuery
+                          .of(context)
+                          .size
+                          .width * 0.8, 10)
                   ),
                   child: const Text("Submit"),),
               ],
@@ -636,12 +721,10 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
   }
 
 
-
 //_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________//_____________
 
 
-  void deletePccData({required BuildContext context, required int id,})
-  {
+  void deletePccData({required BuildContext context, required int id,}) {
     AlertDialog alertDialog = AlertDialog(
         actions: [
           ElevatedButton(onPressed: () => Get.back(),
@@ -654,7 +737,7 @@ class DatewisePccReadingView extends GetView<DatewisePccReadingController> {
             child: const Text("NO"),),
 
           ElevatedButton(onPressed: () {
-            controller.deletePccData(id:id);
+            controller.deletePccData(id: id);
           },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
